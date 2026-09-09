@@ -1,0 +1,37 @@
+body {
+  background: #4161ec;
+  font-family: system-ui, sans-serif;
+}
+
+form {
+    background: #dd7777;
+    padding: 40px;
+    border-radius: 12px;
+    max-width: 360px;
+    margin: 80px auto;
+
+}
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 4px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+}
+div {
+  margin-bottom: 16px;
+}
+label {
+  font-size: 13px;
+  color: #000000;
+}
+button {
+  width: 100%;
+  padding: 11px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+}
