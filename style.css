@@ -1,0 +1,161 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: #f3f4f6;
+  color: #1f2937;
+  line-height: 1.5;
+}
+
+/* Encabezado en negro con detalle verde cesped */
+header {
+  background-color: #111827;
+  color: #ffffff;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid #15803d;
+}
+
+header h1 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+nav a {
+  color: #d1d5db;
+  text-decoration: none;
+  margin-left: 20px;
+  font-size: 14px;
+}
+
+nav a:hover {
+  color: #4ade80;
+}
+
+/* Contenedor principal */
+main {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 0 15px;
+}
+
+/* Secciones tipo tarjeta en blanco */
+section {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 25px;
+  margin-bottom: 25px;
+}
+
+h2 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #15803d;
+  padding-bottom: 6px;
+  color: #111827;
+}
+
+h3 {
+  font-size: 15px;
+  margin: 15px 0 10px 0;
+  color: #111827;
+}
+
+/* Formularios */
+div {
+  margin-bottom: 12px;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #374151;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #15803d;
+}
+
+/* Botones en verde futbol */
+button {
+  background-color: #15803d;
+  color: #ffffff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #166534;
+}
+
+/* Tabla del acta */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+th, td {
+  border: 1px solid #e5e7eb;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #f9fafb;
+  color: #111827;
+  font-weight: 600;
+}
+
+/* Ficha del encuentro */
+.ficha-encuentro {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+}
+
+.ficha-encuentro p {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.firma-arbitro {
+  margin-top: 40px;
+  text-align: right;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+/* Pie de pagina */
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 12px;
+  color: #6b7280;
+}
