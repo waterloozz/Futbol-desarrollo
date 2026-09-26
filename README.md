@@ -55,7 +55,12 @@ El objetivo de este proyecto es crear una aplicación web que permita a los árb
 También busca poner en práctica los conocimientos aprendidos de HTML, CSS y JavaScript.
 
 ---
+## Usuarios de prueba
+usuario: admin
+password: admin123
 
+usuario: arbitro
+password: arbitro123
 ## Estado del proyecto
 
 Actualmente el proyecto se encuentra en desarrollo.
