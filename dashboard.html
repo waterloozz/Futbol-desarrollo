@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Principal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>Panel Principal</h1>
+    <nav>
+      <a href="index.html" id="salir">Cerrar sesion</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Bienvenido, <span id="rol"></span></h2>
+      <p>Elige una opcion:</p>
+      <ul>
+        <li><a href="index.html#partido">Nuevo Partido</a></li>
+        <li><a href="index.html#acta">Acta Oficial</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <script>
+    const rol = localStorage.getItem("rol");
+
+    if (!rol) {
+      window.location.href = "index.html";
+    }
+
+    document.getElementById("rol").textContent = rol;
+
+    document.getElementById("salir").addEventListener("click", function () {
+      localStorage.removeItem("rol");
+    });
+  </script>
+</body>
+</html>

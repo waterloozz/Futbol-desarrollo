@@ -12,7 +12,7 @@ form.addEventListener("submit", function (event) {
       mensaje.textContent = "Bienvenido";
       mensaje.style.color = "green";
       localStorage.setItem("rol", "arbitro");
-      // Aquí luego pasaremos a la pantalla de partidos
+      window.location.href = "dashboard.html";
     } else {
       mensaje.textContent = "Contraseña incorrecta";
       mensaje.style.color = "red";
@@ -22,6 +22,7 @@ form.addEventListener("submit", function (event) {
       mensaje.textContent = "Bienvenido";
       mensaje.style.color = "green";
       localStorage.setItem("rol", "admin");
+      window.location.href = "dashboard.html";
     } else {
       mensaje.textContent = "Contraseña incorrecta";
       mensaje.style.color = "red";
