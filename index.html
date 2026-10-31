@@ -4,6 +4,15 @@
   <meta charset="UTF-8">
   <title>Sistema de Acta Digital Arbitral</title>
   <link rel="stylesheet" href="style.css">
+
+  <!--
+    Orden importante: los dos scripts usan "defer", así que se ejecutan en
+    este mismo orden cuando el HTML terminó de cargarse.
+    1) componentes.js registra los Alpine.data() en "alpine:init".
+    2) Alpine arranca, dispara "alpine:init" y luego procesa los x-data.
+  -->
+  <script src="componentes.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
 </head>
 <body>
 
@@ -107,6 +116,46 @@
       </div>
     </section>
   </main>
+
+  <!-- ===== Notificaciones flotantes (una sola vez en la página) ===== -->
+  <div
+    class="toast-contenedor"
+    x-data="notificaciones"
+    @notificar.window="agregar($event.detail)"
+    aria-live="polite"
+  >
+    <template x-for="toast in lista" :key="toast.id">
+      <div
+        class="toast"
+        :class="'toast--' + toast.tipo"
+        x-show="toast.visible"
+        x-transition:leave="toast-salida"
+        x-transition:leave-end="toast-salida-fin"
+        role="status"
+      >
+        <span x-text="toast.mensaje"></span>
+        <button type="button" class="toast-cerrar" @click="cerrar(toast.id)" aria-label="Cerrar">&times;</button>
+      </div>
+    </template>
+  </div>
+
+  <!-- ===== Modal de confirmación (una sola vez en la página) ===== -->
+  <div
+    x-data="modalConfirmacion"
+    @pedir-confirmacion.window="abrir($event.detail)"
+    @keydown.escape.window="abierto && cerrar()"
+  >
+    <div class="modal-fondo" x-show="abierto" x-cloak x-transition.opacity @click.self="cerrar()">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+        <h3 id="modal-titulo" x-text="titulo"></h3>
+        <p x-text="mensaje"></p>
+        <div class="modal-acciones">
+          <button type="button" class="boton-secundario" x-ref="botonCancelar" @click="cerrar()">Cancelar</button>
+          <button type="button" @click="confirmar()" x-text="textoConfirmar"></button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="login.js"></script>
 </body>
