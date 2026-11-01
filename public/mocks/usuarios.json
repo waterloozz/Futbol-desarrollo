@@ -1,0 +1,5 @@
+[
+  { "id": 1, "usuario": "admin", "password": "admin123", "nombre": "Administrador", "email": "admin@futbolapp.cl", "rol": "admin" },
+  { "id": 2, "usuario": "arbitro", "password": "arbitro123", "nombre": "Árbitro de prueba", "email": "arbitro@futbolapp.cl", "rol": "arbitro" },
+  { "id": 3, "usuario": "jperez", "password": "jperez123", "nombre": "Juan Pérez", "email": "jperez@futbolapp.cl", "rol": "arbitro" }
+]

@@ -2,41 +2,127 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel Principal</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
 
-  <header>
-    <h1>Panel Principal</h1>
-    <nav>
-      <a href="index.html" id="salir">Cerrar sesion</a>
-    </nav>
-  </header>
-
-  <main>
-    <section>
-      <h2>Bienvenido, <span id="rol"></span></h2>
-      <p>Elige una opcion:</p>
-      <ul>
-        <li><a href="index.html#partido">Nuevo Partido</a></li>
-        <li><a href="index.html#acta">Acta Oficial</a></li>
-      </ul>
-    </section>
-  </main>
-
+  <!-- Va primero para proteger la ruta antes de que se dibuje el <body> -->
   <script>
-    const rol = localStorage.getItem("rol");
-
-    if (!rol) {
-      window.location.href = "index.html";
+    function irAlLoginSiNoHaySesion() {
+      if (!localStorage.getItem("rol")) {
+        document.documentElement.hidden = true;
+        // replace() para que "Atrás" no vuelva a esta página
+        window.location.replace("index.html");
+        return true;
+      }
+      return false;
     }
 
-    document.getElementById("rol").textContent = rol;
+    const sinSesion = irAlLoginSiNoHaySesion();
 
-    document.getElementById("salir").addEventListener("click", function () {
-      localStorage.removeItem("rol");
+    // Al volver con "Atrás" el navegador puede mostrar la página desde caché
+    // sin ejecutar los scripts de nuevo
+    window.addEventListener("pageshow", function (event) {
+      if (event.persisted) irAlLoginSiNoHaySesion();
     });
   </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.1.13"></script>
+  <style>
+    [x-cloak] { display: none !important; }
+  </style>
+
+  <!-- Los defer se ejecutan en orden: nuestros scripts van antes que Alpine -->
+  <script src="js/api.js" defer></script>
+  <script src="js/dashboard.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
+</head>
+<body x-data="dashboard" class="flex min-h-screen flex-col bg-slate-100 text-slate-800">
+
+  <header class="bg-blue-800 text-white shadow">
+    <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-4">
+      <h1 class="text-xl font-bold">Panel Principal</h1>
+      <nav aria-label="Navegación principal" class="flex flex-wrap gap-1 text-sm">
+        <a href="index.html#partido" class="rounded px-3 py-2 hover:bg-blue-700">Nuevo Partido</a>
+        <a href="index.html#acta" class="rounded px-3 py-2 hover:bg-blue-700">Acta Oficial</a>
+        <a href="index.html" @click="cerrarSesion()" class="rounded px-3 py-2 hover:bg-blue-700">Cerrar sesión</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="mx-auto w-full max-w-5xl flex-1 space-y-6 px-4 py-6">
+    <section aria-labelledby="titulo-bienvenida">
+      <h2 id="titulo-bienvenida" class="text-2xl font-semibold">
+        Bienvenido, <span x-text="rol" class="capitalize"></span>
+      </h2>
+      <p class="text-slate-600">Este es el resumen del torneo.</p>
+    </section>
+
+    <p x-show="cargando" class="text-slate-500">Cargando...</p>
+    <p x-show="error" x-text="error" x-cloak class="rounded bg-red-100 p-3 text-red-700" role="alert"></p>
+
+    <template x-if="resumen">
+      <div class="space-y-6">
+        <section aria-labelledby="titulo-totales">
+          <h2 id="titulo-totales" class="sr-only">Totales</h2>
+          <dl class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div class="rounded-lg bg-white p-4 shadow-sm">
+              <dt class="text-sm text-slate-500">Partidos totales</dt>
+              <dd class="text-3xl font-bold" x-text="resumen.totalPartidos"></dd>
+            </div>
+            <div class="rounded-lg bg-white p-4 shadow-sm">
+              <dt class="text-sm text-slate-500">Jugados</dt>
+              <dd class="text-3xl font-bold" x-text="resumen.jugados"></dd>
+            </div>
+            <div class="rounded-lg bg-white p-4 shadow-sm">
+              <dt class="text-sm text-slate-500">Programados</dt>
+              <dd class="text-3xl font-bold" x-text="resumen.programados"></dd>
+            </div>
+            <div class="rounded-lg bg-white p-4 shadow-sm">
+              <dt class="text-sm text-slate-500">Goles</dt>
+              <dd class="text-3xl font-bold" x-text="resumen.goles"></dd>
+            </div>
+          </dl>
+        </section>
+
+        <div class="grid gap-6 md:grid-cols-2">
+          <section aria-labelledby="titulo-proximos" class="rounded-lg bg-white p-4 shadow-sm">
+            <h2 id="titulo-proximos" class="mb-3 text-lg font-semibold">Próximos partidos</h2>
+            <ul class="divide-y divide-slate-100">
+              <template x-for="p in resumen.proximos" :key="p.id">
+                <li class="py-2">
+                  <p class="font-medium"><span x-text="p.local"></span> vs <span x-text="p.visitante"></span></p>
+                  <p class="text-sm text-slate-500">
+                    <time :datetime="`${p.fecha}T${p.hora}`" x-text="`${formatearFecha(p.fecha)} · ${p.hora}`"></time>
+                    · <span x-text="p.cancha"></span>
+                  </p>
+                </li>
+              </template>
+            </ul>
+          </section>
+
+          <section aria-labelledby="titulo-resultados" class="rounded-lg bg-white p-4 shadow-sm">
+            <h2 id="titulo-resultados" class="mb-3 text-lg font-semibold">Últimos resultados</h2>
+            <ul class="divide-y divide-slate-100">
+              <template x-for="p in resumen.ultimosResultados" :key="p.id">
+                <li class="flex items-center justify-between gap-3 py-2">
+                  <span>
+                    <span x-text="p.local"></span>
+                    <strong class="mx-1" x-text="`${p.golesLocal} - ${p.golesVisitante}`"></strong>
+                    <span x-text="p.visitante"></span>
+                  </span>
+                  <time class="shrink-0 text-sm text-slate-500" :datetime="p.fecha" x-text="formatearFecha(p.fecha)"></time>
+                </li>
+              </template>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </template>
+  </main>
+
+  <footer class="bg-slate-800 py-4 text-center text-sm text-slate-300">
+    <p>Sistema de Acta Digital Arbitral · <span x-text="new Date().getFullYear()"></span></p>
+  </footer>
+
 </body>
 </html>
