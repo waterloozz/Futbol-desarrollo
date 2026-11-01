@@ -8,8 +8,8 @@ document.addEventListener("alpine:init", () => {
     resumen: null,
 
     async init() {
-      // Sin sesión la página ya va al login (protección en el <head>): no se piden datos
-      if (sinSesion) return;
+      // Sin acceso la página ya va saliendo (ver js/sesion.js): no se piden datos
+      if (redirigiendo) return;
 
       try {
         this.resumen = await obtenerResumen();
@@ -19,10 +19,6 @@ document.addEventListener("alpine:init", () => {
       } finally {
         this.cargando = false;
       }
-    },
-
-    cerrarSesion() {
-      localStorage.removeItem("rol");
     },
 
     // "2026-11-07" -> "sáb, 07 nov". El T00:00 evita que se lea como UTC
