@@ -12,9 +12,13 @@
   <style>
     [x-cloak] { display: none !important; }
   </style>
+  <link rel="stylesheet" href="registro-arbitros.css">
 
   <!-- menu.js va antes que Alpine (ver js/menu.js) -->
   <script src="js/menu.js" defer></script>
+  <!-- componentes y registro tambien van antes de Alpine para que se registren a tiempo -->
+  <script src="componentes.js" defer></script>
+  <script src="registro-arbitros.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
 </head>
 <body class="flex min-h-screen flex-col bg-slate-100 text-slate-800">
@@ -23,14 +27,133 @@
 
   <main class="mx-auto w-full max-w-5xl flex-1 space-y-6 px-4 py-6">
     <h1 class="text-2xl font-semibold">Usuarios</h1>
-    <section class="rounded-lg bg-white p-4 shadow-sm">
-      <p class="text-slate-600">Sección en construcción: aquí irá la administración de usuarios (solo admin).</p>
-    </section>
+
+    <div x-data="registroArbitros" class="space-y-6">
+      <section aria-labelledby="titulo-registro" class="rounded-lg bg-white p-4 shadow-sm">
+        <h2 id="titulo-registro" class="mb-4 text-lg font-semibold">Registro de Árbitros</h2>
+
+        <form @submit.prevent="solicitarGuardado()" novalidate class="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label for="arbNombre" class="mb-1 block text-sm font-medium text-slate-700">Nombre completo</label>
+            <input type="text" id="arbNombre" placeholder="Ej: Roberto Tobar" x-model="form.nombre"
+              class="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2"
+              :class="errores.nombre ? 'border-red-600 focus:ring-red-600' : 'border-slate-300 focus:ring-blue-600'">
+            <small class="mt-1 block text-xs text-red-700" x-show="errores.nombre" x-text="errores.nombre"></small>
+          </div>
+
+          <div>
+            <label for="arbRut" class="mb-1 block text-sm font-medium text-slate-700">
+              RUT <span class="text-xs font-normal text-slate-500">(con guion, ej: 12.345.678-5)</span>
+            </label>
+            <input type="text" id="arbRut" placeholder="Ej: 12.345.678-5" x-model="form.rut"
+              class="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2"
+              :class="errores.rut ? 'border-red-600 focus:ring-red-600' : 'border-slate-300 focus:ring-blue-600'">
+            <small class="mt-1 block text-xs text-red-700" x-show="errores.rut" x-text="errores.rut"></small>
+          </div>
+
+          <div>
+            <label for="arbEmail" class="mb-1 block text-sm font-medium text-slate-700">Email</label>
+            <input type="email" id="arbEmail" placeholder="Ej: nombre@arbitros.cl" x-model="form.email"
+              class="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2"
+              :class="errores.email ? 'border-red-600 focus:ring-red-600' : 'border-slate-300 focus:ring-blue-600'">
+            <small class="mt-1 block text-xs text-red-700" x-show="errores.email" x-text="errores.email"></small>
+          </div>
+
+          <div>
+            <label for="arbTelefono" class="mb-1 block text-sm font-medium text-slate-700">Teléfono</label>
+            <input type="tel" id="arbTelefono" placeholder="Ej: +56 9 1234 5678" x-model="form.telefono"
+              class="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2"
+              :class="errores.telefono ? 'border-red-600 focus:ring-red-600' : 'border-slate-300 focus:ring-blue-600'">
+            <small class="mt-1 block text-xs text-red-700" x-show="errores.telefono" x-text="errores.telefono"></small>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="arbCategoria" class="mb-1 block text-sm font-medium text-slate-700">Categoría</label>
+            <select id="arbCategoria" x-model="form.categoria"
+              class="w-full rounded-md border bg-white px-3 py-2 focus:outline-none focus:ring-2"
+              :class="errores.categoria ? 'border-red-600 focus:ring-red-600' : 'border-slate-300 focus:ring-blue-600'">
+              <option value="">Selecciona una categoría</option>
+              <template x-for="cat in categorias" :key="cat">
+                <option :value="cat" x-text="cat"></option>
+              </template>
+            </select>
+            <small class="mt-1 block text-xs text-red-700" x-show="errores.categoria" x-text="errores.categoria"></small>
+          </div>
+
+          <div class="flex gap-3 sm:col-span-2">
+            <button type="submit" class="rounded-md bg-blue-700 px-4 py-2 font-medium text-white hover:bg-blue-800">Guardar Árbitro</button>
+            <button type="button" @click="reiniciarFormulario()" class="rounded-md bg-slate-200 px-4 py-2 font-medium text-slate-800 hover:bg-slate-300">Limpiar</button>
+          </div>
+        </form>
+      </section>
+
+      <section aria-labelledby="titulo-lista" class="rounded-lg bg-white p-4 shadow-sm">
+        <h2 id="titulo-lista" class="mb-3 text-lg font-semibold">Árbitros Registrados</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 text-slate-600">
+              <tr>
+                <th class="px-3 py-2 font-semibold">ID</th>
+                <th class="px-3 py-2 font-semibold">Nombre</th>
+                <th class="px-3 py-2 font-semibold">RUT</th>
+                <th class="px-3 py-2 font-semibold">Email</th>
+                <th class="px-3 py-2 font-semibold">Teléfono</th>
+                <th class="px-3 py-2 font-semibold">Categoría</th>
+                <th class="px-3 py-2 font-semibold">Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <template x-for="arb in arbitros" :key="arb.id">
+                <tr>
+                  <td class="px-3 py-2" x-text="arb.id"></td>
+                  <td class="px-3 py-2" x-text="arb.nombre"></td>
+                  <td class="px-3 py-2" x-text="arb.rut"></td>
+                  <td class="px-3 py-2" x-text="arb.email"></td>
+                  <td class="px-3 py-2" x-text="arb.telefono"></td>
+                  <td class="px-3 py-2" x-text="arb.categoria"></td>
+                  <td class="px-3 py-2">
+                    <button type="button" @click="solicitarEliminacion(arb)" class="font-medium text-red-600 hover:text-red-800">Eliminar</button>
+                  </td>
+                </tr>
+              </template>
+              <tr x-show="arbitros.length === 0">
+                <td colspan="7" class="px-3 py-4 text-center text-slate-500">No hay árbitros registrados.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
   </main>
 
   <footer x-data class="bg-slate-800 py-4 text-center text-sm text-slate-300">
     <p>Sistema de Acta Digital Arbitral · <span x-text="new Date().getFullYear()"></span></p>
   </footer>
+
+  <!-- aqui salen los avisos de exito o error -->
+  <div class="toast-contenedor" x-data="notificaciones" @notificar.window="agregar($event.detail)" aria-live="polite">
+    <template x-for="toast in lista" :key="toast.id">
+      <div class="toast" :class="'toast--' + toast.tipo" x-show="toast.visible"
+        x-transition:leave="toast-salida" x-transition:leave-end="toast-salida-fin" role="status">
+        <span x-text="toast.mensaje"></span>
+        <button type="button" class="toast-cerrar" @click="cerrar(toast.id)" aria-label="Cerrar">&times;</button>
+      </div>
+    </template>
+  </div>
+
+  <!-- ventana que pregunta antes de guardar -->
+  <div x-data="modalConfirmacion" @pedir-confirmacion.window="abrir($event.detail)" @keydown.escape.window="abierto && cerrar()">
+    <div class="modal-fondo" x-show="abierto" x-cloak x-transition.opacity @click.self="cerrar()">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+        <h3 id="modal-titulo" class="modal-titulo" x-text="titulo"></h3>
+        <p class="modal-mensaje" x-text="mensaje"></p>
+        <div class="modal-acciones">
+          <button type="button" class="modal-boton modal-boton--secundario" x-ref="botonCancelar" @click="cerrar()">Cancelar</button>
+          <button type="button" class="modal-boton" @click="confirmar()" x-text="textoConfirmar"></button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>

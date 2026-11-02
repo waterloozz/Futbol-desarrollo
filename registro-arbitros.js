@@ -1,17 +1,6 @@
-/*
- * Módulo: Registro de Árbitros
- * ----------------------------
- * Registra el componente Alpine "registroArbitros". Igual que componentes.js,
- * se carga ANTES que Alpine y espera "alpine:init" para registrarse.
- *
- * Usa las funciones globales de componentes.js:
- *   - pedirConfirmacion(...)  -> abre el modal antes de guardar
- *   - notificar(...)          -> muestra el toast de éxito o error
- */
 
 document.addEventListener("alpine:init", () => {
-  // Valores iniciales del formulario. Es una función para devolver siempre
-  // un objeto NUEVO (si reutilizáramos el mismo objeto, reiniciar no serviría).
+
   const formVacio = () => ({
     nombre: "",
     rut: "",
@@ -21,19 +10,13 @@ document.addEventListener("alpine:init", () => {
   });
 
   Alpine.data("registroArbitros", () => ({
-    /* ===================== Estado ===================== */
-
-    // Enlazado a los inputs con x-model: lo que se escribe aquí cambia
-    // el objeto, y si el objeto cambia, el input se actualiza.
+   
     form: formVacio(),
-
-    // Un mensaje por campo. Cadena vacía = sin error.
     errores: formVacio(),
 
-    // Opciones del <select> de categoría
+    
     categorias: ["FIFA", "Primera División", "Primera B", "Segunda División", "Amateur"],
 
-    // "Base de datos" en memoria (se pierde al recargar la página)
     arbitros: [
       {
         id: 1,
@@ -46,7 +29,6 @@ document.addEventListener("alpine:init", () => {
     ],
     siguienteId: 2,
 
-    /* ===================== Validación ===================== */
 
     validar() {
       this.errores = formVacio();
@@ -58,7 +40,7 @@ document.addEventListener("alpine:init", () => {
 
       // Acepta 12.345.678-5 o 12345678-5 (dígito verificador 0-9 o K)
       if (!/^\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]$/.test(f.rut.trim())) {
-        this.errores.rut = "Formato de RUT inválido. Ej: 12.345.678-5";
+        this.errores.rut = "Formato de RUT inválido. Debe incluir guion (ej: 12.345.678-5).";
       } else if (this.rutExiste(f.rut)) {
         this.errores.rut = "Ya existe un árbitro con este RUT.";
       }
@@ -119,6 +101,21 @@ document.addEventListener("alpine:init", () => {
     reiniciarFormulario() {
       this.form = formVacio();
       this.errores = formVacio();
+    },
+
+    solicitarEliminacion(arbitro) {
+      pedirConfirmacion({
+        titulo: "Eliminar árbitro",
+        mensaje: `¿Confirmas la eliminación de ${arbitro.nombre}?`,
+        textoConfirmar: "Eliminar",
+        alConfirmar: () => this.eliminarArbitro(arbitro.id),
+      });
+    },
+
+    // deja todos los arbitros menos el que tiene ese id, y la tabla se actualiza sola
+    eliminarArbitro(id) {
+      this.arbitros = this.arbitros.filter((a) => a.id !== id);
+      notificar("Árbitro eliminado correctamente.");
     },
   }));
 });
