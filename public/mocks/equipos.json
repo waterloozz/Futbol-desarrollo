@@ -1,0 +1,12 @@
+[
+  { "id": 1, "nombre": "Colo-Colo", "iniciales": "CC", "ciudad": "Santiago", "estadio": "Estadio Monumental David Arellano" },
+  { "id": 2, "nombre": "U. de Chile", "iniciales": "UCH", "ciudad": "Santiago", "estadio": "Estadio Nacional" },
+  { "id": 3, "nombre": "U. Católica", "iniciales": "UC", "ciudad": "Santiago", "estadio": "Claro Arena" },
+  { "id": 4, "nombre": "Everton", "iniciales": "EVE", "ciudad": "Viña del Mar", "estadio": "Estadio Sausalito" },
+  { "id": 5, "nombre": "Palestino", "iniciales": "PAL", "ciudad": "Santiago", "estadio": "Estadio Municipal de La Cisterna" },
+  { "id": 6, "nombre": "Deportes Limache", "iniciales": "LIM", "ciudad": "Limache", "estadio": "Estadio Municipal de Limache" },
+  { "id": 7, "nombre": "Huachipato", "iniciales": "HUA", "ciudad": "Talcahuano", "estadio": "Estadio Huachipato-CAP Acero" },
+  { "id": 8, "nombre": "Coquimbo Unido", "iniciales": "COQ", "ciudad": "Coquimbo", "estadio": "Estadio Francisco Sánchez Rumoroso" },
+  { "id": 9, "nombre": "Ñublense", "iniciales": "ÑUB", "ciudad": "Chillán", "estadio": "Estadio Nelson Oyarzún" },
+  { "id": 10, "nombre": "La Serena", "iniciales": "LSE", "ciudad": "La Serena", "estadio": "Estadio La Portada" }
+]
