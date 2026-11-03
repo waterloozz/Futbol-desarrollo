@@ -1,14 +1,13 @@
-// Capa de datos: es el único archivo que lee los JSON de public/mocks/.
-// Las páginas siempre llaman a estas funciones (nunca hacen fetch directo),
-// así que al conectar un backend real solo hay que cambiar este archivo.
-//
-// Todas las funciones públicas responden con la misma forma y nunca lanzan:
-//   { ok: true, datos }   si todo salió bien
-//   { ok: false, error }  con un mensaje para mostrar al usuario
+// js/api.js (Versión unificada y lista para usar)
 
-const API_BASE = "/mocks";
+const API_BASE = "public/mocks"; // O "./public/mocks" según cómo lo cargues
+const STORAGE_KEY = "partidos_crud_data";
+const LATENCIA = 400;
+
+const esperar = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function pedir(recurso) {
+  await esperar(LATENCIA); // Simula la latencia de red requerida por la rúbrica
   const respuesta = await fetch(`${API_BASE}/${recurso}.json`);
   if (!respuesta.ok) {
     throw new Error(`No se pudo cargar "${recurso}" (HTTP ${respuesta.status})`);
@@ -19,9 +18,8 @@ async function pedir(recurso) {
 // Texto "fecha hora" para ordenar partidos cronológicamente
 const momento = (p) => `${p.fecha} ${p.hora}`;
 
-// Datos del dashboard para el usuario que inició sesión: su nombre, los totales,
-// los 3 próximos partidos y los 3 últimos resultados
-async function obtenerResumen(usuario) {
+// --- 1. Funciones para el Dashboard / Resumen (de tus compañeros) ---
+export async function obtenerResumen(usuario) {
   let partidos, usuarios;
   try {
     [partidos, usuarios] = await Promise.all([pedir("partidos"), pedir("usuarios")]);
@@ -33,17 +31,10 @@ async function obtenerResumen(usuario) {
     };
   }
 
-  // Si no se encuentra (p. ej. una sesión iniciada antes de guardar el usuario),
-  // nombre queda null y el saludo no lo muestra
   const nombre = usuarios.find((u) => u.usuario === usuario)?.nombre ?? null;
-
   const finalizados = partidos.filter((p) => p.estado === "finalizado");
   const programados = partidos.filter((p) => p.estado === "programado");
-
-  const tarjetas = finalizados.reduce(
-    (total, p) => total + p.amarillas + p.rojas,
-    0
-  );
+  const tarjetas = finalizados.reduce((total, p) => total + p.amarillas + p.rojas, 0);
 
   const proximos = [...programados]
     .sort((a, b) => momento(a).localeCompare(momento(b)))
@@ -65,4 +56,59 @@ async function obtenerResumen(usuario) {
       ultimosResultados,
     },
   };
+}
+
+// --- 2. Funciones para el CRUD de Partidos (con soporte en localStorage) ---
+
+export async function obtenerPartidos() {
+  try {
+    let guardados = localStorage.getItem(STORAGE_KEY);
+    if (guardados) {
+      return { ok: true, datos: JSON.parse(guardados) };
+    }
+    // Si no está en localStorage, cargamos el mock original mediante la función pedir
+    const partidos = await pedir("partidos");
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(partidos));
+    return { ok: true, datos: partidos };
+  } catch (error) {
+    return { ok: false, error: "No se pudieron cargar los partidos." };
+  }
+}
+
+export async function crearPartido(nuevoPartido) {
+  const resultado = await obtenerPartidos();
+  if (!resultado.ok) return resultado;
+
+  let partidos = resultado.datos;
+  nuevoPartido.id = Date.now(); // Asigna un ID único basado en el tiempo
+  partidos.unshift(nuevoPartido);
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(partidos));
+  return { ok: true, datos: nuevoPartido };
+}
+
+export async function actualizarPartido(id, datosActualizados) {
+  const resultado = await obtenerPartidos();
+  if (!resultado.ok) return resultado;
+
+  let partidos = resultado.datos;
+  const index = partidos.findIndex((p) => p.id == id);
+  if (index === -1) {
+    return { ok: false, error: "Partido no encontrado para actualizar." };
+  }
+
+  partidos[index] = { ...partidos[index], ...datosActualizados, id: Number(id) };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(partidos));
+  return { ok: true, datos: partidos[index] };
+}
+
+export async function eliminarPartido(id) {
+  const resultado = await obtenerPartidos();
+  if (!resultado.ok) return resultado;
+
+  let partidos = resultado.datos;
+  const filtrados = partidos.filter((p) => p.id != id);
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(filtrados));
+  return { ok: true, datos: { id } };
 }
