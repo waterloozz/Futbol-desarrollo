@@ -1,127 +1,106 @@
-# Futbol App
+# Sistema de Acta Digital Arbitral (Futbol App)
 
-Aplicación web creada para registrar los distintos sucesos que ocurren durante un partido de fútbol.
-
----
-
-## Descripción
-
-Futbol App es una libreta digital pensada para árbitros de fútbol.
-
-La aplicación permite registrar información importante de un partido, como:
-
-- Goles
-- Tarjetas
-- Faltas
-- Jugadores
-- Observaciones del encuentro
-
-La idea es reemplazar la libreta tradicional del árbitro por una herramienta digital sencilla y fácil de utilizar.
+Aplicación web interactiva desarrollada para árbitros de fútbol, orientada a modernizar y digitalizar el registro oficial de partidos, goles, tarjetas, incidencias y generación de actas arbitrales.
 
 ---
 
-## Requisitos
+## Integrantes del Equipo
 
-- Node.js v18 o superior
-- npm
-
----
-
-## Instalación y ejecución
-
-1. Clonar el repositorio:
-
-```bash
-git clone https://github.com/waterloozz/Futbol-desarrollo.git
-cd Futbol-desarrollo
-```
-
-2. Instalar las dependencias:
-
-```bash
-npm install
-```
-
-3. Levantar el servidor local:
-
-```bash
-npx http-server -p 8080
-```
-
-4. Abrir en el navegador:
-
-```
-http://localhost:8080
-```
-
-También se puede abrir `index.html` directamente en el navegador, pero se recomienda usar el servidor local para evitar restricciones de carga de archivos.
+- **Carlos Benavides**
+- **Roberto Sánchez**
+- **Josefa Solís**
 
 ---
 
-## Estructura del proyecto
+## Tecnologías y Librerías Utilizadas
 
-```
-Futbol-desarrollo/
-├── index.html          Página de login
-├── dashboard.html      Panel principal
-├── partido.html        Registro del partido
-├── style.css           Estilos generales
-├── login.js            Validación de credenciales
-├── partido.js          Lógica del registro del partido
-├── public/             Recursos estáticos (iconos)
-└── package.json
-```
+- **HTML5 Semántico:** Estructura accesible (`header`, `nav`, `main`, `section`, `footer`).
+- **Tailwind CSS:** Diseño utilitario y responsivo (*mobile-first*) incluido vía CDN (`@tailwindcss/browser@4`).
+- **Alpine.js:** Reactividad de interfaz, estados y componentes interactivos incluido vía CDN (`alpinejs@3.14.9`).
+- **JavaScript Moderno (ES6+):** Capa de servicios asíncrona, control de rutas y gestión de eventos del DOM.
+- **Node.js:** Entorno de soporte para servidor local de desarrollo (`http-server`).
 
 ---
 
-## Funcionalidades
+## Requisitos de Ejecución
 
-- Inicio de sesión con validación de credenciales
-- Panel principal con acceso a las secciones
-- Registrar datos del partido
-- Registrar jugadores
-- Registrar goles
-- Registrar tarjetas
-- Registrar faltas
-- Agregar observaciones
-- Visualizar el acta del partido
+- Navegador web moderno (Google Chrome, Firefox, Microsoft Edge o Safari).
+- Node.js (v18 o superior) y npm, o alternativamente la extensión **Live Server** de VS Code.
 
 ---
 
-## Tecnologías utilizadas
+## Instalación y Ejecución Paso a Paso
 
-- HTML
-- CSS
-- JavaScript
-- Node.js (http-server)
+1. **Clonar el repositorio:**
+   ```bash
+   git clone https://github.com/waterloozz/Futbol-desarrollo.git
+   cd Futbol-desarrollo
+   ```
 
----
+2. **Instalar dependencias:**
+   ```bash
+   npm install
+   ```
 
-## Usuarios de prueba
+3. **Iniciar el servidor local:**
+   ```bash
+   npx http-server . -p 8080
+   ```
+   *(También se puede utilizar la extensión **Live Server** abriendo la carpeta en VS Code y haciendo clic en "Go Live" en la esquina inferior).*
 
-| Usuario  | Contraseña   |
-|----------|--------------|
-| admin    | admin123     |
-| arbitro  | arbitro123   |
+4. **Abrir en el navegador:**
+   ```
+   http://localhost:8080
+   ```
 
----
-
-## Integrantes
-
-- Carlos Benavides
-- Roberto Sanchez
-- Josefa Solis
-
----
-
-## Objetivo del proyecto
-
-El objetivo de este proyecto es crear una aplicación web que permita a los árbitros registrar de forma sencilla los acontecimientos que ocurren durante un partido de fútbol.
-
-También busca poner en práctica los conocimientos aprendidos de HTML, CSS y JavaScript.
+> [!NOTE]
+> Debido a que las peticiones `fetch()` a los archivos JSON de datos de prueba (`mocks`) están sujetas a políticas de seguridad del navegador (CORS), no se recomienda abrir los archivos directamente con doble clic (`file:///`), sino mediante el servidor local indicado.
 
 ---
 
-## Estado del proyecto
+## Usuarios y Credenciales de Prueba
 
-En desarrollo.
+| Usuario | Contraseña | Rol asignado | Acceso |
+| :--- | :--- | :--- | :--- |
+| **admin** | `admin123` | Administrador | Acceso total a todas las vistas (incluyendo gestión de usuarios). |
+| **arbitro** | `arbitro123` | Árbitro | Acceso a Dashboard, Partidos, Actas y Perfil. |
+
+---
+
+## Vistas Disponibles y Navegación
+
+Todas las vistas internas cuentan con barra de navegación unificada adaptable a dispositivos móviles:
+
+1. **Acceso / Login (`index.html`):** Inicio de sesión con autenticación y validación por rol.
+2. **Dashboard (`dashboard.html`):** Resumen estadístico del torneo (partidos totales, programados, finalizados y tarjetas), próximos encuentros y últimos resultados con skeleton de carga.
+3. **Gestión de Partidos y Actas (`partidos.html`):** 
+   - Listado reactivo de encuentros.
+   - Búsqueda en tiempo real por equipo o estadio.
+   - Filtro por estado (Todos, Programados, Finalizados).
+   - Ordenamiento por fecha y nombre.
+   - CRUD completo: creación y edición de partidos mediante modal con validación, y eliminación con confirmación.
+   - **Acta Oficial:** Visualización y registro de incidencias en vivo (goles y tarjetas amarillas/rojas con minuto y jugador).
+4. **Registro de Árbitros (`usuarios.html`):** Vista exclusiva para administradores con validación estricta de RUT chileno, email, teléfono, categoría y confirmación modal.
+5. **Perfil de Usuario (`perfil.html`):** Configuración de datos del usuario autenticado y persistencia en `localStorage`.
+
+---
+
+## Tabla de Endpoints Simulados (Capa de Servicios `js/api.js`)
+
+Todos los datos se obtienen mediante funciones asíncronas con simulación de latencia de red (300 a 800 ms) y persistencia en `localStorage`:
+
+| Función en `js/api.js` | Método REST | Ruta Equivalente | Descripción |
+| :--- | :---: | :--- | :--- |
+| `obtenerResumen(usuario)` | `GET` | `/api/dashboard/resumen` | Obtiene los totales del torneo, próximos partidos y últimos resultados para el usuario actual. |
+| `obtenerPartidos()` | `GET` | `/api/partidos` | Obtiene la lista completa de partidos con soporte de persistencia local. |
+| `crearPartido(nuevoPartido)` | `POST` | `/api/partidos` | Registra un nuevo partido en el sistema con ID único (código 201). |
+| `actualizarPartido(id, datos)` | `PUT` | `/api/partidos/:id` | Modifica la información, marcador o acontecimientos de un partido (código 200). |
+| `eliminarPartido(id)` | `DELETE` | `/api/partidos/:id` | Elimina un partido por su ID (código 200). |
+
+---
+
+## Registro de Uso de Inteligencia Artificial
+
+Siguiendo las directrices de la Sección 10 de la rúbrica de evaluación, el detalle de todas las interacciones de IA y los bloques de código asistidos están debidamente documentados:
+
+- **Índice de consultas:** Consulta el archivo [`ia/README.md`](ia/README.md) en la raíz del proyecto.
