@@ -2,22 +2,39 @@
 
 document.addEventListener("alpine:init", () => {
   Alpine.data("dashboard", () => ({
-    rol: localStorage.getItem("rol"),
-    cargando: true,
-    error: "",
+    estado: "cargando", // "cargando" | "listo" | "error"
     resumen: null,
+    mensajeError: "",
 
-    async init() {
+    // Los indicadores como lista, para que el HTML los dibuje con un x-for
+    get indicadores() {
+      const r = this.resumen;
+      return [
+        { id: "total", etiqueta: "Partidos totales", valor: r.totalPartidos },
+        { id: "programados", etiqueta: "Programados", valor: r.programados },
+        { id: "finalizados", etiqueta: "Finalizados", valor: r.finalizados },
+        { id: "tarjetas", etiqueta: "Tarjetas", valor: r.tarjetas },
+      ];
+    },
+
+    init() {
       // Sin acceso la página ya va saliendo (ver js/sesion.js): no se piden datos
       if (redirigiendo) return;
+      this.cargar();
+    },
 
-      try {
-        this.resumen = await obtenerResumen();
-      } catch (error) {
-        this.error = "No se pudo cargar el resumen.";
-        console.error(error);
-      } finally {
-        this.cargando = false;
+    // También la usa el botón "Reintentar"
+    async cargar() {
+      this.estado = "cargando";
+      this.mensajeError = "";
+      const respuesta = await obtenerResumen(localStorage.getItem("usuario"));
+
+      if (respuesta.ok) {
+        this.resumen = respuesta.datos;
+        this.estado = "listo";
+      } else {
+        this.mensajeError = respuesta.error;
+        this.estado = "error";
       }
     },
 
