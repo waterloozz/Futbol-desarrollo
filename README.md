@@ -97,6 +97,22 @@ Futbol-desarrollo/
 
 ---
 
+## API simulada (endpoints)
+
+No hay un backend real: `js/api.js` simula una API REST. Cada función equivale a una ruta y lee los archivos JSON de `public/mocks/`, con un retardo de **400 ms** para imitar la latencia de red. Los cambios en partidos (crear, editar, eliminar) se guardan en `localStorage`.
+
+| Método | Ruta REST simulada | Función en `js/api.js` | Fuente de datos | Respuesta |
+|--------|--------------------|------------------------|-----------------|-----------|
+| GET    | `/api/resumen`        | `obtenerResumen(usuario)`             | `partidos.json` + `usuarios.json` | Totales, próximos partidos y últimos resultados |
+| GET    | `/api/partidos`       | `obtenerPartidos()`                   | `partidos.json` / `localStorage`  | Lista de partidos |
+| POST   | `/api/partidos`       | `crearPartido(nuevoPartido)`          | `localStorage`                    | Partido creado con su `id` |
+| PUT    | `/api/partidos/:id`   | `actualizarPartido(id, datos)`        | `localStorage`                    | Partido actualizado |
+| DELETE | `/api/partidos/:id`   | `eliminarPartido(id)`                 | `localStorage`                    | `id` del partido eliminado |
+
+Todas devuelven un objeto `{ ok: true, datos }` si salen bien, o `{ ok: false, error }` con un mensaje para mostrar en pantalla.
+
+---
+
 ## Usuarios de prueba
 
 | Usuario  | Contraseña   |
