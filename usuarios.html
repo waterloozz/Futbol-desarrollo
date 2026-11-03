@@ -36,7 +36,7 @@
           <div>
             <label for="arbNombre" class="mb-1 block text-sm font-medium text-slate-700">Nombre completo</label>
             <input type="text" id="arbNombre" placeholder="Ej: Roberto Tobar" x-model="form.nombre"
-              class="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2"
+              class="w-full rounded-md border px-3 py-2 placeholder:text-slate-500 focus:outline-none focus:ring-2"
               :class="errores.nombre ? 'border-red-600 focus:ring-red-600' : 'border-slate-300 focus:ring-blue-600'">
             <small class="mt-1 block text-xs text-red-700" x-show="errores.nombre" x-text="errores.nombre"></small>
           </div>
@@ -46,7 +46,7 @@
               RUT <span class="text-xs font-normal text-slate-500">(con guion, ej: 12.345.678-5)</span>
             </label>
             <input type="text" id="arbRut" placeholder="Ej: 12.345.678-5" x-model="form.rut"
-              class="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2"
+              class="w-full rounded-md border px-3 py-2 placeholder:text-slate-500 focus:outline-none focus:ring-2"
               :class="errores.rut ? 'border-red-600 focus:ring-red-600' : 'border-slate-300 focus:ring-blue-600'">
             <small class="mt-1 block text-xs text-red-700" x-show="errores.rut" x-text="errores.rut"></small>
           </div>
@@ -54,7 +54,7 @@
           <div>
             <label for="arbEmail" class="mb-1 block text-sm font-medium text-slate-700">Email</label>
             <input type="email" id="arbEmail" placeholder="Ej: nombre@arbitros.cl" x-model="form.email"
-              class="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2"
+              class="w-full rounded-md border px-3 py-2 placeholder:text-slate-500 focus:outline-none focus:ring-2"
               :class="errores.email ? 'border-red-600 focus:ring-red-600' : 'border-slate-300 focus:ring-blue-600'">
             <small class="mt-1 block text-xs text-red-700" x-show="errores.email" x-text="errores.email"></small>
           </div>
@@ -62,7 +62,7 @@
           <div>
             <label for="arbTelefono" class="mb-1 block text-sm font-medium text-slate-700">Teléfono</label>
             <input type="tel" id="arbTelefono" placeholder="Ej: +56 9 1234 5678" x-model="form.telefono"
-              class="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2"
+              class="w-full rounded-md border px-3 py-2 placeholder:text-slate-500 focus:outline-none focus:ring-2"
               :class="errores.telefono ? 'border-red-600 focus:ring-red-600' : 'border-slate-300 focus:ring-blue-600'">
             <small class="mt-1 block text-xs text-red-700" x-show="errores.telefono" x-text="errores.telefono"></small>
           </div>
@@ -81,8 +81,8 @@
           </div>
 
           <div class="flex gap-3 sm:col-span-2">
-            <button type="submit" class="rounded-md bg-blue-700 px-4 py-2 font-medium text-white hover:bg-blue-800">Guardar Árbitro</button>
-            <button type="button" @click="reiniciarFormulario()" class="rounded-md bg-slate-200 px-4 py-2 font-medium text-slate-800 hover:bg-slate-300">Limpiar</button>
+            <button type="submit" class="rounded-md bg-blue-700 px-4 py-2 font-medium text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">Guardar Árbitro</button>
+            <button type="button" @click="reiniciarFormulario()" class="rounded-md bg-slate-200 px-4 py-2 font-medium text-slate-800 hover:bg-slate-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">Limpiar</button>
           </div>
         </form>
       </section>
@@ -112,7 +112,7 @@
                   <td class="px-3 py-2" x-text="arb.telefono"></td>
                   <td class="px-3 py-2" x-text="arb.categoria"></td>
                   <td class="px-3 py-2">
-                    <button type="button" @click="solicitarEliminacion(arb)" class="font-medium text-red-600 hover:text-red-800">Eliminar</button>
+                    <button type="button" @click="solicitarEliminacion(arb)" class="rounded font-medium text-red-600 hover:text-red-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700">Eliminar</button>
                   </td>
                 </tr>
               </template>
