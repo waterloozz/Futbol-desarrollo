@@ -1,5 +1,8 @@
 // [IA] inicio · ia/2026-11-03_josefasolis1-hue_crud-partidos.md
-// Capa de datos y servicios: centraliza el acceso a mocks y persistencia en localStorage.
+// js/api.js (Versión unificada y lista para usar)
+// Se carga como script clásico (<script src="js/api.js" defer>), igual que menu.js
+// y sesion.js: sus funciones quedan globales. Por eso no usa "export".
+// Centraliza el acceso a mocks y persistencia en localStorage.
 // Imita una API REST con respuestas asíncronas y latencia simulada.
 
 const STORAGE_KEY = "partidos_crud_data";

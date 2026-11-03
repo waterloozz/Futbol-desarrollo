@@ -42,6 +42,18 @@ nav a:hover {
   color: white;
 }
 
+/* FOCO VISIBLE: marca el elemento activo al navegar con teclado */
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid #111;
+  outline-offset: 2px;
+}
+
+/* Sobre el azul del header el contorno oscuro no se ve */
+header a:focus-visible {
+  outline-color: white;
+}
+
 /* CONTENIDO PRINCIPAL */
 main {
   width: 80%;
@@ -93,21 +105,21 @@ textarea {
 input:focus,
 textarea:focus,
 select:focus {
-  outline: 2px solid green;
+  outline: 2px solid #111;
 }
 
 /* BOTONES */
 button {
   margin-top: 20px;
   padding: 10px 15px;
-  background-color: rgb(93, 142, 232);
+  background-color: #1d4ed8;
   color: white;
   border: none;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: rgb(206, 61, 177);
+  background-color: #a21caf;
 }
 
 /* TABLA */
@@ -127,6 +139,7 @@ td {
 
 th {
   background-color: #351be1;
+  color: white;
 }
 
 /* FICHA DEL ENCUENTRO */

@@ -65,6 +65,8 @@ Aplicación web interactiva desarrollada para árbitros de fútbol, orientada a 
 | **admin** | `admin123` | Administrador | Acceso total a todas las vistas (incluyendo gestión de usuarios). |
 | **arbitro** | `arbitro123` | Árbitro | Acceso a Dashboard, Partidos, Actas y Perfil. |
 
+*(En `public/mocks/usuarios.json` se cuenta con 10 usuarios realistas registrados según la rúbrica).*
+
 ---
 
 ## Vistas Disponibles y Navegación
@@ -85,17 +87,19 @@ Todas las vistas internas cuentan con barra de navegación unificada adaptable a
 
 ---
 
-## Tabla de Endpoints Simulados (Capa de Servicios `js/api.js`)
+## API Simulada y Tabla de Endpoints (`js/api.js`)
 
-Todos los datos se obtienen mediante funciones asíncronas con simulación de latencia de red (300 a 800 ms) y persistencia en `localStorage`:
+No hay un backend real: `js/api.js` simula una API REST con respuestas asíncronas, retardo de red (400 a 450 ms) y persistencia en `localStorage`:
 
-| Función en `js/api.js` | Método REST | Ruta Equivalente | Descripción |
-| :--- | :---: | :--- | :--- |
-| `obtenerResumen(usuario)` | `GET` | `/api/dashboard/resumen` | Obtiene los totales del torneo, próximos partidos y últimos resultados para el usuario actual. |
-| `obtenerPartidos()` | `GET` | `/api/partidos` | Obtiene la lista completa de partidos con soporte de persistencia local. |
-| `crearPartido(nuevoPartido)` | `POST` | `/api/partidos` | Registra un nuevo partido en el sistema con ID único (código 201). |
-| `actualizarPartido(id, datos)` | `PUT` | `/api/partidos/:id` | Modifica la información, marcador o acontecimientos de un partido (código 200). |
-| `eliminarPartido(id)` | `DELETE` | `/api/partidos/:id` | Elimina un partido por su ID (código 200). |
+| Método | Ruta REST simulada | Función en `js/api.js` | Fuente de datos | Descripción |
+| :---: | :--- | :--- | :--- | :--- |
+| **GET** | `/api/dashboard/resumen` | `obtenerResumen(usuario)` | `partidos.json` + `usuarios.json` | Obtiene totales del torneo, próximos partidos y últimos resultados. |
+| **GET** | `/api/partidos` | `obtenerPartidos()` | `partidos.json` / `localStorage` | Lista completa de partidos con búsqueda y filtros. |
+| **POST** | `/api/partidos` | `crearPartido(nuevoPartido)` | `localStorage` | Registra un nuevo partido con ID único (código 201). |
+| **PUT** | `/api/partidos/:id` | `actualizarPartido(id, datos)` | `localStorage` | Actualiza datos, marcador o incidencias del acta (código 200). |
+| **DELETE** | `/api/partidos/:id` | `eliminarPartido(id)` | `localStorage` | Elimina un partido por su ID (código 200). |
+
+Todas las funciones responden de manera uniforme con `{ ok: true, status, datos, data }` o `{ ok: false, status, error }`.
 
 ---
 

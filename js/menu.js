@@ -12,14 +12,15 @@ const LINKS_MENU = [
 
 const HTML_MENU = `
   <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 px-4 py-3">
-    <a href="dashboard.html" class="py-2 text-lg font-bold">Acta Digital Arbitral</a>
+    <a href="dashboard.html" class="rounded py-2 text-lg font-bold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Acta Digital Arbitral</a>
 
     <button
       type="button"
-      class="rounded p-2 hover:bg-blue-700 md:hidden"
+      class="rounded p-2 hover:bg-blue-700 md:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
       @click="abierto = !abierto"
       :aria-expanded="abierto.toString()"
       aria-controls="menu-principal"
+      aria-label="Abrir menú"
       :aria-label="abierto ? 'Cerrar menú' : 'Abrir menú'"
     >
       <svg x-show="!abierto" class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -45,7 +46,7 @@ const HTML_MENU = `
               :href="link.href"
               x-text="link.texto"
               :aria-current="esActual(link) ? 'page' : null"
-              class="block rounded px-3 py-2"
+              class="block rounded px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               :class="esActual(link) ? 'bg-white font-semibold text-blue-800' : 'hover:bg-blue-700'"
             ></a>
           </li>
@@ -54,7 +55,7 @@ const HTML_MENU = `
           <button
             type="button"
             @click="cerrarSesion()"
-            class="w-full rounded px-3 py-2 text-left hover:bg-blue-700 md:ml-2 md:border md:border-white/40"
+            class="w-full rounded px-3 py-2 text-left hover:bg-blue-700 md:ml-2 md:border md:border-white/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >Cerrar sesión</button>
         </li>
       </ul>

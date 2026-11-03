@@ -1,5 +1,12 @@
 [
   { "id": 1, "usuario": "admin", "password": "admin123", "nombre": "Administrador", "email": "admin@futbolapp.cl", "rol": "admin" },
   { "id": 2, "usuario": "arbitro", "password": "arbitro123", "nombre": "Árbitro de prueba", "email": "arbitro@futbolapp.cl", "rol": "arbitro" },
-  { "id": 3, "usuario": "jperez", "password": "jperez123", "nombre": "Juan Pérez", "email": "jperez@futbolapp.cl", "rol": "arbitro" }
+  { "id": 3, "usuario": "jperez", "password": "jperez123", "nombre": "Juan Pérez", "email": "jperez@futbolapp.cl", "rol": "arbitro" },
+  { "id": 4, "usuario": "rsanchez", "password": "rsanchez123", "nombre": "Roberto Sánchez", "email": "rsanchez@futbolapp.cl", "rol": "arbitro" },
+  { "id": 5, "usuario": "jsolis", "password": "jsolis123", "nombre": "Josefa Solís", "email": "jsolis@futbolapp.cl", "rol": "arbitro" },
+  { "id": 6, "usuario": "cbenavides", "password": "cbenavides123", "nombre": "Carlos Benavides", "email": "cbenavides@futbolapp.cl", "rol": "arbitro" },
+  { "id": 7, "usuario": "mgonzalez", "password": "mgonzalez123", "nombre": "María González", "email": "mgonzalez@futbolapp.cl", "rol": "arbitro" },
+  { "id": 8, "usuario": "pmunoz", "password": "pmunoz123", "nombre": "Pedro Muñoz", "email": "pmunoz@futbolapp.cl", "rol": "arbitro" },
+  { "id": 9, "usuario": "crojas", "password": "crojas123", "nombre": "Camila Rojas", "email": "crojas@futbolapp.cl", "rol": "arbitro" },
+  { "id": 10, "usuario": "dcontreras", "password": "dcontreras123", "nombre": "Diego Contreras", "email": "dcontreras@futbolapp.cl", "rol": "arbitro" }
 ]
