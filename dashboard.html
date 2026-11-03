@@ -33,7 +33,7 @@
     <!-- Cargando: skeleton con la misma forma que el contenido, para que nada salte al llegar los datos -->
     <div x-show="estado === 'cargando'" class="space-y-6" role="status" aria-live="polite">
       <span class="sr-only">Cargando el resumen…</span>
-      <div class="grid grid-cols-2 gap-4 sm:grid-cols-4" aria-hidden="true">
+      <div class="grid grid-cols-2 gap-4 lg:grid-cols-4" aria-hidden="true">
         <template x-for="n in 4" :key="n">
           <div class="animate-pulse rounded-lg bg-white p-4 shadow-sm">
             <div class="h-4 w-2/3 rounded bg-slate-200"></div>
@@ -41,7 +41,7 @@
           </div>
         </template>
       </div>
-      <div class="grid gap-6 md:grid-cols-2" aria-hidden="true">
+      <div class="grid gap-6 lg:grid-cols-2" aria-hidden="true">
         <template x-for="panel in 2" :key="panel">
           <div class="animate-pulse rounded-lg bg-white p-4 shadow-sm">
             <div class="mb-4 h-5 w-1/2 rounded bg-slate-200"></div>
@@ -70,7 +70,7 @@
       <div class="space-y-6">
         <section aria-labelledby="titulo-totales">
           <h2 id="titulo-totales" class="sr-only">Totales</h2>
-          <dl class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <dl class="grid grid-cols-2 gap-4 lg:grid-cols-4">
             <template x-for="i in indicadores" :key="i.id">
               <div class="rounded-lg bg-white p-4 shadow-sm">
                 <dt class="text-sm text-slate-500" x-text="i.etiqueta"></dt>
@@ -80,7 +80,7 @@
           </dl>
         </section>
 
-        <div class="grid gap-6 md:grid-cols-2">
+        <div class="grid gap-6 lg:grid-cols-2">
           <section aria-labelledby="titulo-proximos" class="rounded-lg bg-white p-4 shadow-sm">
             <h2 id="titulo-proximos" class="mb-3 text-lg font-semibold">Próximos partidos</h2>
             <p x-show="resumen.proximos.length === 0" class="text-slate-500">No hay partidos programados.</p>

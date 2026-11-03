@@ -1,4 +1,6 @@
 // js/api.js (Versión unificada y lista para usar)
+// Se carga como script clásico (<script src="js/api.js" defer>), igual que menu.js
+// y sesion.js: sus funciones quedan globales. Por eso no usa "export".
 
 const API_BASE = "public/mocks"; // O "./public/mocks" según cómo lo cargues
 const STORAGE_KEY = "partidos_crud_data";
@@ -19,7 +21,7 @@ async function pedir(recurso) {
 const momento = (p) => `${p.fecha} ${p.hora}`;
 
 // --- 1. Funciones para el Dashboard / Resumen (de tus compañeros) ---
-export async function obtenerResumen(usuario) {
+async function obtenerResumen(usuario) {
   let partidos, usuarios;
   try {
     [partidos, usuarios] = await Promise.all([pedir("partidos"), pedir("usuarios")]);
@@ -60,7 +62,7 @@ export async function obtenerResumen(usuario) {
 
 // --- 2. Funciones para el CRUD de Partidos (con soporte en localStorage) ---
 
-export async function obtenerPartidos() {
+async function obtenerPartidos() {
   try {
     let guardados = localStorage.getItem(STORAGE_KEY);
     if (guardados) {
@@ -75,7 +77,7 @@ export async function obtenerPartidos() {
   }
 }
 
-export async function crearPartido(nuevoPartido) {
+async function crearPartido(nuevoPartido) {
   const resultado = await obtenerPartidos();
   if (!resultado.ok) return resultado;
 
@@ -87,7 +89,7 @@ export async function crearPartido(nuevoPartido) {
   return { ok: true, datos: nuevoPartido };
 }
 
-export async function actualizarPartido(id, datosActualizados) {
+async function actualizarPartido(id, datosActualizados) {
   const resultado = await obtenerPartidos();
   if (!resultado.ok) return resultado;
 
@@ -102,7 +104,7 @@ export async function actualizarPartido(id, datosActualizados) {
   return { ok: true, datos: partidos[index] };
 }
 
-export async function eliminarPartido(id) {
+async function eliminarPartido(id) {
   const resultado = await obtenerPartidos();
   if (!resultado.ok) return resultado;
 
