@@ -1,77 +1,225 @@
+/* ==========================================
+   ESTILOS GENERALES Y LAYOUT
+========================================== */
 * {
   box-sizing: border-box;
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: #eeeeee;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #f8fafc;
   margin: 0;
-  color: #222;
+  color: #1e293b;
 }
 
+/* Encabezado corporativo azul y blanco */
 header {
-  background-color: #1e09df;
+  background-color: #1d4ed8;
   color: white;
-  padding: 15px 25px;
-  border-bottom: 4px solid rgb(223, 66, 215);
+  padding: 20px 32px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
   margin: 0;
   font-size: 22px;
-}
-
-button:focus-visible {
-  outline: 3px solid #111;
-  outline-offset: 2px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
 }
 
 main {
-  width: 80%;
-  max-width: 800px;
-  margin: 20px auto;
+  width: 90%;
+  max-width: 480px;
+  margin: 60px auto;
 }
 
-section {
-  background-color: rgb(247, 127, 203);
-  padding: 20px;
-  margin-bottom: 20px;
-  border: 1px solid #cccccc;
+/* ==========================================
+   TARJETAS Y FORMULARIOS (LOGIN)
+   ========================================== */
+section, .card {
+  background-color: #ffffff;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e2e8f0;
 }
 
 h2 {
-  color: #4d1dde;
-  border-bottom: 2px solid rgb(161, 23, 192);
-  padding-bottom: 5px;
+  color: #1e3a8a;
+  margin-top: 0;
+  margin-bottom: 24px;
+  font-size: 20px;
+  font-weight: 600;
 }
 
 label {
   display: block;
-  margin-top: 15px;
-  margin-bottom: 5px;
-  font-weight: bold;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #334155;
+  font-size: 14px;
 }
 
 input {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #1724d5;
-  font-family: Arial, sans-serif;
+  padding: 10px 14px;
+  margin-bottom: 18px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 15px;
+  background-color: #f8fafc;
+  color: #0f172a;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 input:focus {
-  outline: 2px solid #111;
+  outline: none;
+  border-color: #2563eb;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 button {
-  margin-top: 20px;
-  padding: 10px 15px;
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px;
   background-color: #1d4ed8;
   color: white;
   border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 button:hover {
-  background-color: #a21caf;
+  background-color: #1e40af;
+}
+
+button:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+
+/* ==========================================
+   TOASTS Y MODALES (Coherentes con el resto)
+========================================== */
+.toast-contenedor {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(360px, calc(100vw - 32px));
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border-left: 5px solid #1d4ed8;
+  background-color: #ffffff;
+  color: #1e293b;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.15);
+  font-size: 14px;
+  animation: toast-entrada 0.25s ease-out;
+}
+
+.toast--exito {
+  border-left-color: #15803d;
+}
+
+.toast--error {
+  border-left-color: #b91c1c;
+}
+
+.toast-cerrar {
+  padding: 0 4px;
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.toast-cerrar:hover {
+  color: #0f172a;
+}
+
+@keyframes toast-entrada {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.modal-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background-color: rgba(15, 23, 42, 0.6);
+}
+
+.modal {
+  width: 100%;
+  max-width: 420px;
+  padding: 22px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #1e293b;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+}
+
+.modal-titulo {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.modal-mensaje {
+  margin: 0 0 18px;
+  font-size: 14px;
+  color: #475569;
+}
+
+.modal-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-boton {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #1d4ed8;
+  color: #ffffff;
+  font-weight: 500;
+  cursor: pointer;
+  width: auto;
+}
+
+.modal-boton:hover {
+  background-color: #1e40af;
+}
+
+.modal-boton--secundario {
+  background-color: #e2e8f0;
+  color: #0f172a;
+}
+
+.modal-boton--secundario:hover {
+  background-color: #cbd5e1;
 }
