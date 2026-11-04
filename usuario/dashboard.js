@@ -1,4 +1,4 @@
-// Componente Alpine del dashboard. Los datos vienen de obtenerResumen() (js/api.js).
+// Componente Alpine del dashboard. Los datos vienen de obtenerResumen() (comun/api.js).
 
 document.addEventListener("alpine:init", () => {
   Alpine.data("dashboard", () => ({
@@ -18,7 +18,7 @@ document.addEventListener("alpine:init", () => {
     },
 
     init() {
-      // Sin acceso la página ya va saliendo (ver js/sesion.js): no se piden datos
+      // Sin acceso la página ya va saliendo (ver comun/sesion.js): no se piden datos
       if (redirigiendo) return;
       this.cargar();
     },

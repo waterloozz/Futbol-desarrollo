@@ -4,15 +4,15 @@
 // Para agregar una sección, súmala a LINKS_MENU.
 
 const LINKS_MENU = [
-  { texto: "Inicio", href: "dashboard.html" },
-  { texto: "Partidos", href: "partidos.html" },
-  { texto: "Perfil", href: "perfil.html" },
-  { texto: "Usuarios", href: "usuarios.html", soloAdmin: true },
+  { texto: "Inicio", href: "../usuario/dashboard.html" },
+  { texto: "Partidos", href: "../usuario/partidos.html" },
+  { texto: "Perfil", href: "../usuario/perfil.html" },
+  { texto: "Usuarios", href: "../admin/usuarios.html", soloAdmin: true },
 ];
 
 const HTML_MENU = `
   <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 px-4 py-3">
-    <a href="dashboard.html" class="rounded py-2 text-lg font-bold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Acta Digital Arbitral</a>
+    <a href="../usuario/dashboard.html" class="rounded py-2 text-lg font-bold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Acta Digital Arbitral</a>
 
     <button
       type="button"
@@ -83,12 +83,12 @@ document.addEventListener("alpine:init", () => {
 
     // Compara el archivo de la URL actual ("/dashboard.html" -> "dashboard.html") con el link
     esActual(link) {
-      return window.location.pathname.split("/").pop() === link.href;
+      return window.location.pathname.split("/").pop() === link.href.split("/").pop();
     },
 
     cerrarSesion() {
       localStorage.clear();
-      window.location.replace("index.html");
+      window.location.replace("../index.html");
     },
   }));
 });

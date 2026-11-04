@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inicio · Acta Digital Arbitral</title>
+  <link rel="icon" href="data:,">
 
-  <!-- Primer script y sin defer: protege la ruta antes de dibujar (ver js/sesion.js) -->
-  <script src="js/sesion.js"></script>
+  <!-- Primer script y sin defer: protege la ruta antes de dibujar (ver comun/sesion.js) -->
+  <script src="../comun/sesion.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.1.13"></script>
   <style>
@@ -14,9 +15,9 @@
   </style>
 
   <!-- Los defer se ejecutan en orden: nuestros scripts van antes que Alpine -->
-  <script src="js/api.js" defer></script>
-  <script src="js/menu.js" defer></script>
-  <script src="js/dashboard.js" defer></script>
+  <script src="../comun/api.js" defer></script>
+  <script src="../comun/menu.js" defer></script>
+  <script src="dashboard.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
 </head>
 <body class="flex min-h-screen flex-col bg-slate-100 text-slate-800">

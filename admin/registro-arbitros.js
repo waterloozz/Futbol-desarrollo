@@ -1,6 +1,4 @@
-
 document.addEventListener("alpine:init", () => {
-
   const formVacio = () => ({
     nombre: "",
     rut: "",
@@ -10,11 +8,9 @@ document.addEventListener("alpine:init", () => {
   });
 
   Alpine.data("registroArbitros", () => ({
-   
     form: formVacio(),
     errores: formVacio(),
 
-    
     categorias: ["FIFA", "Primera División", "Primera B", "Segunda División", "Amateur"],
 
     arbitros: [
@@ -28,7 +24,6 @@ document.addEventListener("alpine:init", () => {
       },
     ],
     siguienteId: 2,
-
 
     validar() {
       this.errores = formVacio();

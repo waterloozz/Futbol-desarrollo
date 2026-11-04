@@ -1,110 +1,146 @@
-# Sistema de Acta Digital Arbitral (Futbol App)
+# Sistema de Acta Digital Arbitral
 
-Aplicación web interactiva desarrollada para árbitros de fútbol, orientada a modernizar y digitalizar el registro oficial de partidos, goles, tarjetas, incidencias y generación de actas arbitrales.
+Aplicación web para que los **árbitros de fútbol registren lo que ocurre en un partido** y para que el administrador gestione a los árbitros. Reemplaza la libreta tradicional del árbitro por una herramienta digital sencilla.
 
----
+Es la Entrega 2 de Desarrollo Web y Móvil (CIT2008, UDP): frontend con datos simulados (mocks) detrás de una capa de servicios que imita una API REST y que en la Entrega 3 se reemplazará por el backend real.
 
-## Integrantes del Equipo
+**Integrantes:**
 
-- **Carlos Benavides**
-- **Roberto Sánchez**
-- **Josefa Solís**
-
----
-
-## Tecnologías y Librerías Utilizadas
-
-- **HTML5 Semántico:** Estructura accesible (`header`, `nav`, `main`, `section`, `footer`).
-- **Tailwind CSS:** Diseño utilitario y responsivo (*mobile-first*) incluido vía CDN (`@tailwindcss/browser@4`).
-- **Alpine.js:** Reactividad de interfaz, estados y componentes interactivos incluido vía CDN (`alpinejs@3.14.9`).
-- **JavaScript Moderno (ES6+):** Capa de servicios asíncrona, control de rutas y gestión de eventos del DOM.
-- **Node.js:** Entorno de soporte para servidor local de desarrollo (`http-server`).
+- Carlos Benavides (@CBenavidesP)
+- Roberto Sánchez
+- Josefa Solís (@josefasolis1-hue)
 
 ---
 
-## Requisitos de Ejecución
+## Tecnologías
 
-- Navegador web moderno (Google Chrome, Firefox, Microsoft Edge o Safari).
-- Node.js (v18 o superior) y npm, o alternativamente la extensión **Live Server** de VS Code.
+| Tecnología | Uso | Cómo se incluye |
+|---|---|---|
+| HTML, CSS y JavaScript | Base del proyecto | Archivos del repositorio |
+| [Alpine.js 3.14.9](https://alpinejs.dev) | Interactividad: `x-data`, `x-show`, `x-for`, `x-model`, `@click`, `Alpine.data` | CDN (jsDelivr) |
+| [Tailwind CSS 4](https://tailwindcss.com) | Estilos de las vistas internas con clases utilitarias y prefijos responsivos | CDN (`@tailwindcss/browser@4.1.13`) |
+| [Vite 8](https://vite.dev) | Servidor local de desarrollo | npm (`devDependencies`) |
 
----
+La pantalla de login usa su propio archivo de estilos (`login/login.css`).
 
-## Instalación y Ejecución Paso a Paso
+## Requisitos
 
-1. **Clonar el repositorio:**
-   ```bash
-   git clone https://github.com/waterloozz/Futbol-desarrollo.git
-   cd Futbol-desarrollo
-   ```
+- **Node.js 20.19 o superior** (o 22.12+). Comprobar con `node -v`.
+- npm (viene con Node).
+- Un navegador moderno (Chrome, Firefox, Edge o Safari actualizados).
 
-2. **Instalar dependencias:**
-   ```bash
-   npm install
-   ```
+> **Importante:** la aplicación carga los mocks con `fetch`, así que **no funciona abriendo `index.html` con doble clic** (`file://`). Siempre hay que levantarla con un servidor local.
 
-3. **Iniciar el servidor local:**
-   ```bash
-   npx http-server . -p 8080
-   ```
-   *(También se puede utilizar la extensión **Live Server** abriendo la carpeta en VS Code y haciendo clic en "Go Live" en la esquina inferior).*
+## Instalación y ejecución
 
-4. **Abrir en el navegador:**
-   ```
-   http://localhost:8080
-   ```
+```bash
+git clone https://github.com/waterloozz/Futbol-desarrollo.git
+cd Futbol-desarrollo
+npm install
+npm run dev
+```
 
-> [!NOTE]
-> Debido a que las peticiones `fetch()` a los archivos JSON de datos de prueba (`mocks`) están sujetas a políticas de seguridad del navegador (CORS), no se recomienda abrir los archivos directamente con doble clic (`file:///`), sino mediante el servidor local indicado.
+Abrir la URL que muestra la terminal (por defecto **http://localhost:5173**).
 
----
+También funciona con la extensión **Live Server** de VS Code: clic derecho en `index.html` → **Open with Live Server**.
 
-## Usuarios y Credenciales de Prueba
+## Credenciales de prueba
 
-| Usuario | Contraseña | Rol asignado | Acceso |
-| :--- | :--- | :--- | :--- |
-| **admin** | `admin123` | Administrador | Acceso total a todas las vistas (incluyendo gestión de usuarios). |
-| **arbitro** | `arbitro123` | Árbitro | Acceso a Dashboard, Partidos, Actas y Perfil. |
+| Rol | Usuario | Contraseña |
+|---|---|---|
+| Administrador | `admin` | `admin123` |
+| Árbitro | `arbitro` | `arbitro123` |
 
-*(En `public/mocks/usuarios.json` se cuenta con 10 usuarios realistas registrados según la rúbrica).*
+- **Árbitro:** ve el inicio con el resumen del torneo, partidos y perfil.
+- **Administrador:** además entra a **Usuarios**, donde registra y elimina árbitros.
 
----
+## Vistas
 
-## Vistas Disponibles y Navegación
+| Vista | Archivo | Cómo llegar | Acceso |
+|---|---|---|---|
+| Iniciar sesión | `index.html` | Al abrir la aplicación | Pública |
+| Inicio (resumen del torneo) | `usuario/dashboard.html` | Al iniciar sesión, o menú **Inicio** | Con sesión |
+| Partidos (en construcción) | `usuario/partidos.html` | Menú **Partidos** | Con sesión |
+| Perfil (en construcción) | `usuario/perfil.html` | Menú **Perfil** | Con sesión |
+| Usuarios (registro de árbitros) | `admin/usuarios.html` | Menú **Usuarios** | Solo administrador |
 
-Todas las vistas internas cuentan con barra de navegación unificada adaptable a dispositivos móviles:
+Sin sesión, cualquier vista interna redirige al login. Un árbitro que intenta entrar a **Usuarios** vuelve al inicio. **Cerrar sesión** (en el menú) limpia los datos guardados y vuelve al login.
 
-1. **Acceso / Login (`index.html`):** Inicio de sesión con autenticación y validación por rol.
-2. **Dashboard (`dashboard.html`):** Resumen estadístico del torneo (partidos totales, programados, finalizados y tarjetas), próximos encuentros y últimos resultados con skeleton de carga.
-3. **Gestión de Partidos y Actas (`partidos.html`):** 
-   - Listado reactivo de encuentros.
-   - Búsqueda en tiempo real por equipo o estadio.
-   - Filtro por estado (Todos, Programados, Finalizados).
-   - Ordenamiento por fecha y nombre.
-   - CRUD completo: creación y edición de partidos mediante modal con validación, y eliminación con confirmación.
-   - **Acta Oficial:** Visualización y registro de incidencias en vivo (goles y tarjetas amarillas/rojas con minuto y jugador).
-4. **Registro de Árbitros (`usuarios.html`):** Vista exclusiva para administradores con validación estricta de RUT chileno, email, teléfono, categoría y confirmación modal.
-5. **Perfil de Usuario (`perfil.html`):** Configuración de datos del usuario autenticado y persistencia en `localStorage`.
+## Funcionalidades
 
----
-
-## API Simulada y Tabla de Endpoints (`js/api.js`)
-
-No hay un backend real: `js/api.js` simula una API REST con respuestas asíncronas, retardo de red (400 a 450 ms) y persistencia en `localStorage`:
-
-| Método | Ruta REST simulada | Función en `js/api.js` | Fuente de datos | Descripción |
-| :---: | :--- | :--- | :--- | :--- |
-| **GET** | `/api/dashboard/resumen` | `obtenerResumen(usuario)` | `partidos.json` + `usuarios.json` | Obtiene totales del torneo, próximos partidos y últimos resultados. |
-| **GET** | `/api/partidos` | `obtenerPartidos()` | `partidos.json` / `localStorage` | Lista completa de partidos con búsqueda y filtros. |
-| **POST** | `/api/partidos` | `crearPartido(nuevoPartido)` | `localStorage` | Registra un nuevo partido con ID único (código 201). |
-| **PUT** | `/api/partidos/:id` | `actualizarPartido(id, datos)` | `localStorage` | Actualiza datos, marcador o incidencias del acta (código 200). |
-| **DELETE** | `/api/partidos/:id` | `eliminarPartido(id)` | `localStorage` | Elimina un partido por su ID (código 200). |
-
-Todas las funciones responden de manera uniforme con `{ ok: true, status, datos, data }` o `{ ok: false, status, error }`.
+- **Sesión simulada:** el login guarda el rol en `localStorage` y las vistas internas lo revisan antes de mostrarse.
+- **Menú común** en todas las vistas internas: marca la vista actual, muestra **Usuarios** solo al administrador y se convierte en menú hamburguesa en móvil.
+- **Inicio:** totales del torneo, próximos partidos y últimos resultados, con estados de *cargando* (skeleton), *vacío* y *error con botón Reintentar*.
+- **Registro de árbitros (administrador):** formulario con validación por campo (nombre, RUT con guion, email, teléfono y categoría), modal de confirmación antes de guardar y de eliminar, tabla que se actualiza al instante y notificaciones (toasts) de éxito o error.
+- **Componentes de interfaz:** modal de confirmación, notificaciones (toasts) y menú desplegable.
 
 ---
 
-## Registro de Uso de Inteligencia Artificial
+## Capa de datos (mocks como API)
 
-Siguiendo las directrices de la Sección 10 de la rúbrica de evaluación, el detalle de todas las interacciones de IA y los bloques de código asistidos están debidamente documentados:
+Todo el acceso a datos está en `comun/api.js`. Las vistas no leen los JSON directamente: llaman a funciones de esta capa.
 
-- **Índice de consultas:** Consulta el archivo [`ia/README.md`](ia/README.md) en la raíz del proyecto.
+- Las funciones son **asíncronas** y esperan **400 ms** antes de responder, para imitar la latencia de red.
+- Leen los archivos de `public/mocks/`. Los cambios en partidos (crear, editar, eliminar) se guardan en `localStorage` y se mantienen al recargar.
+- Responden con `{ ok: true, datos }` si todo sale bien, o `{ ok: false, error }` con un mensaje para mostrar en pantalla.
+
+### Endpoints simulados
+
+| Función | Método | Ruta equivalente | Fuente de datos | Descripción |
+|---|---|---|---|---|
+| `obtenerResumen(usuario)` | GET | `/api/resumen` | `partidos.json` + `usuarios.json` | Totales, próximos partidos y últimos resultados |
+| `obtenerPartidos()` | GET | `/api/partidos` | `partidos.json` / `localStorage` | Lista de partidos |
+| `crearPartido(nuevoPartido)` | POST | `/api/partidos` | `localStorage` | Crea un partido y lo devuelve con su `id` |
+| `actualizarPartido(id, datos)` | PUT | `/api/partidos/:id` | `localStorage` | Actualiza un partido, o error si no existe |
+| `eliminarPartido(id)` | DELETE | `/api/partidos/:id` | `localStorage` | Elimina un partido y devuelve su `id` |
+
+### Datos (`public/mocks/`)
+
+| Archivo | Registros | Contenido |
+|---|---|---|
+| `partidos.json` | 12 | Fecha, hora, equipos, goles, tarjetas, estado, cancha, árbitro, acontecimientos y observaciones |
+| `usuarios.json` | 10 | Usuarios con nombre, email y rol (administrador o árbitro) |
+| `equipos.json` | 10 | Nombre, iniciales, ciudad y estadio de cada equipo |
+
+---
+
+## Estructura del proyecto
+
+```
+Futbol-desarrollo/
+├── index.html                 Login (página de entrada)
+├── login/
+│   ├── login.js               Validación de credenciales y guardado de la sesión
+│   └── login.css              Estilos del login
+├── comun/                     Lo que usan todas las vistas internas
+│   ├── api.js                 Capa de datos (mocks como API)
+│   ├── sesion.js              Protección de rutas por sesión y rol
+│   ├── menu.js                Menú común con control por rol
+│   └── componentes.js         Notificaciones (toasts) y modal de confirmación
+├── usuario/                   Vistas del árbitro (y del administrador)
+│   ├── dashboard.html         Inicio con el resumen del torneo
+│   ├── dashboard.js
+│   ├── partidos.html
+│   └── perfil.html
+├── admin/                     Vistas solo para el administrador
+│   ├── usuarios.html          Registro de árbitros
+│   ├── registro-arbitros.js
+│   └── registro-arbitros.css  Estilos de toasts y modal
+├── public/
+│   └── mocks/                 Un JSON por recurso
+├── ia/
+│   └── README.md              Índice de uso de IA
+└── package.json
+```
+
+---
+
+## Uso de IA
+
+Ver el índice en [`ia/README.md`](ia/README.md).
+
+---
+
+## Estado del proyecto
+
+En desarrollo.

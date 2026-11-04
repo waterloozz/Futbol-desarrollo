@@ -1,10 +1,11 @@
-// [IA] inicio · ia/2026-11-03_josefasolis1-hue_crud-partidos.md
-// js/api.js (Versión unificada y lista para usar)
-// Se carga como script clásico (<script src="js/api.js" defer>), igual que menu.js
+// comun/api.js (Versión unificada y lista para usar)
+// Se carga como script clásico (<script src="../comun/api.js" defer>), igual que menu.js
 // y sesion.js: sus funciones quedan globales. Por eso no usa "export".
 // Centraliza el acceso a mocks y persistencia en localStorage.
 // Imita una API REST con respuestas asíncronas y latencia simulada.
 
+// la ruta a los mocks se arma desde donde esta este archivo, asi sirve desde cualquier carpeta
+const API_BASE = new URL("../public/mocks", document.currentScript?.src ?? location.href).href;
 const STORAGE_KEY = "partidos_crud_data";
 const LATENCIA = 450;
 
@@ -164,23 +165,5 @@ async function eliminarPartido(id) {
   const filtrados = partidos.filter((p) => p.id != id);
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(filtrados));
-  return { ok: true, status: 200, datos: { id }, data: { id } };
+  return { ok: true, datos: { id } };
 }
-
-// Exposición en el objeto global (window) para scripts tradicionales (defer)
-if (typeof window !== "undefined") {
-  window.obtenerResumen = obtenerResumen;
-  window.obtenerPartidos = obtenerPartidos;
-  window.crearPartido = crearPartido;
-  window.actualizarPartido = actualizarPartido;
-  window.eliminarPartido = eliminarPartido;
-
-  window.api = {
-    obtenerResumen,
-    obtenerPartidos,
-    crearPartido,
-    actualizarPartido,
-    eliminarPartido,
-  };
-}
-// [IA] fin
