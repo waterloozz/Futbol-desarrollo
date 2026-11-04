@@ -1,6 +1,3 @@
-/* ==========================================
-   ESTILOS GENERALES Y LAYOUT
-========================================== */
 * {
   box-sizing: border-box;
 }
@@ -33,9 +30,7 @@ main {
   margin: 60px auto;
 }
 
-/* ==========================================
-   TARJETAS Y FORMULARIOS (LOGIN)
-   ========================================== */
+
 section, .card {
   background-color: #ffffff;
   padding: 32px;
@@ -103,9 +98,6 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-/* ==========================================
-   TOASTS Y MODALES (Coherentes con el resto)
-========================================== */
 .toast-contenedor {
   position: fixed;
   right: 16px;
