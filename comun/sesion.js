@@ -1,15 +1,15 @@
 // Protección de rutas. Va en el <head> como primer script y sin defer,
 // para que corra antes de que se dibuje la página.
-//   <script src="js/sesion.js"></script>                  requiere sesión
-//   <script src="js/sesion.js" data-rol="admin"></script>  requiere ese rol
+//   <script src="../comun/sesion.js"></script>                  requiere sesión
+//   <script src="../comun/sesion.js" data-rol="admin"></script>  requiere ese rol
 
 const rolRequerido = document.currentScript.dataset.rol;
 
 // A dónde mandar al usuario, o null si puede quedarse
 function destinoSinAcceso() {
   const rol = localStorage.getItem("rol");
-  if (!rol) return "index.html";
-  if (rolRequerido && rol !== rolRequerido) return "dashboard.html";
+  if (!rol) return "../index.html";
+  if (rolRequerido && rol !== rolRequerido) return "../usuario/dashboard.html";
   return null;
 }
 

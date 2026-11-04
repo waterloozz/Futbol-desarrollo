@@ -1,11 +1,11 @@
 /*
  * Componentes globales de Alpine.js
  * ---------------------------------
- * Este archivo se carga ANTES que Alpine (ver index.html). Por eso no usamos
+ * Este archivo se carga ANTES que Alpine (ver admin/usuarios.html). Por eso no usamos
  * Alpine directamente aquí arriba: esperamos el evento "alpine:init", que
  * Alpine dispara justo antes de recorrer el HTML buscando x-data.
  *
- * Cada componente vive una sola vez en index.html y escucha eventos en
+ * Cada componente vive una sola vez en la pagina que lo usa y escucha eventos en
  * "window". Así cualquier parte de la página (otro componente Alpine o JS
  * normal como login.js) puede usarlos sin conocer su estado interno.
  */

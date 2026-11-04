@@ -1,8 +1,9 @@
-// js/api.js (Versión unificada y lista para usar)
-// Se carga como script clásico (<script src="js/api.js" defer>), igual que menu.js
+// comun/api.js (Versión unificada y lista para usar)
+// Se carga como script clásico (<script src="../comun/api.js" defer>), igual que menu.js
 // y sesion.js: sus funciones quedan globales. Por eso no usa "export".
 
-const API_BASE = "public/mocks"; // O "./public/mocks" según cómo lo cargues
+// la ruta a los mocks se arma desde donde esta este archivo, asi sirve desde cualquier carpeta
+const API_BASE = new URL("../public/mocks", document.currentScript?.src ?? location.href).href;
 const STORAGE_KEY = "partidos_crud_data";
 const LATENCIA = 400;
 

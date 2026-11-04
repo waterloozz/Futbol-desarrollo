@@ -2,27 +2,15 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema de Acta Digital Arbitral</title>
-  <link rel="stylesheet" href="style.css">
-
-  <!--
-    Orden importante: los dos scripts usan "defer", así que se ejecutan en
-    este mismo orden cuando el HTML terminó de cargarse.
-    1) componentes.js registra los Alpine.data() en "alpine:init".
-    2) Alpine arranca, dispara "alpine:init" y luego procesa los x-data.
-  -->
-  <script src="componentes.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="login/login.css">
 </head>
 <body>
 
   <header>
     <h1>Sistema de Acta Digital Arbitral</h1>
-    <nav>
-      <a href="#login">Acceso</a>
-      <a href="#partido">Nuevo Partido</a>
-      <a href="#acta">Acta Oficial</a>
-    </nav>
   </header>
 
   <main>
@@ -43,121 +31,8 @@
         <p id="mensaje"></p>
       </form>
     </section>
-
-    
-    <section id="partido">
-      <h2>Programacion de Partido</h2>
-      <form id="formPartido">
-        <div>
-          <label for="nombreArbitro">Arbitro Responsable</label>
-          <input type="text" id="nombreArbitro" placeholder="Nombre completo del arbitro">
-        </div>
-        <div>
-          <label for="equipoLocal">Equipo Local</label>
-          <input type="text" id="equipoLocal" placeholder="Nombre equipo local">
-        </div>
-        <div>
-          <label for="equipoVisita">Equipo Visitante</label>
-          <input type="text" id="equipoVisita" placeholder="Nombre equipo visitante">
-        </div>
-        <div>
-          <label for="fechaPartido">Fecha y Hora</label>
-          <input type="datetime-local" id="fechaPartido">
-        </div>
-        <div>
-          <button type="button">Registrar Partido</button>
-        </div>
-      </form>
-    </section>
-
-    
-    <section id="acta">
-      <h2>Acta Digital de Partido</h2>
-      <div class="ficha-encuentro">
-        <p><strong>Encuentro:</strong> Equipo Local vs Equipo Visitante</p>
-        <p><strong>Resultado:</strong> 0 - 0</p>
-        <p><strong>Arbitro Principal:</strong> Por asignar</p>
-      </div>
-
-      <h3>Registro de Acontecimientos</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Minuto</th>
-            <th>Equipo</th>
-            <th>Jugador</th>
-            <th>Acontecimiento</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>12'</td>
-            <td>Equipo Local</td>
-            <td>Juan Perez</td>
-            <td>Gol</td>
-          </tr>
-          <tr>
-            <td>34'</td>
-            <td>Equipo Visitante</td>
-            <td>Carlos Soto</td>
-            <td>Tarjeta Amarilla</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div>
-        <h3>Observaciones del Arbitro</h3>
-        <textarea rows="4" cols="50" placeholder="Informe de incidencias o conducta antideportiva"></textarea>
-      </div>
-
-      <div class="firma-arbitro">
-        <p>___________________________</p>
-        <p>Firma Arbitro Principal</p>
-      </div>
-    </section>
   </main>
 
-  <!-- ===== Notificaciones flotantes (una sola vez en la página) ===== -->
-  <div
-    class="toast-contenedor"
-    x-data="notificaciones"
-    @notificar.window="agregar($event.detail)"
-    aria-live="polite"
-  >
-    <template x-for="toast in lista" :key="toast.id">
-      <div
-        class="toast"
-        :class="'toast--' + toast.tipo"
-        x-show="toast.visible"
-        x-transition:leave="toast-salida"
-        x-transition:leave-end="toast-salida-fin"
-        role="status"
-      >
-        <span x-text="toast.mensaje"></span>
-        <button type="button" class="toast-cerrar" @click="cerrar(toast.id)" aria-label="Cerrar">&times;</button>
-      </div>
-    </template>
-  </div>
-
-  <!-- ===== Modal de confirmación (una sola vez en la página) ===== -->
-  <div
-    x-data="modalConfirmacion"
-    @pedir-confirmacion.window="abrir($event.detail)"
-    @keydown.escape.window="abierto && cerrar()"
-  >
-    <div class="modal-fondo" x-show="abierto" x-cloak x-transition.opacity @click.self="cerrar()">
-      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
-        <h3 id="modal-titulo" x-text="titulo"></h3>
-        <p x-text="mensaje"></p>
-        <div class="modal-acciones">
-          <button type="button" class="boton-secundario" x-ref="botonCancelar" @click="cerrar()">Cancelar</button>
-          <button type="button" @click="confirmar()" x-text="textoConfirmar"></button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="login.js"></script>
-  <script src="js/api.js" type="module"></script>
+  <script src="login/login.js"></script>
 </body>
 </html>
