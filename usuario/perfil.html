@@ -1,23 +1,22 @@
-<!-- [IA] inicio · ia/2026-11-03_josefasolis1-hue_crud-partidos.md -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Perfil · Acta Digital Arbitral</title>
+  <title>Perfil de Usuario · Acta Digital Arbitral</title>
   <link rel="icon" href="data:,">
 
-  <!-- Primer script y sin defer: protege la ruta antes de dibujar (ver comun/sesion.js) -->
+
   <script src="../comun/sesion.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.1.13"></script>
   <style>
     [x-cloak] { display: none !important; }
   </style>
-  <link rel="stylesheet" href="registro-arbitros.css">
+  <link rel="stylesheet" href="../admin/registro-arbitros.css">
 
-  <!-- menu.js va antes que Alpine (ver comun/menu.js) -->
   <script src="../comun/menu.js" defer></script>
+  <script src="../comun/componentes.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
 </head>
 <body class="flex min-h-screen flex-col bg-slate-100 text-slate-800">
@@ -46,7 +45,7 @@
     </div>
 
     <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-      <!-- Tarjeta de Identidad -->
+
       <section aria-labelledby="titulo-resumen-perfil" class="rounded-2xl bg-white p-6 shadow-sm border border-slate-200 text-center flex flex-col items-center">
         <h2 id="titulo-resumen-perfil" class="sr-only">Resumen de usuario</h2>
         <div class="size-20 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-2xl font-bold uppercase shadow-inner">
@@ -61,7 +60,6 @@
         <p class="mt-4 text-xs text-slate-500">Sesión activa y autenticada en el sistema de actas digitales.</p>
       </section>
 
-      <!-- Formulario de Configuración -->
       <section aria-labelledby="titulo-datos-perfil" class="rounded-2xl bg-white p-6 shadow-sm border border-slate-200 md:col-span-2">
         <h2 id="titulo-datos-perfil" class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">Información de la Cuenta</h2>
 
@@ -104,7 +102,6 @@
     <p>Sistema de Acta Digital Arbitral · <span x-text="new Date().getFullYear()"></span></p>
   </footer>
 
-  <!-- Toasts de Notificación Global -->
   <div class="toast-contenedor" x-data="notificaciones" @notificar.window="agregar($event.detail)" aria-live="polite">
     <template x-for="toast in lista" :key="toast.id">
       <div
@@ -123,4 +120,4 @@
 
 </body>
 </html>
-<!-- [IA] fin -->
+

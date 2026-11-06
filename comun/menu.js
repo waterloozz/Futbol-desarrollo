@@ -1,8 +1,3 @@
-// Menú común de las páginas internas. Cada página pone <header id="menu-comun"></header>
-// y carga este archivo con defer ANTES que Alpine: así el HTML del menú ya
-// está insertado cuando Alpine arranca y procesa su x-data.
-// Para agregar una sección, súmala a LINKS_MENU.
-
 const LINKS_MENU = [
   { texto: "Inicio", href: "../usuario/dashboard.html" },
   { texto: "Partidos", href: "../usuario/partidos.html" },
@@ -81,13 +76,15 @@ document.addEventListener("alpine:init", () => {
       return LINKS_MENU.filter((link) => !link.soloAdmin || this.rol === "admin");
     },
 
-    // Compara el archivo de la URL actual ("/dashboard.html" -> "dashboard.html") con el link
+
     esActual(link) {
       return window.location.pathname.split("/").pop() === link.href.split("/").pop();
     },
 
     cerrarSesion() {
-      localStorage.clear();
+      
+      localStorage.removeItem("rol");
+      localStorage.removeItem("usuario");
       window.location.replace("../index.html");
     },
   }));
