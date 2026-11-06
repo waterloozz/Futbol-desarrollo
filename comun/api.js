@@ -1,46 +1,21 @@
-// comun/api.js (Versión unificada y lista para usar)
-// Se carga como script clásico (<script src="../comun/api.js" defer>), igual que menu.js
-// y sesion.js: sus funciones quedan globales. Por eso no usa "export".
-// Centraliza el acceso a mocks y persistencia en localStorage.
-// Imita una API REST con respuestas asíncronas y latencia simulada.
 
-// la ruta a los mocks se arma desde donde esta este archivo, asi sirve desde cualquier carpeta
 const API_BASE = new URL("../public/mocks", document.currentScript?.src ?? location.href).href;
 const STORAGE_KEY = "partidos_crud_data";
 const LATENCIA = 450;
 
 const esperar = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// Carga recursos desde public/mocks/ con soporte para Vite y servidores estáticos
 async function pedir(recurso) {
-  await esperar(LATENCIA); // Simulación de latencia de red requerida por rúbrica
-  const posiblesRutas = [
-    `public/mocks/${recurso}.json`,
-    `./public/mocks/${recurso}.json`,
-    `mocks/${recurso}.json`,
-    `/mocks/${recurso}.json`,
-  ];
-
-  let respuesta = null;
-  for (const ruta of posiblesRutas) {
-    try {
-      const res = await fetch(ruta);
-      if (res.ok) {
-        respuesta = res;
-        break;
-      }
-    } catch (_) {}
-  }
-
-  if (!respuesta) {
-    throw new Error(`No se pudo cargar el recurso "${recurso}"`);
+  await esperar(LATENCIA); 
+  const respuesta = await fetch(`${API_BASE}/${recurso}.json`);
+  if (!respuesta.ok) {
+    throw new Error(`No se pudo cargar "${recurso}" (HTTP ${respuesta.status})`);
   }
   return respuesta.json();
 }
 
 const momento = (p) => `${p.fecha} ${p.hora}`;
 
-// --- 1. Resumen para el Dashboard ---
 async function obtenerResumen(usuario) {
   try {
     let partidos;
@@ -98,7 +73,7 @@ async function obtenerResumen(usuario) {
   }
 }
 
-// --- 2. CRUD de Partidos con soporte en localStorage ---
+
 async function obtenerPartidos() {
   try {
     const guardados = localStorage.getItem(STORAGE_KEY);
