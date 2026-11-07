@@ -5,6 +5,8 @@ document.addEventListener("alpine:init", () => {
     email: "",
     telefono: "",
     categoria: "",
+    password: "",
+    confirmarPassword: "",
   });
 
   Alpine.data("registroArbitros", () => ({
@@ -33,7 +35,6 @@ document.addEventListener("alpine:init", () => {
         this.errores.nombre = "Ingresa el nombre completo (mínimo 3 caracteres).";
       }
 
-      // Acepta 12.345.678-5 o 12345678-5 (dígito verificador 0-9 o K)
       if (!/^\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]$/.test(f.rut.trim())) {
         this.errores.rut = "Formato de RUT inválido. Debe incluir guion (ej: 12.345.678-5).";
       } else if (this.rutExiste(f.rut)) {
@@ -44,7 +45,6 @@ document.addEventListener("alpine:init", () => {
         this.errores.email = "Ingresa un email válido.";
       }
 
-      // Al menos 8 dígitos, permitiendo +, espacios y guiones
       if (f.telefono.replace(/\D/g, "").length < 8) {
         this.errores.telefono = "Ingresa un teléfono válido.";
       }
@@ -53,19 +53,22 @@ document.addEventListener("alpine:init", () => {
         this.errores.categoria = "Selecciona una categoría.";
       }
 
-      // Es válido si ningún campo quedó con mensaje
+      if (f.password.length < 8) {
+        this.errores.password = "La contraseña debe tener al menos 8 caracteres.";
+      }
+
+      if (f.confirmarPassword !== f.password) {
+        this.errores.confirmarPassword = "Las contraseñas no coinciden.";
+      }
+
       return Object.values(this.errores).every((msg) => msg === "");
     },
 
-    // Compara RUTs ignorando puntos y mayúsculas
     rutExiste(rut) {
       const limpiar = (r) => r.replace(/\./g, "").toUpperCase().trim();
       return this.arbitros.some((a) => limpiar(a.rut) === limpiar(rut));
     },
 
-    /* ===================== Acciones ===================== */
-
-    // Se llama desde @submit.prevent del formulario
     solicitarGuardado() {
       if (!this.validar()) {
         notificar("Revisa los campos marcados en el formulario.", "error");
@@ -76,19 +79,34 @@ document.addEventListener("alpine:init", () => {
         titulo: "Registrar árbitro",
         mensaje: `¿Confirmas el registro de ${this.form.nombre.trim()}?`,
         textoConfirmar: "Registrar",
-        // Función flecha: mantiene "this" apuntando a este componente
+
         alConfirmar: () => this.agregarArbitro(),
       });
     },
 
-    agregarArbitro() {
-      // Copia los datos (sin espacios sobrantes) en un objeto nuevo
-      const nuevo = { id: this.siguienteId++ };
-      for (const campo in this.form) {
-        nuevo[campo] = this.form[campo].trim();
+    async agregarArbitro() {
+      const f = this.form;
+      const sal = crearSal();
+      let passwordHash;
+      try {
+        passwordHash = await hashearPassword(f.password, sal);
+      } catch (error) {
+        notificar(error.message, "error");
+        return;
       }
 
-      this.arbitros.push(nuevo); // la tabla con x-for se actualiza sola
+      const nuevo = {
+        id: this.siguienteId++,
+        nombre: f.nombre.trim(),
+        rut: f.rut.trim(),
+        email: f.email.trim(),
+        telefono: f.telefono.trim(),
+        categoria: f.categoria,
+        sal,
+        passwordHash,
+      };
+
+      this.arbitros.push(nuevo);
       notificar(`Árbitro ${nuevo.nombre} registrado correctamente.`);
       this.reiniciarFormulario();
     },
@@ -107,7 +125,6 @@ document.addEventListener("alpine:init", () => {
       });
     },
 
-    // deja todos los arbitros menos el que tiene ese id, y la tabla se actualiza sola
     eliminarArbitro(id) {
       this.arbitros = this.arbitros.filter((a) => a.id !== id);
       notificar("Árbitro eliminado correctamente.");

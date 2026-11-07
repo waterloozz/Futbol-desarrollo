@@ -6,7 +6,6 @@
   <title>Usuarios · Acta Digital Arbitral</title>
   <link rel="icon" href="data:,">
 
-  <!-- Primer script y sin defer: protege la ruta antes de dibujar (ver comun/sesion.js) -->
   <script src="../comun/sesion.js" data-rol="admin"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.1.13"></script>
@@ -15,10 +14,10 @@
   </style>
   <link rel="stylesheet" href="registro-arbitros.css">
 
-  <!-- menu.js va antes que Alpine (ver comun/menu.js) -->
   <script src="../comun/menu.js" defer></script>
-  <!-- componentes y registro tambien van antes de Alpine para que se registren a tiempo -->
+
   <script src="../comun/componentes.js" defer></script>
+  <script src="../comun/seguridad.js" defer></script>
   <script src="registro-arbitros.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
 </head>
@@ -81,6 +80,24 @@
             <small class="mt-1 block text-xs text-red-700" x-show="errores.categoria" x-text="errores.categoria"></small>
           </div>
 
+          <div>
+            <label for="arbPassword" class="mb-1 block text-sm font-medium text-slate-700">
+              Contraseña <span class="text-xs font-normal text-slate-500">(mínimo 8 caracteres)</span>
+            </label>
+            <input type="password" id="arbPassword" autocomplete="new-password" x-model="form.password"
+              class="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2"
+              :class="errores.password ? 'border-red-600 focus:ring-red-600' : 'border-slate-300 focus:ring-blue-600'">
+            <small class="mt-1 block text-xs text-red-700" x-show="errores.password" x-text="errores.password"></small>
+          </div>
+
+          <div>
+            <label for="arbConfirmarPassword" class="mb-1 block text-sm font-medium text-slate-700">Confirmar contraseña</label>
+            <input type="password" id="arbConfirmarPassword" autocomplete="new-password" x-model="form.confirmarPassword"
+              class="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2"
+              :class="errores.confirmarPassword ? 'border-red-600 focus:ring-red-600' : 'border-slate-300 focus:ring-blue-600'">
+            <small class="mt-1 block text-xs text-red-700" x-show="errores.confirmarPassword" x-text="errores.confirmarPassword"></small>
+          </div>
+
           <div class="flex gap-3 sm:col-span-2">
             <button type="submit" class="rounded-md bg-blue-700 px-4 py-2 font-medium text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">Guardar Árbitro</button>
             <button type="button" @click="reiniciarFormulario()" class="rounded-md bg-slate-200 px-4 py-2 font-medium text-slate-800 hover:bg-slate-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">Limpiar</button>
@@ -131,7 +148,6 @@
     <p>Sistema de Acta Digital Arbitral · <span x-text="new Date().getFullYear()"></span></p>
   </footer>
 
-  <!-- aqui salen los avisos de exito o error -->
   <div class="toast-contenedor" x-data="notificaciones" @notificar.window="agregar($event.detail)" aria-live="polite">
     <template x-for="toast in lista" :key="toast.id">
       <div class="toast" :class="'toast--' + toast.tipo" x-show="toast.visible"
@@ -142,7 +158,6 @@
     </template>
   </div>
 
-  <!-- ventana que pregunta antes de guardar -->
   <div x-data="modalConfirmacion" @pedir-confirmacion.window="abrir($event.detail)" @keydown.escape.window="abierto && cerrar()">
     <div class="modal-fondo" x-show="abierto" x-cloak x-transition.opacity @click.self="cerrar()">
       <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
