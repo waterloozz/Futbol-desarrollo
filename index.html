@@ -16,25 +16,34 @@
   <main>
     <section id="login">
       <h2>Acceso al Sistema</h2>
-      <form id="formLogin">
+      <form x-data="login" @submit.prevent="entrar()" novalidate>
+        <p x-show="errorGeneral" x-cloak role="alert" class="alerta-error" x-text="errorGeneral"></p>
         <div>
           <label for="email">Email</label>
-          <input type="email" id="email" autocomplete="email" placeholder="tu@correo.cl">
+          <input type="email" id="email" autocomplete="email" placeholder="tu@correo.cl"
+            x-model="form.email" @blur="validarCampo('email')" @input="revalidar('email')"
+            :class="errores.email ? 'input-error' : ''"
+            :aria-invalid="errores.email ? 'true' : 'false'" aria-describedby="email-error">
+          <small id="email-error" class="error-campo" x-show="errores.email" x-text="errores.email"></small>
         </div>
         <div>
           <label for="password">Contraseña</label>
-          <input type="password" id="password" autocomplete="current-password" placeholder="Tu contraseña">
+          <input type="password" id="password" autocomplete="current-password" placeholder="Tu contraseña"
+            x-model="form.password" @blur="validarCampo('password')" @input="revalidar('password')"
+            :class="errores.password ? 'input-error' : ''"
+            :aria-invalid="errores.password ? 'true' : 'false'" aria-describedby="password-error">
+          <small id="password-error" class="error-campo" x-show="errores.password" x-text="errores.password"></small>
         </div>
         <div>
-          <button type="submit">Entrar</button>
+          <button type="submit" :disabled="enviando" x-text="enviando ? 'Ingresando…' : 'Entrar'">Entrar</button>
         </div>
-        <p id="mensaje"></p>
       </form>
     </section>
   </main>
 
-  <script src="comun/api.js"></script>
-  <script src="comun/seguridad.js"></script>
-  <script src="login/login.js"></script>
+  <script src="comun/api.js" defer></script>
+  <script src="comun/seguridad.js" defer></script>
+  <script src="login/login.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
 </body>
 </html>
