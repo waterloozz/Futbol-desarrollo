@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página no encontrada · Acta Digital Arbitral</title>
+  <link rel="icon" href="data:,">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.1.13"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
+</head>
+<body class="flex min-h-screen flex-col bg-slate-100 text-slate-800">
+
+  <header class="bg-blue-800 text-white shadow">
+    <div class="mx-auto max-w-5xl px-4 py-3">
+      <p class="py-2 text-lg font-bold">Acta Digital Arbitral</p>
+    </div>
+  </header>
+
+  <main class="mx-auto flex w-full max-w-5xl flex-1 items-center justify-center px-4 py-10">
+    <section aria-labelledby="titulo-404" class="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-sm"
+      x-data="{ conSesion: localStorage.getItem('rol') !== null }">
+      <p class="text-5xl font-bold text-blue-700">404</p>
+      <h1 id="titulo-404" class="mt-3 text-2xl font-semibold">Página no encontrada</h1>
+      <p class="mt-2 text-slate-600">La dirección que abriste no existe o fue movida.</p>
+      <a :href="conSesion ? '/usuario/dashboard.html' : '/index.html'" href="/index.html"
+        x-text="conSesion ? 'Volver al inicio' : 'Ir al login'"
+        class="mt-6 inline-block rounded-md bg-blue-700 px-4 py-2 font-medium text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">Volver al inicio</a>
+    </section>
+  </main>
+
+  <footer class="bg-slate-800 py-4 text-center text-sm text-slate-300">
+    <p>Sistema de Acta Digital Arbitral</p>
+  </footer>
+
+</body>
+</html>
