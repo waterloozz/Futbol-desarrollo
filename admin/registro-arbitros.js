@@ -26,42 +26,53 @@ document.addEventListener("alpine:init", () => {
       },
     ],
     siguienteId: 2,
+    guardando: false,
+
+    mensajeDe(campo) {
+      const f = this.form;
+      switch (campo) {
+        case "nombre":
+          return f.nombre.trim().length < 3 ? "Ingresa el nombre completo (mínimo 3 caracteres)." : "";
+        case "rut":
+          if (!/^\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]$/.test(f.rut.trim())) {
+            return "Formato de RUT inválido. Debe incluir guion (ej: 12.345.678-5).";
+          }
+          return this.rutExiste(f.rut) ? "Ya existe un árbitro con este RUT." : "";
+        case "email":
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim()) ? "" : "Ingresa un email válido.";
+        case "telefono":
+          return f.telefono.replace(/\D/g, "").length < 8 ? "Ingresa un teléfono válido." : "";
+        case "categoria":
+          return f.categoria ? "" : "Selecciona una categoría.";
+        case "password":
+          return f.password.length < 8 ? "La contraseña debe tener al menos 8 caracteres." : "";
+        case "confirmarPassword":
+          return f.confirmarPassword === f.password ? "" : "Las contraseñas no coinciden.";
+        default:
+          return "";
+      }
+    },
+
+    validarCampo(campo) {
+      this.errores[campo] = this.mensajeDe(campo);
+    },
+
+    revalidar(campo) {
+      if (this.errores[campo]) {
+        this.validarCampo(campo);
+      }
+      if (campo === "password" && this.form.confirmarPassword !== "") {
+        this.validarCampo("confirmarPassword");
+      }
+    },
 
     validar() {
-      this.errores = formVacio();
-      const f = this.form;
-
-      if (f.nombre.trim().length < 3) {
-        this.errores.nombre = "Ingresa el nombre completo (mínimo 3 caracteres).";
-      }
-
-      if (!/^\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]$/.test(f.rut.trim())) {
-        this.errores.rut = "Formato de RUT inválido. Debe incluir guion (ej: 12.345.678-5).";
-      } else if (this.rutExiste(f.rut)) {
-        this.errores.rut = "Ya existe un árbitro con este RUT.";
-      }
-
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim())) {
-        this.errores.email = "Ingresa un email válido.";
-      }
-
-      if (f.telefono.replace(/\D/g, "").length < 8) {
-        this.errores.telefono = "Ingresa un teléfono válido.";
-      }
-
-      if (!f.categoria) {
-        this.errores.categoria = "Selecciona una categoría.";
-      }
-
-      if (f.password.length < 8) {
-        this.errores.password = "La contraseña debe tener al menos 8 caracteres.";
-      }
-
-      if (f.confirmarPassword !== f.password) {
-        this.errores.confirmarPassword = "Las contraseñas no coinciden.";
-      }
-
+      Object.keys(this.errores).forEach((campo) => this.validarCampo(campo));
       return Object.values(this.errores).every((msg) => msg === "");
+    },
+
+    enfocarPrimerError() {
+      this.$nextTick(() => this.$root.querySelector('[aria-invalid="true"]')?.focus());
     },
 
     rutExiste(rut) {
@@ -70,8 +81,10 @@ document.addEventListener("alpine:init", () => {
     },
 
     solicitarGuardado() {
+      if (this.guardando) return;
       if (!this.validar()) {
         notificar("Revisa los campos marcados en el formulario.", "error");
+        this.enfocarPrimerError();
         return;
       }
 
@@ -79,36 +92,36 @@ document.addEventListener("alpine:init", () => {
         titulo: "Registrar árbitro",
         mensaje: `¿Confirmas el registro de ${this.form.nombre.trim()}?`,
         textoConfirmar: "Registrar",
-
         alConfirmar: () => this.agregarArbitro(),
       });
     },
 
     async agregarArbitro() {
-      const f = this.form;
-      const sal = crearSal();
-      let passwordHash;
+      this.guardando = true;
       try {
-        passwordHash = await hashearPassword(f.password, sal);
+        const f = this.form;
+        const sal = crearSal();
+        const passwordHash = await hashearPassword(f.password, sal);
+
+        const nuevo = {
+          id: this.siguienteId++,
+          nombre: f.nombre.trim(),
+          rut: f.rut.trim(),
+          email: f.email.trim(),
+          telefono: f.telefono.trim(),
+          categoria: f.categoria,
+          sal,
+          passwordHash,
+        };
+
+        this.arbitros.push(nuevo);
+        notificar(`Árbitro ${nuevo.nombre} registrado correctamente.`);
+        this.reiniciarFormulario();
       } catch (error) {
         notificar(error.message, "error");
-        return;
+      } finally {
+        this.guardando = false;
       }
-
-      const nuevo = {
-        id: this.siguienteId++,
-        nombre: f.nombre.trim(),
-        rut: f.rut.trim(),
-        email: f.email.trim(),
-        telefono: f.telefono.trim(),
-        categoria: f.categoria,
-        sal,
-        passwordHash,
-      };
-
-      this.arbitros.push(nuevo);
-      notificar(`Árbitro ${nuevo.nombre} registrado correctamente.`);
-      this.reiniciarFormulario();
     },
 
     reiniciarFormulario() {

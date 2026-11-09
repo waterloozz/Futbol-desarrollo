@@ -9,3 +9,4 @@
 | 2026-11-03 | @josefasolis1-hue | Gemini 3.8 Flash | CRUD de Partidos, Búsqueda, Filtros y Acta Oficial | [ver](2026-11-03_josefasolis1-hue_crud-partidos.md) |
 | 2026-11-04 | @CBenavidesP | Claude Code | Orden por carpetas, limpieza de código y README | [ver](2026-11-04_cbenavidesp_carpetas-y-limpieza.md) |
 | 2026-11-04 | @CBenavidesP | Claude Code | Contraseña con hash y sal para los árbitros | [ver](2026-11-04_cbenavidesp_contrasena-arbitros.md) |
+| 2026-11-09 | @CBenavidesP | Claude Code | Validación en tiempo real y botón deshabilitado en el registro de árbitros | [ver](2026-11-09_cbenavidesp_validacion-tiempo-real.md) |
