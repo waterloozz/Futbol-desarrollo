@@ -27,8 +27,8 @@ async function obtenerResumen(usuario) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(partidos));
     }
 
-    const usuarios = await pedir("usuarios");
-    const nombre = usuarios.find((u) => u.usuario === usuario)?.nombre ?? null;
+    const usuarios = await leerUsuarios();
+    const nombre = usuarios.find((u) => u.email === usuario || u.usuario === usuario)?.nombre ?? null;
     const finalizados = partidos.filter((p) => p.estado === "finalizado");
     const programados = partidos.filter((p) => p.estado === "programado");
     const tarjetas = finalizados.reduce((total, p) => total + (p.amarillas || 0) + (p.rojas || 0), 0);
@@ -141,4 +141,101 @@ async function eliminarPartido(id) {
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(filtrados));
   return { ok: true, datos: { id } };
+}
+
+const USUARIOS_KEY = "usuarios_data";
+
+async function leerUsuarios() {
+  const guardados = localStorage.getItem(USUARIOS_KEY);
+  if (guardados) {
+    await esperar(LATENCIA);
+    return JSON.parse(guardados);
+  }
+  const usuarios = await pedir("usuarios");
+  localStorage.setItem(USUARIOS_KEY, JSON.stringify(usuarios));
+  return usuarios;
+}
+
+function guardarUsuarios(usuarios) {
+  localStorage.setItem(USUARIOS_KEY, JSON.stringify(usuarios));
+}
+
+function sinClave({ sal, passwordHash, ...resto }) {
+  return resto;
+}
+
+const normalizarRut = (rut) => rut.replace(/\./g, "").toUpperCase().trim();
+
+async function obtenerArbitros() {
+  try {
+    const usuarios = await leerUsuarios();
+    const arbitros = usuarios.filter((u) => u.rol === "arbitro").map(sinClave);
+    return { ok: true, status: 200, datos: arbitros, data: arbitros };
+  } catch (error) {
+    return { ok: false, status: 500, error: "No se pudieron cargar los árbitros." };
+  }
+}
+
+async function crearArbitro(datos) {
+  try {
+    const usuarios = await leerUsuarios();
+    const email = datos.email.trim().toLowerCase();
+    const errores = {};
+    if (usuarios.some((u) => u.email.toLowerCase() === email)) {
+      errores.email = "Ya existe un usuario con este email.";
+    }
+    if (usuarios.some((u) => u.rut && normalizarRut(u.rut) === normalizarRut(datos.rut))) {
+      errores.rut = "Ya existe un árbitro con este RUT.";
+    }
+    if (Object.keys(errores).length > 0) {
+      return { ok: false, status: 409, error: "Ya existe un usuario con esos datos.", errores };
+    }
+
+    const sal = crearSal();
+    const passwordHash = await hashearPassword(datos.password, sal);
+    const nuevo = {
+      id: usuarios.reduce((max, u) => Math.max(max, u.id), 0) + 1,
+      nombre: datos.nombre.trim(),
+      email,
+      rol: "arbitro",
+      rut: datos.rut.trim(),
+      telefono: datos.telefono.trim(),
+      categoria: datos.categoria,
+      sal,
+      passwordHash,
+    };
+    usuarios.push(nuevo);
+    guardarUsuarios(usuarios);
+    const publico = sinClave(nuevo);
+    return { ok: true, status: 201, datos: publico, data: publico };
+  } catch (error) {
+    return { ok: false, status: 500, error: error.message || "No se pudo registrar el árbitro." };
+  }
+}
+
+async function eliminarArbitro(id) {
+  try {
+    const usuarios = await leerUsuarios();
+    if (!usuarios.some((u) => u.id === id && u.rol === "arbitro")) {
+      return { ok: false, status: 404, error: "No se encontró el árbitro." };
+    }
+    guardarUsuarios(usuarios.filter((u) => u.id !== id));
+    return { ok: true, status: 200, datos: { id }, data: { id } };
+  } catch (error) {
+    return { ok: false, status: 500, error: "No se pudo eliminar el árbitro." };
+  }
+}
+
+async function iniciarSesion(email, password) {
+  try {
+    const usuarios = await leerUsuarios();
+    const usuario = usuarios.find((u) => u.email.toLowerCase() === email.trim().toLowerCase());
+    if (usuario && (await hashearPassword(password, usuario.sal)) === usuario.passwordHash) {
+      const publico = sinClave(usuario);
+      return { ok: true, status: 200, datos: publico, data: publico };
+    }
+    return { ok: false, status: 401, error: "Email o contraseña incorrectos." };
+  } catch (error) {
+    return { ok: false, status: 500, error: error.message || "No se pudo iniciar sesión." };
+  }
 }

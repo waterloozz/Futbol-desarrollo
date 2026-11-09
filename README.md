@@ -20,8 +20,11 @@ Es la Entrega 2 de Desarrollo Web y Móvil (CIT2008, UDP): frontend con datos si
 | [Alpine.js 3.14.9](https://alpinejs.dev) | Interactividad: `x-data`, `x-show`, `x-for`, `x-model`, `@click`, `Alpine.data` | CDN (jsDelivr) |
 | [Tailwind CSS 4](https://tailwindcss.com) | Estilos de las vistas internas con clases utilitarias y prefijos responsivos | CDN (`@tailwindcss/browser@4.1.13`) |
 | [Vite 8](https://vite.dev) | Servidor local de desarrollo | npm (`devDependencies`) |
+| [Web Crypto API](https://developer.mozilla.org/es/docs/Web/API/Web_Crypto_API) (`crypto.subtle`) | Hash SHA-256 con sal para las contraseñas de los árbitros (`comun/seguridad.js`) | Nativa del navegador (no se instala) |
 
 La pantalla de login usa su propio archivo de estilos (`login/login.css`).
+
+> **Sobre las contraseñas:** la Web Crypto API es parte del navegador, no una librería externa. Los navegadores solo la habilitan en **localhost** o en sitios **https**, por eso el registro de árbitros con contraseña funciona al levantar el proyecto con `npm run dev`, pero no en una dirección `http://` con IP. Como no hay backend, esto es una simulación: en la Entrega 3 el hash se calculará en el servidor.
 
 ## Requisitos
 

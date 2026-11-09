@@ -15,18 +15,28 @@ document.addEventListener("alpine:init", () => {
 
     categorias: ["FIFA", "Primera División", "Primera B", "Segunda División", "Amateur"],
 
-    arbitros: [
-      {
-        id: 1,
-        nombre: "Roberto Tobar",
-        rut: "12.345.678-5",
-        email: "roberto.tobar@arbitros.cl",
-        telefono: "+56 9 1234 5678",
-        categoria: "FIFA",
-      },
-    ],
-    siguienteId: 2,
+    arbitros: [],
+    estado: "cargando",
+    mensajeError: "",
     guardando: false,
+
+    init() {
+      if (typeof redirigiendo !== "undefined" && redirigiendo) return;
+      this.cargar();
+    },
+
+    async cargar() {
+      this.estado = "cargando";
+      this.mensajeError = "";
+      const respuesta = await obtenerArbitros();
+      if (respuesta.ok) {
+        this.arbitros = respuesta.datos;
+        this.estado = "listo";
+      } else {
+        this.mensajeError = respuesta.error;
+        this.estado = "error";
+      }
+    },
 
     mensajeDe(campo) {
       const f = this.form;
@@ -39,7 +49,10 @@ document.addEventListener("alpine:init", () => {
           }
           return this.rutExiste(f.rut) ? "Ya existe un árbitro con este RUT." : "";
         case "email":
-          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim()) ? "" : "Ingresa un email válido.";
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim())) {
+            return "Ingresa un email válido.";
+          }
+          return this.emailExiste(f.email) ? "Ya existe un usuario con este email." : "";
         case "telefono":
           return f.telefono.replace(/\D/g, "").length < 8 ? "Ingresa un teléfono válido." : "";
         case "categoria":
@@ -77,7 +90,12 @@ document.addEventListener("alpine:init", () => {
 
     rutExiste(rut) {
       const limpiar = (r) => r.replace(/\./g, "").toUpperCase().trim();
-      return this.arbitros.some((a) => limpiar(a.rut) === limpiar(rut));
+      return this.arbitros.some((a) => a.rut && limpiar(a.rut) === limpiar(rut));
+    },
+
+    emailExiste(email) {
+      const buscado = email.trim().toLowerCase();
+      return this.arbitros.some((a) => a.email.toLowerCase() === buscado);
     },
 
     solicitarGuardado() {
@@ -100,22 +118,26 @@ document.addEventListener("alpine:init", () => {
       this.guardando = true;
       try {
         const f = this.form;
-        const sal = crearSal();
-        const passwordHash = await hashearPassword(f.password, sal);
-
-        const nuevo = {
-          id: this.siguienteId++,
-          nombre: f.nombre.trim(),
-          rut: f.rut.trim(),
-          email: f.email.trim(),
-          telefono: f.telefono.trim(),
+        const respuesta = await crearArbitro({
+          nombre: f.nombre,
+          rut: f.rut,
+          email: f.email,
+          telefono: f.telefono,
           categoria: f.categoria,
-          sal,
-          passwordHash,
-        };
+          password: f.password,
+        });
 
-        this.arbitros.push(nuevo);
-        notificar(`Árbitro ${nuevo.nombre} registrado correctamente.`);
+        if (!respuesta.ok) {
+          if (respuesta.errores) {
+            Object.assign(this.errores, respuesta.errores);
+            this.enfocarPrimerError();
+          }
+          notificar(respuesta.error, "error");
+          return;
+        }
+
+        this.arbitros.push(respuesta.datos);
+        notificar(`Árbitro ${respuesta.datos.nombre} registrado correctamente.`);
         this.reiniciarFormulario();
       } catch (error) {
         notificar(error.message, "error");
@@ -134,11 +156,16 @@ document.addEventListener("alpine:init", () => {
         titulo: "Eliminar árbitro",
         mensaje: `¿Confirmas la eliminación de ${arbitro.nombre}?`,
         textoConfirmar: "Eliminar",
-        alConfirmar: () => this.eliminarArbitro(arbitro.id),
+        alConfirmar: () => this.borrarArbitro(arbitro.id),
       });
     },
 
-    eliminarArbitro(id) {
+    async borrarArbitro(id) {
+      const respuesta = await eliminarArbitro(id);
+      if (!respuesta.ok) {
+        notificar(respuesta.error, "error");
+        return;
+      }
       this.arbitros = this.arbitros.filter((a) => a.id !== id);
       notificar("Árbitro eliminado correctamente.");
     },
