@@ -12,3 +12,4 @@
 | 2026-11-09 | @CBenavidesP | Claude Code | Validación en tiempo real y botón deshabilitado en el registro de árbitros | [ver](2026-11-09_cbenavidesp_validacion-tiempo-real.md) |
 | 2026-11-09 | @CBenavidesP | Claude Code | Árbitros en la capa de datos y login con email | [ver](2026-11-09_cbenavidesp_acceso-unico-arbitros.md) |
 | 2026-11-09 | @CBenavidesP | Claude Code | Validación del login con Alpine.js | [ver](2026-11-09_cbenavidesp_validacion-login.md) |
+| 2026-11-09 | @CBenavidesP | Claude Code | Página de no encontrado (404) | [ver](2026-11-09_cbenavidesp_pagina-no-encontrada.md) |
