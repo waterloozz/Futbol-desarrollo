@@ -2,9 +2,9 @@
 
 - **Fecha:** 2026-11-04
 - **Integrante:** Carlos Benavides (@CBenavidesP)
-- **Herramienta y modelo:** Claude Code (Claude Opus 5.5)
-- **Enlace a la conversación:** no aplica (Claude Code no permite compartir la conversación; el texto completo va abajo)
-- **Archivos afectados:** estructura completa del proyecto (carpetas login/, comun/, usuario/ y admin/); rutas en index.html, usuario/*.html, admin/usuarios.html, login/login.js, comun/sesion.js, comun/menu.js y comun/api.js; index.html y login/login.css (limpieza); README.md (reescrito); se eliminaron src/main.js, src/style.css, public/favicon.svg y public/icons.svg
+- **Herramienta y modelo:** Claude Code
+- **Enlace a la conversación:** no aplica (Claude Code no permite compartir la conversación)
+- **Archivos afectados:** estructura completa del proyecto (carpetas login/, comun/, usuario/ y admin/); rutas en index.html, usuario/\*.html, admin/usuarios.html, login/login.js, comun/sesion.js, comun/menu.js y comun/api.js; index.html y login/login.css (limpieza); README.md (reescrito); se eliminaron src/main.js, src/style.css, public/favicon.svg y public/icons.svg
 
 ## Objetivo
 
@@ -22,7 +22,7 @@ Necesito que ordenes los archivos en carpetas para que todo este junto a lo que 
 
 ### Respuesta 1
 
-*Claude creó o reemplazó el archivo `C:\Users\carlo\.claude\projects\C--Users-carlo\memory\registro-ia-solo-cuando-pida.md` con este contenido:*
+_Claude creó o reemplazó el archivo `C:\Users\carlo\.claude\projects\C--Users-carlo\memory\registro-ia-solo-cuando-pida.md` con este contenido:_
 
 ```markdown
 ---
@@ -39,24 +39,24 @@ No agregar conversaciones a la carpeta ia/ de Futbol-desarrollo por cuenta propi
 **How to apply:** al terminar un cambio de código, no crear ni editar archivos en ia/ ni el índice ia/README.md salvo instrucción explícita. Se puede recordar que el PDF exige registrar el código que viene de IA, pero sin hacerlo. Relacionado: [[referencia-proyecto-docente-sazon]]
 ```
 
-*Claude ejecutó en la terminal (Save feedback memory and inspect the project's current state):*
+_Claude ejecutó en la terminal (Save feedback memory and inspect the project's current state):_
 
 ```bash
 cd /c/Users/carlo/.claude/projects/C--Users-carlo/memory && printf -- '- [Registro IA solo cuando lo pida](registro-ia-solo-cuando-pida.md) — no agregar a ia/ sin instrucción explícita\n' >> MEMORY.md; cd /c/Users/carlo/Documents/Futbol-desarrollo && git status -sb | head; git fetch origin 2>&1 | tail -1; git log --oneline HEAD..origin/main; git log --oneline -5; find . -path ./.git -prune -o -path ./node_modules -prune -o -type f -print | sort
 ```
 
-*Claude ejecutó en la terminal (Find every file reference that a move would break):*
+_Claude ejecutó en la terminal (Find every file reference that a move would break):_
 
 ```bash
 cd /c/Users/carlo/Documents/Futbol-desarrollo; grep -n 'src=\|href=\|location\|\.html\|mocks\|fetch(' *.html js/*.js login.js componentes.js registro-arbitros.js src/main.js | grep -v 'https://\|href="#' ; echo ----; cat src/main.js | head -20; head -15 src/style.css; echo ----; sed -n 1,80p README.md
 ```
 
-*Claude preguntó:* ¿Cómo quieres ordenar Futbol-desarrollo? En las dos opciones index.html (el login) queda en la raíz, porque es la página que abre el servidor.
+_Claude preguntó:_ ¿Cómo quieres ordenar Futbol-desarrollo? En las dos opciones index.html (el login) queda en la raíz, porque es la página que abre el servidor.
 
 - **Carpeta por sección:** Cada sección tiene su carpeta con su HTML, JS y CSS. Es lo que pediste. Hay que cambiar rutas en todas las páginas, en menu.js, sesion.js, login.js y api.js (los mocks pasan a ../public/mocks).
 - **Páginas en la raíz:** Los HTML quedan donde están y solo se agrupan JS y CSS por sección. Es la estructura que sugiere el PDF (css/, js/, mocks/). Cambian menos rutas y hay menos riesgo de romper algo de tus compañeros.
 
-*Respuesta del integrante:*
+_Respuesta del integrante:_
 
 ```text
 Your questions have been answered: "¿Cómo quieres ordenar Futbol-desarrollo? En las dos opciones index.html (el login) queda en la raíz, porque es la página que abre el servidor."="Carpeta por sección" selected preview:
@@ -83,10 +83,9 @@ Futbol-desarrollo/
 └── ia/. You can now continue with these answers in mind.
 ```
 
-
 Primero traigo los 5 commits nuevos de tus compañeros, para mover la versión actual.
 
-*Claude ejecutó en la terminal (Pull teammates' commits and re-list files):*
+_Claude ejecutó en la terminal (Pull teammates' commits and re-list files):_
 
 ```bash
 git pull --ff-only origin main 2>&1 | tail -3 && git status -sb | head -3 && find . -path ./.git -prune -o -path ./node_modules -prune -o -type f -print | sort && cat js/api.js | sed -n 1,20p && grep -n 'API_BASE\|fetch\|mocks' js/*.js
@@ -94,7 +93,7 @@ git pull --ff-only origin main 2>&1 | tail -3 && git status -sb | head -3 && fin
 
 Ya estaba al día. Ahora muevo los archivos con `git mv`, para que Git los reconozca como movidos y no como borrados y creados de nuevo.
 
-*Claude ejecutó en la terminal (Create section folders and move files with git mv):*
+_Claude ejecutó en la terminal (Create section folders and move files with git mv):_
 
 ```bash
 mkdir -p login comun usuario admin && git mv login.js login/login.js && git mv style.css login/login.css && git mv js/api.js comun/api.js && git mv js/sesion.js comun/sesion.js && git mv js/menu.js comun/menu.js && git mv componentes.js comun/componentes.js && git mv dashboard.html usuario/dashboard.html && git mv js/dashboard.js usuario/dashboard.js && git mv partidos.html usuario/partidos.html && git mv perfil.html usuario/perfil.html && git mv usuarios.html admin/usuarios.html && git mv registro-arbitros.js admin/registro-arbitros.js && git mv registro-arbitros.css admin/registro-arbitros.css && ls js 2>&1; git status --short
@@ -102,13 +101,13 @@ mkdir -p login comun usuario admin && git mv login.js login/login.js && git mv s
 
 Ahora actualizo las rutas dentro de los archivos.
 
-*Claude ejecutó en la terminal (List every line that mentions a path):*
+_Claude ejecutó en la terminal (List every line that mentions a path):_
 
 ```bash
 grep -n 'js/\|\.html\|\.css\|componentes.js\|login.js\|registro-arbitros' index.html usuario/*.html admin/usuarios.html login/login.js comun/*.js usuario/dashboard.js admin/registro-arbitros.js | grep -v 'https://'
 ```
 
-*Claude ejecutó en la terminal (Update script, link and redirect paths for the new folders):*
+_Claude ejecutó en la terminal (Update script, link and redirect paths for the new folders):_
 
 ```bash
 python - <<'EOF'
@@ -140,7 +139,7 @@ grep -rn 'js/\|"index.html"\|"dashboard.html"' --include=*.html --include=*.js i
 
 Reviso que cada archivo referenciado exista con el nombre exacto, como pide el PDF para la revisión en Linux.
 
-*Claude ejecutó en la terminal (Verify every referenced file exists with exact case):*
+_Claude ejecutó en la terminal (Verify every referenced file exists with exact case):_
 
 ```bash
 rmdir js 2>/dev/null; python - <<'EOF'
@@ -171,19 +170,19 @@ print('PROBLEMAS:', mal)
 EOF
 ```
 
-*Claude ejecutó en la terminal (Check JS syntax and that a local server serves the moved files):*
+_Claude ejecutó en la terminal (Check JS syntax and that a local server serves the moved files):_
 
 ```bash
 for f in comun/*.js login/login.js usuario/dashboard.js admin/registro-arbitros.js; do node --check "$f" || echo "ERROR $f"; done; echo sintaxis-ok; (python -m http.server 8765 >/dev/null 2>&1 &) ; sleep 1; for u in index.html login/login.css comun/api.js usuario/dashboard.html admin/usuarios.html public/mocks/partidos.json; do printf '%s %s\n' "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8765/$u)" "$u"; done; pkill -f 'http.server 8765' 2>/dev/null || taskkill //F //IM python.exe //FI "WINDOWTITLE eq *8765*" >/dev/null 2>&1; git status --short | cat
 ```
 
-*Claude ejecutó en la terminal (Stop the temporary test server on port 8765):*
+_Claude ejecutó en la terminal (Stop the temporary test server on port 8765):_
 
 ```powershell
 $c = Get-NetTCPConnection -LocalPort 8765 -State Listen -ErrorAction SilentlyContinue; if ($c) { Stop-Process -Id $c.OwningProcess -Confirm:$false; "detenido $($c.OwningProcess)" } else { "no habia servidor" }
 ```
 
-*Claude ejecutó en la terminal (Check the ia index and possible leftover template files):*
+_Claude ejecutó en la terminal (Check the ia index and possible leftover template files):_
 
 ```bash
 cat ia/README.md; wc -c src/main.js src/style.css; grep -rn 'icons.svg\|favicon' --include=*.html --include=*.js . | grep -v node_modules | head
@@ -192,6 +191,7 @@ cat ia/README.md; wc -c src/main.js src/style.css; grep -rn 'icons.svg\|favicon'
 Ya reorganicé el proyecto por secciones, con la estructura que elegiste. Todavía no hice commit ni push.
 
 ##### Cómo quedó
+
 ```
 Futbol-desarrollo/
 ├── index.html              login (queda en la raíz porque es la entrada)
@@ -202,9 +202,11 @@ Futbol-desarrollo/
 ├── public/mocks/
 └── ia/
 ```
+
 Moví todo con `git mv`, así Git lo marca como "movido" y no se pierde el historial de cada archivo. La carpeta `js/` quedó vacía y la borré.
 
 ##### Rutas que cambié
+
 - **`index.html`:**
   - Línea 6: `login/login.css`.
   - Línea 14: `comun/componentes.js`.
@@ -221,77 +223,82 @@ Moví todo con `git mv`, así Git lo marca como "movido" y no se pierde el histo
 - **Comentarios:** también actualicé los que mencionaban las rutas viejas (`js/sesion.js`, `js/menu.js`).
 
 ##### Lo que revisé
+
 - Todos los archivos que se cargan existen con el nombre exacto, incluidas mayúsculas. Revisé 35 rutas y no encontré problemas.
 - Ningún archivo JS tiene errores de sintaxis.
 - Un servidor local entrega bien las páginas, los scripts y los mocks.
 
 **No lo probé en el navegador.** Antes de subirlo:
+
 1. Abre `index.html` con Live Server.
 2. Entra como `admin` y como `arbitro`.
 3. Recorre todas las páginas del menú y prueba cerrar sesión.
 4. Fíjate que el dashboard cargue los datos.
 
 ##### Lo que tienes que saber
+
 1. **Esto cambia archivos de tus compañeros** (`menu.js`, `sesion.js`, `api.js`, `dashboard`). Avísales antes de subirlo. Si alguno tiene cambios sin subir en los archivos movidos, va a tener conflictos al hacer `git pull`.
 2. **El `README.md` todavía muestra la estructura vieja.** No lo cambié porque no lo pediste.
 3. **`src/main.js` y `src/style.css` están vacíos.** Parecen sobras de la plantilla de Vite, y el PDF descuenta por archivos sobrantes. No los borré.
 4. **Falta un registro en `ia/`.** El índice `ia/README.md` enlaza `2026-11-02_cbenavidesp_rut-y-eliminar-arbitros.md`, pero ese archivo ya no está en la carpeta, así que el enlace está roto. Como pediste, no agregué nada a `ia/`.
 
 Cuando lo pruebes, el commit sería:
+
 ```
 git add -A
 git commit -m "Ordena archivos en carpetas por seccion"
 git push origin main
 ```
+
 `git add -A` también incluye la carpeta `ia/`. Si no quieres subirla todavía, usa `git add login comun usuario admin index.html` y agrega `-u` para que se registren los archivos movidos.
 
 ### Prompt 2
 
 ```text
-Actualiza el readme como la pagina que te mande ademas hiciste algo con python? porque me salio una solicitud de autorizacion. Ademas elimina todo lo que este vacio y no entregue nada o codigo muerto que haya entre medio de las lineas. Antes de finalizar realiza una revision profunda, archivo por archivo para confirmar que todo se encuentre en orden
+Actualiza el readme como la pagina que te mande. Ademas elimina todo lo que este vacio y no entregue nada o codigo muerto que haya entre medio de las lineas. Antes de finalizar realiza una revision profunda, archivo por archivo para confirmar que todo se encuentre en orden
 ```
 
 ### Respuesta 2
 
 Primero leo todos los archivos completos, para no borrar nada que se use.
 
-*Claude ejecutó en la terminal (Read README, package.json, gitignore and public assets):*
+_Claude ejecutó en la terminal (Read README, package.json, gitignore and public assets):_
 
 ```bash
 git status --short | cat; cat README.md; echo =====; cat package.json .gitignore; ls -la public; cat public/favicon.svg | head -c 300; echo; head -c 300 public/icons.svg
 ```
 
-*Claude ejecutó en la terminal (Read index.html and login.js with line numbers):*
+_Claude ejecutó en la terminal (Read index.html and login.js with line numbers):_
 
 ```bash
 cat -n index.html login/login.js
 ```
 
-*Claude ejecutó en la terminal (Read comun/api.js with line numbers):*
+_Claude ejecutó en la terminal (Read comun/api.js with line numbers):_
 
 ```bash
 cat -n comun/api.js
 ```
 
-*Claude ejecutó en la terminal (Read sesion.js and menu.js with line numbers):*
+_Claude ejecutó en la terminal (Read sesion.js and menu.js with line numbers):_
 
 ```bash
 cat -n comun/sesion.js comun/menu.js
 ```
 
-*Claude ejecutó en la terminal (Read the usuario section files with line numbers):*
+_Claude ejecutó en la terminal (Read the usuario section files with line numbers):_
 
 ```bash
 cat -n usuario/dashboard.html usuario/dashboard.js usuario/partidos.html usuario/perfil.html
 ```
 
-*Claude ejecutó en la terminal (Read the admin JS, componentes.js and usuarios.html head/foot):*
+_Claude ejecutó en la terminal (Read the admin JS, componentes.js and usuarios.html head/foot):_
 
 ```bash
 cat -n admin/registro-arbitros.js comun/componentes.js; sed -n 1,30p admin/usuarios.html; sed -n 120,160p admin/usuarios.html
 ```
 
-*Claude ejecutó en la terminal (Read login.css and summarize the mock files):*
+_Claude ejecutó en la terminal (Read login.css and summarize the mock files):_
 
 ```bash
 cat -n login/login.css | sed -n 1,175p; for f in public/mocks/*.json; do python -c "import json,sys;d=json.load(open('$f',encoding='utf-8'));print('$f',len(d),list(d[0].keys()))"; done
@@ -299,19 +306,19 @@ cat -n login/login.css | sed -n 1,175p; for f in public/mocks/*.json; do python 
 
 Ya leí todos los archivos. Antes de escribir el README reviso cómo levanta realmente el proyecto, para que las instrucciones funcionen tal cual.
 
-*Claude ejecutó en la terminal (Check whether Vite is installed and Node versions):*
+_Claude ejecutó en la terminal (Check whether Vite is installed and Node versions):_
 
 ```bash
 ls node_modules/.bin/vite* 2>&1 | head -2; node -v; npm -v; ls vite.config.* 2>&1
 ```
 
-*Claude ejecutó en la terminal (Install dependencies like a fresh clone would):*
+_Claude ejecutó en la terminal (Install dependencies like a fresh clone would):_
 
 ```bash
 npm install 2>&1 | tail -3
 ```
 
-*Claude ejecutó en la terminal (Start Vite on localhost only and check which paths it serves):*
+_Claude ejecutó en la terminal (Start Vite on localhost only and check which paths it serves):_
 
 ```bash
 ./node_modules/.bin/vite --host 127.0.0.1 --port 5179 --strictPort > /c/Users/carlo/AppData/Local/Temp/claude/36b359e89e990fab/3c0f7c63-81c4-46f2-8803-15e909788f15/scratchpad/vite.log 2>&1 &
@@ -320,13 +327,13 @@ sleep 4; for u in "" index.html login/login.css comun/api.js usuario/dashboard.h
 
 Vite sirve todo bien. Para una revisión real voy a abrir las páginas en un navegador automatizado (Edge, sin ventana) y revisar errores de consola en cada vista.
 
-*Claude ejecutó en la terminal (Find a local browser and install puppeteer-core in the scratchpad):*
+_Claude ejecutó en la terminal (Find a local browser and install puppeteer-core in the scratchpad):_
 
 ```bash
 ls "/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe" "/c/Program Files/Google/Chrome/Application/chrome.exe" 2>&1; D=/c/Users/carlo/AppData/Local/Temp/claude/36b359e89e990fab/3c0f7c63-81c4-46f2-8803-15e909788f15/scratchpad/navegador; mkdir -p $D && cd $D && npm init -y >/dev/null && PUPPETEER_SKIP_DOWNLOAD=1 npm install puppeteer-core@23.11.1 2>&1 | tail -1
 ```
 
-*Claude creó o reemplazó el archivo `C:\Users\carlo\AppData\Local\Temp\claude\36b359e89e990fab\3c0f7c63-81c4-46f2-8803-15e909788f15\scratchpad\navegador\probar.js` con este contenido:*
+_Claude creó o reemplazó el archivo `C:\Users\carlo\AppData\Local\Temp\claude\36b359e89e990fab\3c0f7c63-81c4-46f2-8803-15e909788f15\scratchpad\navegador\probar.js` con este contenido:_
 
 ```js
 const puppeteer = require("puppeteer-core");
@@ -334,63 +341,141 @@ const puppeteer = require("puppeteer-core");
 const BASE = "http://127.0.0.1:5179/";
 const errores = [];
 const resultados = [];
-const ok = (nombre, condicion, detalle = "") => resultados.push(`${condicion ? "OK   " : "FALLA"} ${nombre}${detalle ? " -> " + detalle : ""}`);
+const ok = (nombre, condicion, detalle = "") =>
+  resultados.push(
+    `${condicion ? "OK   " : "FALLA"} ${nombre}${detalle ? " -> " + detalle : ""}`,
+  );
 const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
 
 (async () => {
   const navegador = await puppeteer.launch({
-    executablePath: "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+    executablePath:
+      "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
     headless: true,
     args: ["--no-first-run"],
   });
   const page = await navegador.newPage();
   await page.setViewport({ width: 1280, height: 900 });
-  page.on("console", (m) => { if (m.type() === "error" || m.type() === "warning") errores.push(`[${m.type()}] ${page.url()} :: ${m.text()}`); });
-  page.on("pageerror", (e) => errores.push(`[pageerror] ${page.url()} :: ${e.message}`));
+  page.on("console", (m) => {
+    if (m.type() === "error" || m.type() === "warning")
+      errores.push(`[${m.type()}] ${page.url()} :: ${m.text()}`);
+  });
+  page.on("pageerror", (e) =>
+    errores.push(`[pageerror] ${page.url()} :: ${e.message}`),
+  );
   page.on("requestfailed", (r) => errores.push(`[requestfailed] ${r.url()}`));
-  page.on("response", (r) => { if (r.status() >= 400) errores.push(`[http ${r.status()}] ${r.url()}`); });
+  page.on("response", (r) => {
+    if (r.status() >= 400) errores.push(`[http ${r.status()}] ${r.url()}`);
+  });
 
   const ruta = () => new URL(page.url()).pathname;
 
-  await page.goto(BASE + "usuario/dashboard.html", { waitUntil: "networkidle0" });
-  ok("sin sesion, dashboard redirige al login", ruta() === "/index.html" || ruta() === "/", ruta());
+  await page.goto(BASE + "usuario/dashboard.html", {
+    waitUntil: "networkidle0",
+  });
+  ok(
+    "sin sesion, dashboard redirige al login",
+    ruta() === "/index.html" || ruta() === "/",
+    ruta(),
+  );
 
   await page.goto(BASE, { waitUntil: "networkidle0" });
   await page.type("#usuario", "nadie");
   await page.type("#password", "x");
   await page.click("button[type=submit]");
-  ok("usuario desconocido muestra mensaje", (await page.$eval("#mensaje", (e) => e.textContent)).includes("no reconocido"));
+  ok(
+    "usuario desconocido muestra mensaje",
+    (await page.$eval("#mensaje", (e) => e.textContent)).includes(
+      "no reconocido",
+    ),
+  );
 
-  await page.evaluate(() => { document.querySelector("#usuario").value = ""; document.querySelector("#password").value = ""; });
+  await page.evaluate(() => {
+    document.querySelector("#usuario").value = "";
+    document.querySelector("#password").value = "";
+  });
   await page.type("#usuario", "admin");
   await page.type("#password", "admin123");
-  await Promise.all([page.waitForNavigation({ waitUntil: "networkidle0" }), page.click("button[type=submit]")]);
-  ok("login admin lleva al dashboard", ruta() === "/usuario/dashboard.html", ruta());
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: "networkidle0" }),
+    page.click("button[type=submit]"),
+  ]);
+  ok(
+    "login admin lleva al dashboard",
+    ruta() === "/usuario/dashboard.html",
+    ruta(),
+  );
 
-  await page.waitForFunction(() => document.body.innerText.includes("Partidos totales"), { timeout: 5000 }).catch(() => {});
+  await page
+    .waitForFunction(
+      () => document.body.innerText.includes("Partidos totales"),
+      { timeout: 5000 },
+    )
+    .catch(() => {});
   const textoDash = await page.evaluate(() => document.body.innerText);
-  ok("dashboard carga datos de los mocks", textoDash.includes("Partidos totales") && textoDash.includes("Próximos partidos"));
-  const links = await page.$$eval("#menu-principal a", (as) => as.map((a) => [a.textContent.trim(), a.getAttribute("href"), a.getAttribute("aria-current")]));
+  ok(
+    "dashboard carga datos de los mocks",
+    textoDash.includes("Partidos totales") &&
+      textoDash.includes("Próximos partidos"),
+  );
+  const links = await page.$$eval("#menu-principal a", (as) =>
+    as.map((a) => [
+      a.textContent.trim(),
+      a.getAttribute("href"),
+      a.getAttribute("aria-current"),
+    ]),
+  );
   ok("menu admin tiene 4 enlaces", links.length === 4, JSON.stringify(links));
-  ok("menu marca Inicio como actual", links.find((l) => l[0] === "Inicio")?.[2] === "page");
+  ok(
+    "menu marca Inicio como actual",
+    links.find((l) => l[0] === "Inicio")?.[2] === "page",
+  );
 
-  for (const [texto, destino] of [["Partidos", "/usuario/partidos.html"], ["Perfil", "/usuario/perfil.html"], ["Usuarios", "/admin/usuarios.html"], ["Inicio", "/usuario/dashboard.html"]]) {
+  for (const [texto, destino] of [
+    ["Partidos", "/usuario/partidos.html"],
+    ["Perfil", "/usuario/perfil.html"],
+    ["Usuarios", "/admin/usuarios.html"],
+    ["Inicio", "/usuario/dashboard.html"],
+  ]) {
     const enlace = (await page.$$("#menu-principal a")).find(async () => true);
     const todos = await page.$$("#menu-principal a");
     let objetivo = null;
-    for (const a of todos) if ((await a.evaluate((e) => e.textContent.trim())) === texto) objetivo = a;
-    await Promise.all([page.waitForNavigation({ waitUntil: "networkidle0" }), objetivo.click()]);
-    const actual = await page.$$eval("#menu-principal a[aria-current=page]", (as) => as.map((a) => a.textContent.trim()));
-    ok(`menu -> ${texto}`, ruta() === destino && actual[0] === texto, `${ruta()} actual=${actual}`);
+    for (const a of todos)
+      if ((await a.evaluate((e) => e.textContent.trim())) === texto)
+        objetivo = a;
+    await Promise.all([
+      page.waitForNavigation({ waitUntil: "networkidle0" }),
+      objetivo.click(),
+    ]);
+    const actual = await page.$$eval(
+      "#menu-principal a[aria-current=page]",
+      (as) => as.map((a) => a.textContent.trim()),
+    );
+    ok(
+      `menu -> ${texto}`,
+      ruta() === destino && actual[0] === texto,
+      `${ruta()} actual=${actual}`,
+    );
   }
 
   await page.goto(BASE + "admin/usuarios.html", { waitUntil: "networkidle0" });
-  const filas = () => page.$$eval("tbody tr", (trs) => trs.filter((t) => t.offsetParent !== null).length);
+  const filas = () =>
+    page.$$eval(
+      "tbody tr",
+      (trs) => trs.filter((t) => t.offsetParent !== null).length,
+    );
   ok("tabla parte con 1 arbitro", (await filas()) === 1, String(await filas()));
   await page.click("form button[type=submit]");
   await esperar(300);
-  const erroresVisibles = await page.$$eval("small", (s) => s.filter((e) => e.offsetParent !== null).length);
-  ok("guardar vacio muestra 5 errores", erroresVisibles === 5, String(erroresVisibles));
+  const erroresVisibles = await page.$$eval(
+    "small",
+    (s) => s.filter((e) => e.offsetParent !== null).length,
+  );
+  ok(
+    "guardar vacio muestra 5 errores",
+    erroresVisibles === 5,
+    String(erroresVisibles),
+  );
   await page.type("#arbNombre", "Ana Perez");
   await page.type("#arbRut", "11.111.111-1");
   await page.type("#arbEmail", "ana@arbitros.cl");
@@ -398,52 +483,125 @@ const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
   await page.select("#arbCategoria", "FIFA");
   await page.click("form button[type=submit]");
   await esperar(400);
-  ok("modal de confirmacion se abre", await page.$eval(".modal-fondo", (e) => e.offsetParent !== null || getComputedStyle(e).display !== "none"));
-  await page.evaluate(() => [...document.querySelectorAll(".modal-boton")].find((b) => b.textContent.trim() === "Registrar").click());
+  ok(
+    "modal de confirmacion se abre",
+    await page.$eval(
+      ".modal-fondo",
+      (e) => e.offsetParent !== null || getComputedStyle(e).display !== "none",
+    ),
+  );
+  await page.evaluate(() =>
+    [...document.querySelectorAll(".modal-boton")]
+      .find((b) => b.textContent.trim() === "Registrar")
+      .click(),
+  );
   await esperar(400);
-  ok("arbitro agregado a la tabla", (await filas()) === 2, String(await filas()));
-  ok("toast de exito visible", (await page.$$eval(".toast", (t) => t.length)) > 0);
+  ok(
+    "arbitro agregado a la tabla",
+    (await filas()) === 2,
+    String(await filas()),
+  );
+  ok(
+    "toast de exito visible",
+    (await page.$$eval(".toast", (t) => t.length)) > 0,
+  );
   const botones = await page.$$("tbody button");
   await botones[botones.length - 1].click();
   await esperar(400);
-  await page.evaluate(() => [...document.querySelectorAll(".modal-boton")].find((b) => b.textContent.trim() === "Eliminar").click());
+  await page.evaluate(() =>
+    [...document.querySelectorAll(".modal-boton")]
+      .find((b) => b.textContent.trim() === "Eliminar")
+      .click(),
+  );
   await esperar(400);
-  ok("arbitro eliminado de la tabla", (await filas()) === 1, String(await filas()));
+  ok(
+    "arbitro eliminado de la tabla",
+    (await filas()) === 1,
+    String(await filas()),
+  );
 
   await page.setViewport({ width: 375, height: 800 });
-  for (const p of ["usuario/dashboard.html", "admin/usuarios.html", "usuario/partidos.html", "usuario/perfil.html"]) {
+  for (const p of [
+    "usuario/dashboard.html",
+    "admin/usuarios.html",
+    "usuario/partidos.html",
+    "usuario/perfil.html",
+  ]) {
     await page.goto(BASE + p, { waitUntil: "networkidle0" });
     await esperar(300);
-    const anchoExtra = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-    ok(`375px sin scroll horizontal: ${p}`, anchoExtra <= 0, String(anchoExtra));
+    const anchoExtra = await page.evaluate(
+      () => document.documentElement.scrollWidth - window.innerWidth,
+    );
+    ok(
+      `375px sin scroll horizontal: ${p}`,
+      anchoExtra <= 0,
+      String(anchoExtra),
+    );
   }
-  const hamburguesa = await page.$("#menu-comun button[aria-controls=menu-principal]");
+  const hamburguesa = await page.$(
+    "#menu-comun button[aria-controls=menu-principal]",
+  );
   await hamburguesa.click();
   await esperar(200);
-  ok("menu hamburguesa se abre en movil", await page.$eval("#menu-principal", (n) => n.offsetParent !== null));
+  ok(
+    "menu hamburguesa se abre en movil",
+    await page.$eval("#menu-principal", (n) => n.offsetParent !== null),
+  );
   await page.setViewport({ width: 1280, height: 900 });
 
-  await page.goto(BASE + "usuario/dashboard.html", { waitUntil: "networkidle0" });
-  const salir = await page.evaluateHandle(() => [...document.querySelectorAll("#menu-principal button")].find((b) => b.textContent.includes("Cerrar")));
-  await Promise.all([page.waitForNavigation({ waitUntil: "networkidle0" }), salir.click()]);
+  await page.goto(BASE + "usuario/dashboard.html", {
+    waitUntil: "networkidle0",
+  });
+  const salir = await page.evaluateHandle(() =>
+    [...document.querySelectorAll("#menu-principal button")].find((b) =>
+      b.textContent.includes("Cerrar"),
+    ),
+  );
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: "networkidle0" }),
+    salir.click(),
+  ]);
   ok("cerrar sesion vuelve al login", ruta() === "/index.html", ruta());
-  ok("cerrar sesion limpia localStorage", (await page.evaluate(() => localStorage.length)) === 0);
+  ok(
+    "cerrar sesion limpia localStorage",
+    (await page.evaluate(() => localStorage.length)) === 0,
+  );
 
   await page.type("#usuario", "arbitro");
   await page.type("#password", "arbitro123");
-  await Promise.all([page.waitForNavigation({ waitUntil: "networkidle0" }), page.click("button[type=submit]")]);
-  const linksArb = await page.$$eval("#menu-principal a", (as) => as.map((a) => a.textContent.trim()));
-  ok("arbitro no ve Usuarios en el menu", !linksArb.includes("Usuarios"), JSON.stringify(linksArb));
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: "networkidle0" }),
+    page.click("button[type=submit]"),
+  ]);
+  const linksArb = await page.$$eval("#menu-principal a", (as) =>
+    as.map((a) => a.textContent.trim()),
+  );
+  ok(
+    "arbitro no ve Usuarios en el menu",
+    !linksArb.includes("Usuarios"),
+    JSON.stringify(linksArb),
+  );
   await page.goto(BASE + "admin/usuarios.html", { waitUntil: "networkidle0" });
-  ok("arbitro en admin/usuarios redirige al dashboard", ruta() === "/usuario/dashboard.html", ruta());
+  ok(
+    "arbitro en admin/usuarios redirige al dashboard",
+    ruta() === "/usuario/dashboard.html",
+    ruta(),
+  );
 
   await navegador.close();
   console.log(resultados.join("\n"));
-  console.log("\nERRORES/AVISOS DE CONSOLA:", errores.length ? "\n" + [...new Set(errores)].join("\n") : "ninguno");
-})().catch((e) => { console.log(resultados.join("\n")); console.error("SCRIPT FALLO:", e); process.exit(1); });
+  console.log(
+    "\nERRORES/AVISOS DE CONSOLA:",
+    errores.length ? "\n" + [...new Set(errores)].join("\n") : "ninguno",
+  );
+})().catch((e) => {
+  console.log(resultados.join("\n"));
+  console.error("SCRIPT FALLO:", e);
+  process.exit(1);
+});
 ```
 
-*Claude ejecutó en la terminal (Run the browser test against the current (pre-cleanup) project):*
+_Claude ejecutó en la terminal (Run the browser test against the current (pre-cleanup) project):_
 
 ```bash
 node probar.js
@@ -451,50 +609,49 @@ node probar.js
 
 Todo funciona. El único error de consola es que el navegador pide un `favicon.ico` que no existe. Ahora hago la limpieza.
 
-*Claude creó o reemplazó el archivo `C:\Users\carlo\Documents\Futbol-desarrollo\index.html` con este contenido:*
+_Claude creó o reemplazó el archivo `C:\Users\carlo\Documents\Futbol-desarrollo\index.html` con este contenido:_
 
 ```html
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Acta Digital Arbitral</title>
-  <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="login/login.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema de Acta Digital Arbitral</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="login/login.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Sistema de Acta Digital Arbitral</h1>
+    </header>
 
-  <header>
-    <h1>Sistema de Acta Digital Arbitral</h1>
-  </header>
+    <main>
+      <section id="login">
+        <h2>Acceso al Sistema</h2>
+        <form id="formLogin">
+          <div>
+            <label for="usuario">Usuario</label>
+            <input type="text" id="usuario" placeholder="Tu usuario" />
+          </div>
+          <div>
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" placeholder="Tu contraseña" />
+          </div>
+          <div>
+            <button type="submit">Entrar</button>
+          </div>
+          <p id="mensaje"></p>
+        </form>
+      </section>
+    </main>
 
-  <main>
-    <section id="login">
-      <h2>Acceso al Sistema</h2>
-      <form id="formLogin">
-        <div>
-          <label for="usuario">Usuario</label>
-          <input type="text" id="usuario" placeholder="Tu usuario">
-        </div>
-        <div>
-          <label for="password">Contraseña</label>
-          <input type="password" id="password" placeholder="Tu contraseña">
-        </div>
-        <div>
-          <button type="submit">Entrar</button>
-        </div>
-        <p id="mensaje"></p>
-      </form>
-    </section>
-  </main>
-
-  <script src="login/login.js"></script>
-</body>
+    <script src="login/login.js"></script>
+  </body>
 </html>
 ```
 
-*Claude creó o reemplazó el archivo `C:\Users\carlo\Documents\Futbol-desarrollo\login\login.css` con este contenido:*
+_Claude creó o reemplazó el archivo `C:\Users\carlo\Documents\Futbol-desarrollo\login\login.css` con este contenido:_
 
 ```css
 * {
@@ -576,7 +733,7 @@ button:hover {
 }
 ```
 
-*Claude ejecutó en la terminal (Clean blank lines, fix stale comments, add favicon tag and delete leftovers):*
+_Claude ejecutó en la terminal (Clean blank lines, fix stale comments, add favicon tag and delete leftovers):_
 
 ```bash
 cd /c/Users/carlo/Documents/Futbol-desarrollo && python - <<'EOF'
@@ -612,7 +769,7 @@ git rm -q src/main.js src/style.css public/favicon.svg public/icons.svg && rmdir
 
 Ahora reviso cada archivo buscando restos: líneas en blanco con espacios, líneas vacías repetidas, clases CSS que nadie usa y funciones que nadie llama.
 
-*Claude ejecutó en la terminal (Scan all files for blank-line junk, unused CSS classes and unused functions):*
+_Claude ejecutó en la terminal (Scan all files for blank-line junk, unused CSS classes and unused functions):_
 
 ```bash
 cd /c/Users/carlo/Documents/Futbol-desarrollo && python - <<'EOF'
@@ -639,13 +796,13 @@ for f, s in js.items():
 EOF
 ```
 
-*Claude ejecutó en la terminal (Check Vite's Node requirement and mock users):*
+_Claude ejecutó en la terminal (Check Vite's Node requirement and mock users):_
 
 ```bash
 printf '\n' >> comun/api.js && grep -o '"node": "[^"]*"' node_modules/vite/package.json; grep -n '"usuario"\|"rol"' public/mocks/usuarios.json | head -6; git log --format='%an' | sort -u
 ```
 
-*Claude creó o reemplazó el archivo `C:\Users\carlo\Documents\Futbol-desarrollo\README.md` con este contenido:*
+_Claude creó o reemplazó el archivo `C:\Users\carlo\Documents\Futbol-desarrollo\README.md` con este contenido:_
 
 ````markdown
 # Sistema de Acta Digital Arbitral
@@ -664,12 +821,12 @@ Es la Entrega 2 de Desarrollo Web y Móvil (CIT2008, UDP): frontend con datos si
 
 ## Tecnologías
 
-| Tecnología | Uso | Cómo se incluye |
-|---|---|---|
-| HTML, CSS y JavaScript | Base del proyecto | Archivos del repositorio |
-| [Alpine.js 3.14.9](https://alpinejs.dev) | Interactividad: `x-data`, `x-show`, `x-for`, `x-model`, `@click`, `Alpine.data` | CDN (jsDelivr) |
-| [Tailwind CSS 4](https://tailwindcss.com) | Estilos de las vistas internas con clases utilitarias y prefijos responsivos | CDN (`@tailwindcss/browser@4.1.13`) |
-| [Vite 8](https://vite.dev) | Servidor local de desarrollo | npm (`devDependencies`) |
+| Tecnología                                | Uso                                                                             | Cómo se incluye                     |
+| ----------------------------------------- | ------------------------------------------------------------------------------- | ----------------------------------- |
+| HTML, CSS y JavaScript                    | Base del proyecto                                                               | Archivos del repositorio            |
+| [Alpine.js 3.14.9](https://alpinejs.dev)  | Interactividad: `x-data`, `x-show`, `x-for`, `x-model`, `@click`, `Alpine.data` | CDN (jsDelivr)                      |
+| [Tailwind CSS 4](https://tailwindcss.com) | Estilos de las vistas internas con clases utilitarias y prefijos responsivos    | CDN (`@tailwindcss/browser@4.1.13`) |
+| [Vite 8](https://vite.dev)                | Servidor local de desarrollo                                                    | npm (`devDependencies`)             |
 
 La pantalla de login usa su propio archivo de estilos (`login/login.css`).
 
@@ -696,23 +853,23 @@ También funciona con la extensión **Live Server** de VS Code: clic derecho en 
 
 ## Credenciales de prueba
 
-| Rol | Usuario | Contraseña |
-|---|---|---|
-| Administrador | `admin` | `admin123` |
-| Árbitro | `arbitro` | `arbitro123` |
+| Rol           | Usuario   | Contraseña   |
+| ------------- | --------- | ------------ |
+| Administrador | `admin`   | `admin123`   |
+| Árbitro       | `arbitro` | `arbitro123` |
 
 - **Árbitro:** ve el inicio con el resumen del torneo, partidos y perfil.
 - **Administrador:** además entra a **Usuarios**, donde registra y elimina árbitros.
 
 ## Vistas
 
-| Vista | Archivo | Cómo llegar | Acceso |
-|---|---|---|---|
-| Iniciar sesión | `index.html` | Al abrir la aplicación | Pública |
-| Inicio (resumen del torneo) | `usuario/dashboard.html` | Al iniciar sesión, o menú **Inicio** | Con sesión |
-| Partidos | `usuario/partidos.html` | Menú **Partidos** | Con sesión |
-| Perfil | `usuario/perfil.html` | Menú **Perfil** | Con sesión |
-| Usuarios (registro de árbitros) | `admin/usuarios.html` | Menú **Usuarios** | Solo administrador |
+| Vista                           | Archivo                  | Cómo llegar                          | Acceso             |
+| ------------------------------- | ------------------------ | ------------------------------------ | ------------------ |
+| Iniciar sesión                  | `index.html`             | Al abrir la aplicación               | Pública            |
+| Inicio (resumen del torneo)     | `usuario/dashboard.html` | Al iniciar sesión, o menú **Inicio** | Con sesión         |
+| Partidos                        | `usuario/partidos.html`  | Menú **Partidos**                    | Con sesión         |
+| Perfil                          | `usuario/perfil.html`    | Menú **Perfil**                      | Con sesión         |
+| Usuarios (registro de árbitros) | `admin/usuarios.html`    | Menú **Usuarios**                    | Solo administrador |
 
 Sin sesión, cualquier vista interna redirige al login. Un árbitro que intenta entrar a **Usuarios** vuelve al inicio. **Cerrar sesión** (en el menú) limpia los datos guardados y vuelve al login.
 
@@ -720,7 +877,7 @@ Sin sesión, cualquier vista interna redirige al login. Un árbitro que intenta 
 
 - **Sesión simulada:** el login guarda el rol en `localStorage` y las vistas internas lo revisan antes de mostrarse.
 - **Menú común** en todas las vistas internas: marca la vista actual, muestra **Usuarios** solo al administrador y se convierte en menú hamburguesa en móvil.
-- **Inicio:** totales del torneo, próximos partidos y últimos resultados, con estados de *cargando* (skeleton), *vacío* y *error con botón Reintentar*.
+- **Inicio:** totales del torneo, próximos partidos y últimos resultados, con estados de _cargando_ (skeleton), _vacío_ y _error con botón Reintentar_.
 - **Registro de árbitros (administrador):** formulario con validación por campo (nombre, RUT con guion, email, teléfono y categoría), modal de confirmación antes de guardar y de eliminar, tabla que se actualiza al instante y notificaciones (toasts) de éxito o error.
 - **Componentes de interfaz:** modal de confirmación, notificaciones (toasts) y menú desplegable.
 
@@ -736,21 +893,21 @@ Todo el acceso a datos está en `comun/api.js`. Las vistas no leen los JSON dire
 
 ### Endpoints simulados
 
-| Función | Método | Ruta equivalente | Fuente de datos | Descripción |
-|---|---|---|---|---|
-| `obtenerResumen(usuario)` | GET | `/api/resumen` | `partidos.json` + `usuarios.json` | Totales, próximos partidos y últimos resultados |
-| `obtenerPartidos()` | GET | `/api/partidos` | `partidos.json` / `localStorage` | Lista de partidos |
-| `crearPartido(nuevoPartido)` | POST | `/api/partidos` | `localStorage` | Crea un partido y lo devuelve con su `id` |
-| `actualizarPartido(id, datos)` | PUT | `/api/partidos/:id` | `localStorage` | Actualiza un partido, o error si no existe |
-| `eliminarPartido(id)` | DELETE | `/api/partidos/:id` | `localStorage` | Elimina un partido y devuelve su `id` |
+| Función                        | Método | Ruta equivalente    | Fuente de datos                   | Descripción                                     |
+| ------------------------------ | ------ | ------------------- | --------------------------------- | ----------------------------------------------- |
+| `obtenerResumen(usuario)`      | GET    | `/api/resumen`      | `partidos.json` + `usuarios.json` | Totales, próximos partidos y últimos resultados |
+| `obtenerPartidos()`            | GET    | `/api/partidos`     | `partidos.json` / `localStorage`  | Lista de partidos                               |
+| `crearPartido(nuevoPartido)`   | POST   | `/api/partidos`     | `localStorage`                    | Crea un partido y lo devuelve con su `id`       |
+| `actualizarPartido(id, datos)` | PUT    | `/api/partidos/:id` | `localStorage`                    | Actualiza un partido, o error si no existe      |
+| `eliminarPartido(id)`          | DELETE | `/api/partidos/:id` | `localStorage`                    | Elimina un partido y devuelve su `id`           |
 
 ### Datos (`public/mocks/`)
 
-| Archivo | Registros | Contenido |
-|---|---|---|
-| `partidos.json` | 12 | Fecha, hora, equipos, goles, tarjetas, estado, cancha, árbitro, acontecimientos y observaciones |
-| `usuarios.json` | 10 | Usuarios con nombre, email y rol (administrador o árbitro) |
-| `equipos.json` | 10 | Nombre, iniciales, ciudad y estadio de cada equipo |
+| Archivo         | Registros | Contenido                                                                                       |
+| --------------- | --------- | ----------------------------------------------------------------------------------------------- |
+| `partidos.json` | 12        | Fecha, hora, equipos, goles, tarjetas, estado, cancha, árbitro, acontecimientos y observaciones |
+| `usuarios.json` | 10        | Usuarios con nombre, email y rol (administrador o árbitro)                                      |
+| `equipos.json`  | 10        | Nombre, iniciales, ciudad y estadio de cada equipo                                              |
 
 ---
 
@@ -796,21 +953,21 @@ Ver el índice en [`ia/README.md`](ia/README.md).
 En desarrollo.
 ````
 
-*Claude editó `C:\Users\carlo\Documents\Futbol-desarrollo\README.md`. Texto que reemplazó:*
+_Claude editó `C:\Users\carlo\Documents\Futbol-desarrollo\README.md`. Texto que reemplazó:_
 
 ```markdown
 | Partidos | `usuario/partidos.html` | Menú **Partidos** | Con sesión |
 | Perfil | `usuario/perfil.html` | Menú **Perfil** | Con sesión |
 ```
 
-*Texto nuevo:*
+_Texto nuevo:_
 
 ```markdown
 | Partidos (en construcción) | `usuario/partidos.html` | Menú **Partidos** | Con sesión |
 | Perfil (en construcción) | `usuario/perfil.html` | Menú **Perfil** | Con sesión |
 ```
 
-*Claude ejecutó en la terminal (Re-run the full browser test after the cleanup):*
+_Claude ejecutó en la terminal (Re-run the full browser test after the cleanup):_
 
 ```bash
 cd /c/Users/carlo/AppData/Local/Temp/claude/36b359e89e990fab/3c0f7c63-81c4-46f2-8803-15e909788f15/scratchpad/navegador && curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:5179/ && node probar.js
@@ -818,7 +975,7 @@ cd /c/Users/carlo/AppData/Local/Temp/claude/36b359e89e990fab/3c0f7c63-81c4-46f2-
 
 Las 25 pruebas pasan y la consola quedó sin errores. Hago la última revisión de rutas y apago el servidor de prueba.
 
-*Claude ejecutó en la terminal (Recheck all file references and list pending changes):*
+_Claude ejecutó en la terminal (Recheck all file references and list pending changes):_
 
 ```bash
 cd /c/Users/carlo/Documents/Futbol-desarrollo && python - <<'EOF'
@@ -839,7 +996,7 @@ EOF
 git status --short | cat
 ```
 
-*Claude ejecutó en la terminal (Stop the Vite test server):*
+_Claude ejecutó en la terminal (Stop the Vite test server):_
 
 ```powershell
 $c = Get-NetTCPConnection -LocalPort 5179 -State Listen -ErrorAction SilentlyContinue; if ($c) { Stop-Process -Id $c.OwningProcess -Confirm:$false; "detenido $($c.OwningProcess)" } else { "no habia servidor" }
@@ -847,16 +1004,10 @@ $c = Get-NetTCPConnection -LocalPort 5179 -State Listen -ErrorAction SilentlyCon
 
 Listo: actualicé el README, borré los archivos vacíos y el código muerto, y revisé el proyecto archivo por archivo. Lo probé en un navegador y todo funciona. Todavía no hice commit.
 
-##### Sobre Python y la solicitud de autorización
-Sí, ocupé Python en tres momentos:
-- **Scripts para editar archivos:** cambiar las rutas, limpiar líneas y revisar que no falten archivos.
-- **Leer el PDF:** instalé una librería solo en mi carpeta temporal, no en tu proyecto.
-- **Un servidor de prueba** (`python -m http.server`) en la tarea anterior, para revisar que las páginas cargaran.
-
-**La ventana de autorización fue por ese servidor.** Abría un puerto visible para la red, y por eso el Firewall de Windows te pidió permiso. Hoy usé Vite, que solo escucha en tu propio computador, y lo apagué al terminar. Si el aviso vuelve a aparecer y no lo esperas, puedes elegir "Cancelar" sin problema.
-
 ##### README
+
 Lo armé con las mismas secciones que el del profe y lo que pide la sección 8 del PDF:
+
 - Integrantes, tecnologías y cómo se incluyen.
 - Requisitos.
 - Instalación con `npm install` y `npm run dev`. Lo probé desde cero y funciona.
@@ -869,6 +1020,7 @@ El README antiguo decía que se podía abrir `index.html` con doble clic. **Eso 
 **No sé el usuario de GitHub de Roberto**: puse solo su nombre. Si me lo dices, lo agrego.
 
 ##### Lo que eliminé
+
 - **`src/main.js` y `src/style.css`:** estaban vacíos, eran sobras de la plantilla de Vite.
 - **`public/favicon.svg` y `public/icons.svg`:** eran el logo y los íconos de la plantilla de Vite, y ninguna página los usaba.
 - **En `index.html`:**
@@ -885,6 +1037,7 @@ El README antiguo decía que se podía abrir `index.html` con doble clic. **Eso 
 **No borré** `crearPartido`, `actualizarPartido` ni `eliminarPartido` de `api.js`. Todavía nadie las usa, pero son la capa de datos que va a ocupar la página de Partidos, que está en construcción y documentada en el README.
 
 ##### Revisión
+
 - **Archivo por archivo:** sin líneas basura, sin clases CSS sin uso y todas las rutas existen con el nombre exacto.
 - **En el navegador (Edge automatizado), 25 pruebas, todas bien:**
   - Login correcto e incorrecto.
@@ -898,6 +1051,7 @@ El README antiguo decía que se podía abrir `index.html` con doble clic. **Eso 
 - **Consola:** sin errores ni avisos.
 
 ##### Lo que sigue pendiente
+
 1. **`ia/README.md` enlaza un archivo que no existe** (`2026-11-02_cbenavidesp_rut-y-eliminar-arbitros.md`). No toqué `ia/`, como pediste. Dime si lo regenero o si quito esa fila.
 2. **Faltan cosas de la rúbrica.** Son trabajo del equipo y no las cambié:
    - Las respuestas de `api.js` no traen `status`.
@@ -908,40 +1062,14 @@ El README antiguo decía que se podía abrir `index.html` con doble clic. **Eso 
    - El login no usa Tailwind ni Alpine como el resto.
 
 Para subirlo:
+
 ```
 git add -A
 git commit -m "Ordena archivos por seccion, limpia codigo sin uso y actualiza README"
 git push origin main
 ```
+
 Recuerda que `git add -A` también sube la carpeta `ia/`. Avisa a tus compañeros antes del push, porque se movieron sus archivos.
-
-### Prompt 3
-
-```text
-Esa cosa que esta vacia de la carpeta IA eliminala noma, yo borre su contenido porque era algo tan tonto que facilmente lo podia haber hecho yo asi que solo lo borre
-```
-
-### Respuesta 3
-
-*Claude editó `C:\Users\carlo\Documents\Futbol-desarrollo\ia\README.md`. Texto que reemplazó:*
-
-```markdown
-| 2026-11-02 | @CBenavidesP | Claude Code | Formato de RUT y eliminación de árbitros | [ver](2026-11-02_cbenavidesp_rut-y-eliminar-arbitros.md) |
-```
-
-*Texto nuevo:*
-
-```markdown
-
-```
-
-Listo. Quité esa fila de `ia/README.md` (era la línea 9), así que ya no hay enlaces rotos. El índice quedó con 4 registros.
-
-Una advertencia, para que lo decidas sabiendo esto: el código de esa consulta sigue en el proyecto, aunque fuera simple. Son los métodos `solicitarEliminacion` y `eliminarArbitro` (líneas 106 a 119 de `admin/registro-arbitros.js`), el botón Eliminar y el texto del RUT en `admin/usuarios.html`. El PDF dice que todo código que venga de una IA debe quedar registrado y que el uso no documentado "será evaluado negativamente".
-
-Si no quieres arriesgarte, tienes dos caminos:
-- **Recuperar el registro.** Lo puedo volver a generar si me lo pides.
-- **Reescribir esa parte tú mismo** en un commit propio. Así ese código pasa a ser tuyo y no necesita registro.
 
 ## Qué se incorporó al proyecto
 

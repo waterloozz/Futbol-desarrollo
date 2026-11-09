@@ -3,7 +3,7 @@
 - **Fecha:** 2026-11-09
 - **Integrante:** Carlos Benavides (@CBenavidesP)
 - **Herramienta y modelo:** Claude Code (Claude Opus 5.5)
-- **Enlace a la conversación:** no aplica (Claude Code no permite compartir la conversación; el texto completo va abajo)
+- **Enlace a la conversación:** no aplica (Claude Code no permite compartir la conversación)
 - **Archivos afectados:** index.html (formulario con x-data="login", error general y campos, líneas 19-39; scripts con defer y Alpine al final, líneas 44-47); login/login.js (archivo completo, 64 líneas); login/login.css (reglas nuevas al final: [x-cloak], .input-error, .error-campo, .alerta-error y button:disabled; se avisó a Josefa antes)
 
 ## Objetivo
@@ -15,7 +15,7 @@ Terminar mi tarea de validación de formularios en el login: que no se pueda env
 ### Prompt 1
 
 ```text
-Lo de los comentarios lo haremos al final que terminen todos de hacer sus cosas, haremos primero la validacion del login, luego haremos las cosas que no tienen dueño para dejarlo listo. Finalizada esas 2 cosas actualizaremos el readme
+ haremos primero la validacion del login, luego haremos las cosas que no tienen dueño para dejarlo listo. Finalizada esas 2 cosas actualizaremos el readme
 ```
 
 ### Respuesta 1
@@ -25,33 +25,39 @@ De acuerdo con el orden: primero la validación del login, después lo que no ti
 ##### Cómo pensaría la validación del login
 
 ###### Decisión 1: ¿JavaScript normal o Alpine?
+
 Hoy `login/login.js` es JavaScript normal (`addEventListener`) y `index.html` no carga Alpine.
 
-| Opción | Ventajas | Desventajas |
-|---|---|---|
-| **A. Pasarlo a Alpine (recomendada)** | Usa **lo mismo que el registro de árbitros**: `validarCampo`, `revalidar`, `@blur`, `@input`, `aria-invalid` y `$nextTick`. Ya lo sabes explicar. Además, el criterio D1 del PDF pide usar Alpine "de forma consistente". | Hay que agregar Alpine a `index.html`. |
-| B. Seguir con JavaScript normal | No cambia la forma en que está hecho. | Hay que escribir a mano lo que Alpine hace solo (mostrar u ocultar mensajes, marcar campos), y queda distinto al resto del proyecto. |
+| Opción                                | Ventajas                                                                                                                                                                                                                  | Desventajas                                                                                                                          |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **A. Pasarlo a Alpine (recomendada)** | Usa **lo mismo que el registro de árbitros**: `validarCampo`, `revalidar`, `@blur`, `@input`, `aria-invalid` y `$nextTick`. Ya lo sabes explicar. Además, el criterio D1 del PDF pide usar Alpine "de forma consistente". | Hay que agregar Alpine a `index.html`.                                                                                               |
+| B. Seguir con JavaScript normal       | No cambia la forma en que está hecho.                                                                                                                                                                                     | Hay que escribir a mano lo que Alpine hace solo (mostrar u ocultar mensajes, marcar campos), y queda distinto al resto del proyecto. |
 
 ###### Decisión 2: ¿qué se valida?
+
 - **Email:** obligatorio y con formato válido (la misma regla del registro).
 - **Contraseña:** solo obligatoria. **Recomiendo no pedir mínimo de 8 caracteres en el login.** El login no debería dar pistas sobre cómo son las claves, y si alguna cuenta tuviera una más corta, no podría entrar.
 
 ###### Decisión 3: ¿cuándo se muestran los errores?
+
 Igual que en el registro: **al salir del campo**, y si ya tenía error, **mientras escribe**. Al apretar Entrar con errores, el foco va al primer campo malo.
 
 ###### Decisión 4: el error de la API (401)
+
 "Email o contraseña incorrectos." no es de un campo en particular, sino del intento completo. Por eso propongo:
+
 - Mostrarlo como **mensaje general**, arriba del botón, con `role="alert"` para que los lectores de pantalla lo anuncien.
 - **Que se borre apenas el usuario vuelve a escribir.**
 - No decir si lo que estaba mal era el email o la contraseña. Así no se le da pistas a alguien que intente adivinar cuentas.
 
 ###### Lo que cambiaría (cuando decidas)
-| Archivo | Qué cambia |
-|---|---|
-| `index.html` (formulario, líneas 19-31) | Cada campo con `x-model`, `@blur`, `@input`, `aria-invalid`, `aria-describedby` y su mensaje de error debajo. El mensaje general del 401. El botón con `:disabled` y el texto "Ingresando…". |
-| `index.html` (scripts, líneas 36-38) | `api.js`, `seguridad.js` y `login.js` con `defer`, y **Alpine al final**. |
-| `login/login.js` | Pasa a ser un componente `Alpine.data("login")` con `form`, `errores`, `errorGeneral`, `enviando`, `mensajeDe`, `validarCampo`, `revalidar`, `validar`, `enfocarPrimerError` y `entrar()` con `try/finally`. |
-| `login/login.css` (de Josefa) | Unas pocas reglas: el estilo del mensaje de error, el borde rojo del campo con error y el botón deshabilitado. El login no usa Tailwind, así que va en su CSS. |
+
+| Archivo                                 | Qué cambia                                                                                                                                                                                                   |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `index.html` (formulario, líneas 19-31) | Cada campo con `x-model`, `@blur`, `@input`, `aria-invalid`, `aria-describedby` y su mensaje de error debajo. El mensaje general del 401. El botón con `:disabled` y el texto "Ingresando…".                 |
+| `index.html` (scripts, líneas 36-38)    | `api.js`, `seguridad.js` y `login.js` con `defer`, y **Alpine al final**.                                                                                                                                    |
+| `login/login.js`                        | Pasa a ser un componente `Alpine.data("login")` con `form`, `errores`, `errorGeneral`, `enviando`, `mensajeDe`, `validarCampo`, `revalidar`, `validar`, `enfocarPrimerError` y `entrar()` con `try/finally`. |
+| `login/login.css` (de Josefa)           | Unas pocas reglas: el estilo del mensaje de error, el borde rojo del campo con error y el botón deshabilitado. El login no usa Tailwind, así que va en su CSS.                                               |
 
 Ojo: `login/login.css` es de Josefa. Son solo unas líneas al final, pero conviene avisarle.
 
@@ -82,7 +88,7 @@ dime las lineas exactas antes de tocar nada
 
 Reviso cómo están hoy `index.html` y `login.css`, para darte las líneas exactas. Solo leo.
 
-*Claude ejecutó en la terminal (Read index.html and the end of login.css):*
+_Claude ejecutó en la terminal (Read index.html and the end of login.css):_
 
 ```bash
 git status -sb | head -1; awk '{printf "%4d  %s\n", NR, $0}' index.html; wc -l login/login.css login/login.js; tail -5 login/login.css; grep -n '^input\|^button\|^label\|#mensaje\|^input:focus' login/login.css
@@ -93,45 +99,91 @@ Te dejo el plan con el código exacto que pondría en cada archivo. No toqué na
 ##### 1. `index.html`
 
 ###### Líneas 19-32: el formulario se reemplaza completo
+
 ```html
-      <form x-data="login" @submit.prevent="entrar()" novalidate>
-        <p x-show="errorGeneral" x-cloak role="alert" class="alerta-error" x-text="errorGeneral"></p>
-        <div>
-          <label for="email">Email</label>
-          <input type="email" id="email" autocomplete="email" placeholder="tu@correo.cl"
-            x-model="form.email" @blur="validarCampo('email')" @input="revalidar('email')"
-            :class="errores.email ? 'input-error' : ''"
-            :aria-invalid="errores.email ? 'true' : 'false'" aria-describedby="email-error">
-          <small id="email-error" class="error-campo" x-show="errores.email" x-text="errores.email"></small>
-        </div>
-        <div>
-          <label for="password">Contraseña</label>
-          <input type="password" id="password" autocomplete="current-password" placeholder="Tu contraseña"
-            x-model="form.password" @blur="validarCampo('password')" @input="revalidar('password')"
-            :class="errores.password ? 'input-error' : ''"
-            :aria-invalid="errores.password ? 'true' : 'false'" aria-describedby="password-error">
-          <small id="password-error" class="error-campo" x-show="errores.password" x-text="errores.password"></small>
-        </div>
-        <div>
-          <button type="submit" :disabled="enviando" x-text="enviando ? 'Ingresando…' : 'Entrar'">Entrar</button>
-        </div>
-      </form>
+<form x-data="login" @submit.prevent="entrar()" novalidate>
+  <p
+    x-show="errorGeneral"
+    x-cloak
+    role="alert"
+    class="alerta-error"
+    x-text="errorGeneral"
+  ></p>
+  <div>
+    <label for="email">Email</label>
+    <input
+      type="email"
+      id="email"
+      autocomplete="email"
+      placeholder="tu@correo.cl"
+      x-model="form.email"
+      @blur="validarCampo('email')"
+      @input="revalidar('email')"
+      :class="errores.email ? 'input-error' : ''"
+      :aria-invalid="errores.email ? 'true' : 'false'"
+      aria-describedby="email-error"
+    />
+    <small
+      id="email-error"
+      class="error-campo"
+      x-show="errores.email"
+      x-text="errores.email"
+    ></small>
+  </div>
+  <div>
+    <label for="password">Contraseña</label>
+    <input
+      type="password"
+      id="password"
+      autocomplete="current-password"
+      placeholder="Tu contraseña"
+      x-model="form.password"
+      @blur="validarCampo('password')"
+      @input="revalidar('password')"
+      :class="errores.password ? 'input-error' : ''"
+      :aria-invalid="errores.password ? 'true' : 'false'"
+      aria-describedby="password-error"
+    />
+    <small
+      id="password-error"
+      class="error-campo"
+      x-show="errores.password"
+      x-text="errores.password"
+    ></small>
+  </div>
+  <div>
+    <button
+      type="submit"
+      :disabled="enviando"
+      x-text="enviando ? 'Ingresando…' : 'Entrar'"
+    >
+      Entrar
+    </button>
+  </div>
+</form>
 ```
+
 - `x-data="login"` conecta el formulario con el componente.
 - **El 401 va arriba**, en el `<p role="alert">`.
 - Se borra el `<p id="mensaje">` de la línea 31, que ya no se usa.
 - El botón dice "Entrar" desde que carga la página, antes de que arranque Alpine.
 
 ###### Líneas 36-38: los scripts
+
 ```html
-  <script src="comun/api.js" defer></script>
-  <script src="comun/seguridad.js" defer></script>
-  <script src="login/login.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
+<script src="comun/api.js" defer></script>
+<script src="comun/seguridad.js" defer></script>
+<script src="login/login.js" defer></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"
+  defer
+></script>
 ```
+
 **Alpine queda al final**, con `defer`, como dijiste. Es la misma versión que usan las demás páginas.
 
 ##### 2. `login/login.js`: se reemplaza completo (unas 60 líneas)
+
 ```js
 document.addEventListener("alpine:init", () => {
   Alpine.data("login", () => ({
@@ -145,7 +197,9 @@ document.addEventListener("alpine:init", () => {
       switch (campo) {
         case "email":
           if (!f.email.trim()) return "Ingresa tu email.";
-          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim()) ? "" : "Ingresa un email válido.";
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim())
+            ? ""
+            : "Ingresa un email válido.";
         case "password":
           return f.password ? "" : "Ingresa tu contraseña.";
         default:
@@ -168,7 +222,9 @@ document.addEventListener("alpine:init", () => {
     },
 
     enfocarPrimerError() {
-      this.$nextTick(() => this.$root.querySelector('[aria-invalid="true"]')?.focus());
+      this.$nextTick(() =>
+        this.$root.querySelector('[aria-invalid="true"]')?.focus(),
+      );
     },
 
     async entrar() {
@@ -181,7 +237,10 @@ document.addEventListener("alpine:init", () => {
 
       this.enviando = true;
       try {
-        const respuesta = await iniciarSesion(this.form.email, this.form.password);
+        const respuesta = await iniciarSesion(
+          this.form.email,
+          this.form.password,
+        );
         if (!respuesta.ok) {
           this.errorGeneral = respuesta.error;
           return;
@@ -198,6 +257,7 @@ document.addEventListener("alpine:init", () => {
   }));
 });
 ```
+
 - **`revalidar()` borra `errorGeneral` apenas se escribe en cualquier campo** (decisión 4).
 - **El mensaje del 401 es el mismo para los dos casos**, porque ya viene así desde `iniciarSesion()` en `api.js`: "Email o contraseña incorrectos."
 - **La contraseña solo es obligatoria**, sin mínimo de caracteres (decisión 2).
@@ -205,6 +265,7 @@ document.addEventListener("alpine:init", () => {
 - La estructura es la misma del registro, así que se explica igual.
 
 ##### 3. `login/login.css` (de Josefa): solo se agrega al final, después de la línea 216
+
 ```css
 [x-cloak] {
   display: none !important;
@@ -245,11 +306,13 @@ button:disabled:hover {
   background-color: #1d4ed8;
 }
 ```
+
 - `[x-cloak]`: el login no tiene Tailwind, así que esta regla hace falta para que el mensaje del 401 no aparezca un instante al cargar la página.
 - `.error-campo` lleva `margin-top: -12px` porque en su CSS cada `input` tiene 18 px de margen abajo. Así el mensaje queda pegado a su campo.
 - Lo que ya tiene Josefa no cambia nada.
 
 ##### Qué probaría después
+
 - Errores al salir del campo, que se borran mientras escribes, y el foco en el primer campo malo.
 - Email vacío y email mal escrito, cada uno con su mensaje. Contraseña vacía.
 - **Que una contraseña corta no muestre error en el login.**
@@ -268,70 +331,121 @@ si
 
 ### Respuesta 3
 
-*Claude editó `C:\Users\carlo\Documents\Futbol-desarrollo\index.html`. Texto que reemplazó:*
+_Claude editó `C:\Users\carlo\Documents\Futbol-desarrollo\index.html`. Texto que reemplazó:_
 
 ```html
-      <form id="formLogin">
-        <div>
-          <label for="email">Email</label>
-          <input type="email" id="email" autocomplete="email" placeholder="tu@correo.cl">
-        </div>
-        <div>
-          <label for="password">Contraseña</label>
-          <input type="password" id="password" autocomplete="current-password" placeholder="Tu contraseña">
-        </div>
-        <div>
-          <button type="submit">Entrar</button>
-        </div>
-        <p id="mensaje"></p>
-      </form>
+<form id="formLogin">
+  <div>
+    <label for="email">Email</label>
+    <input
+      type="email"
+      id="email"
+      autocomplete="email"
+      placeholder="tu@correo.cl"
+    />
+  </div>
+  <div>
+    <label for="password">Contraseña</label>
+    <input
+      type="password"
+      id="password"
+      autocomplete="current-password"
+      placeholder="Tu contraseña"
+    />
+  </div>
+  <div>
+    <button type="submit">Entrar</button>
+  </div>
+  <p id="mensaje"></p>
+</form>
 ```
 
-*Texto nuevo:*
+_Texto nuevo:_
 
 ```html
-      <form x-data="login" @submit.prevent="entrar()" novalidate>
-        <p x-show="errorGeneral" x-cloak role="alert" class="alerta-error" x-text="errorGeneral"></p>
-        <div>
-          <label for="email">Email</label>
-          <input type="email" id="email" autocomplete="email" placeholder="tu@correo.cl"
-            x-model="form.email" @blur="validarCampo('email')" @input="revalidar('email')"
-            :class="errores.email ? 'input-error' : ''"
-            :aria-invalid="errores.email ? 'true' : 'false'" aria-describedby="email-error">
-          <small id="email-error" class="error-campo" x-show="errores.email" x-text="errores.email"></small>
-        </div>
-        <div>
-          <label for="password">Contraseña</label>
-          <input type="password" id="password" autocomplete="current-password" placeholder="Tu contraseña"
-            x-model="form.password" @blur="validarCampo('password')" @input="revalidar('password')"
-            :class="errores.password ? 'input-error' : ''"
-            :aria-invalid="errores.password ? 'true' : 'false'" aria-describedby="password-error">
-          <small id="password-error" class="error-campo" x-show="errores.password" x-text="errores.password"></small>
-        </div>
-        <div>
-          <button type="submit" :disabled="enviando" x-text="enviando ? 'Ingresando…' : 'Entrar'">Entrar</button>
-        </div>
-      </form>
+<form x-data="login" @submit.prevent="entrar()" novalidate>
+  <p
+    x-show="errorGeneral"
+    x-cloak
+    role="alert"
+    class="alerta-error"
+    x-text="errorGeneral"
+  ></p>
+  <div>
+    <label for="email">Email</label>
+    <input
+      type="email"
+      id="email"
+      autocomplete="email"
+      placeholder="tu@correo.cl"
+      x-model="form.email"
+      @blur="validarCampo('email')"
+      @input="revalidar('email')"
+      :class="errores.email ? 'input-error' : ''"
+      :aria-invalid="errores.email ? 'true' : 'false'"
+      aria-describedby="email-error"
+    />
+    <small
+      id="email-error"
+      class="error-campo"
+      x-show="errores.email"
+      x-text="errores.email"
+    ></small>
+  </div>
+  <div>
+    <label for="password">Contraseña</label>
+    <input
+      type="password"
+      id="password"
+      autocomplete="current-password"
+      placeholder="Tu contraseña"
+      x-model="form.password"
+      @blur="validarCampo('password')"
+      @input="revalidar('password')"
+      :class="errores.password ? 'input-error' : ''"
+      :aria-invalid="errores.password ? 'true' : 'false'"
+      aria-describedby="password-error"
+    />
+    <small
+      id="password-error"
+      class="error-campo"
+      x-show="errores.password"
+      x-text="errores.password"
+    ></small>
+  </div>
+  <div>
+    <button
+      type="submit"
+      :disabled="enviando"
+      x-text="enviando ? 'Ingresando…' : 'Entrar'"
+    >
+      Entrar
+    </button>
+  </div>
+</form>
 ```
 
-*Claude editó `C:\Users\carlo\Documents\Futbol-desarrollo\index.html`. Texto que reemplazó:*
+_Claude editó `C:\Users\carlo\Documents\Futbol-desarrollo\index.html`. Texto que reemplazó:_
 
 ```html
-  <script src="comun/api.js"></script>
-  <script src="comun/seguridad.js"></script>
-  <script src="login/login.js"></script>
+<script src="comun/api.js"></script>
+<script src="comun/seguridad.js"></script>
+<script src="login/login.js"></script>
 ```
 
-*Texto nuevo:*
+_Texto nuevo:_
 
 ```html
-  <script src="comun/api.js" defer></script>
-  <script src="comun/seguridad.js" defer></script>
-  <script src="login/login.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
+<script src="comun/api.js" defer></script>
+<script src="comun/seguridad.js" defer></script>
+<script src="login/login.js" defer></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"
+  defer
+></script>
 ```
 
-*Claude creó o reemplazó el archivo `C:\Users\carlo\Documents\Futbol-desarrollo\login\login.js` con este contenido:*
+_Claude creó o reemplazó el archivo `C:\Users\carlo\Documents\Futbol-desarrollo\login\login.js` con este contenido:_
 
 ```js
 document.addEventListener("alpine:init", () => {
@@ -346,7 +460,9 @@ document.addEventListener("alpine:init", () => {
       switch (campo) {
         case "email":
           if (!f.email.trim()) return "Ingresa tu email.";
-          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim()) ? "" : "Ingresa un email válido.";
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim())
+            ? ""
+            : "Ingresa un email válido.";
         case "password":
           return f.password ? "" : "Ingresa tu contraseña.";
         default:
@@ -369,7 +485,9 @@ document.addEventListener("alpine:init", () => {
     },
 
     enfocarPrimerError() {
-      this.$nextTick(() => this.$root.querySelector('[aria-invalid="true"]')?.focus());
+      this.$nextTick(() =>
+        this.$root.querySelector('[aria-invalid="true"]')?.focus(),
+      );
     },
 
     async entrar() {
@@ -382,7 +500,10 @@ document.addEventListener("alpine:init", () => {
 
       this.enviando = true;
       try {
-        const respuesta = await iniciarSesion(this.form.email, this.form.password);
+        const respuesta = await iniciarSesion(
+          this.form.email,
+          this.form.password,
+        );
         if (!respuesta.ok) {
           this.errorGeneral = respuesta.error;
           return;
@@ -400,7 +521,7 @@ document.addEventListener("alpine:init", () => {
 });
 ```
 
-*Claude ejecutó en la terminal (Append the error styles to login.css and check the changes):*
+_Claude ejecutó en la terminal (Append the error styles to login.css and check the changes):_
 
 ```bash
 python - <<'EOF'
@@ -457,7 +578,7 @@ EOF
 node --check login/login.js && echo js-ok; git diff --stat | cat
 ```
 
-*Claude ejecutó en la terminal (Point the old tests at the new login error elements):*
+_Claude ejecutó en la terminal (Point the old tests at the new login error elements):_
 
 ```bash
 N=/c/Users/carlo/AppData/Local/Temp/claude/36b359e89e990fab/3c0f7c63-81c4-46f2-8803-15e909788f15/scratchpad/navegador; cd $N && python - <<'EOF'
@@ -474,117 +595,252 @@ print("#mensaje" in s, "#mensaje" in t)
 EOF
 ```
 
-*Claude creó o reemplazó el archivo `C:\Users\carlo\AppData\Local\Temp\claude\36b359e89e990fab\3c0f7c63-81c4-46f2-8803-15e909788f15\scratchpad\navegador\probar-login.js` con este contenido:*
+_Claude creó o reemplazó el archivo `C:\Users\carlo\AppData\Local\Temp\claude\36b359e89e990fab\3c0f7c63-81c4-46f2-8803-15e909788f15\scratchpad\navegador\probar-login.js` con este contenido:_
 
 ```js
 const puppeteer = require("puppeteer-core");
 const BASE = process.env.BASE || "http://127.0.0.1:5179/";
 const res = [];
 const errores = [];
-const ok = (n, c, d = "") => res.push(`${c ? "OK   " : "FALLA"} ${n}${d ? " -> " + d : ""}`);
+const ok = (n, c, d = "") =>
+  res.push(`${c ? "OK   " : "FALLA"} ${n}${d ? " -> " + d : ""}`);
 const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
 
 (async () => {
-  const nav = await puppeteer.launch({ executablePath: "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe", headless: true });
+  const nav = await puppeteer.launch({
+    executablePath:
+      "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+    headless: true,
+  });
   const page = await nav.newPage();
   await page.setViewport({ width: 1280, height: 900 });
   page.on("pageerror", (e) => errores.push(`[pageerror] ${e.message}`));
-  page.on("console", (m) => { if (m.type() === "error") errores.push(`[error] ${m.text()}`); });
-  page.on("response", (r) => { if (r.status() >= 400) errores.push(`[http ${r.status()}] ${r.url()}`); });
+  page.on("console", (m) => {
+    if (m.type() === "error") errores.push(`[error] ${m.text()}`);
+  });
+  page.on("response", (r) => {
+    if (r.status() >= 400) errores.push(`[http ${r.status()}] ${r.url()}`);
+  });
 
-  const texto = (id) => page.$eval(`#${id}-error`, (e) => (e.offsetParent !== null ? e.textContent : ""));
-  const aria = (id) => page.$eval(`#${id}`, (e) => e.getAttribute("aria-invalid"));
-  const general = () => page.$eval("[role=alert]", (e) => (e.offsetParent !== null ? e.textContent : ""));
-  const boton = () => page.$eval("button[type=submit]", (b) => ({ d: b.disabled, t: b.textContent.trim() }));
-  const limpiar = (id) => page.$eval(`#${id}`, (e) => { e.value = ""; e.dispatchEvent(new Event("input")); });
+  const texto = (id) =>
+    page.$eval(`#${id}-error`, (e) =>
+      e.offsetParent !== null ? e.textContent : "",
+    );
+  const aria = (id) =>
+    page.$eval(`#${id}`, (e) => e.getAttribute("aria-invalid"));
+  const general = () =>
+    page.$eval("[role=alert]", (e) =>
+      e.offsetParent !== null ? e.textContent : "",
+    );
+  const boton = () =>
+    page.$eval("button[type=submit]", (b) => ({
+      d: b.disabled,
+      t: b.textContent.trim(),
+    }));
+  const limpiar = (id) =>
+    page.$eval(`#${id}`, (e) => {
+      e.value = "";
+      e.dispatchEvent(new Event("input"));
+    });
 
   await page.goto(BASE, { waitUntil: "networkidle0" });
-  ok("al cargar no se ve ningun error", (await general()) === "" && (await texto("email")) === "" && (await texto("password")) === "");
+  ok(
+    "al cargar no se ve ningun error",
+    (await general()) === "" &&
+      (await texto("email")) === "" &&
+      (await texto("password")) === "",
+  );
   ok("el boton dice Entrar al cargar", (await boton()).t === "Entrar");
 
   await page.click("#email");
   await page.keyboard.type("ana");
   await esperar(150);
-  ok("C: mientras escribe por primera vez no hay error", (await texto("email")) === "");
+  ok(
+    "C: mientras escribe por primera vez no hay error",
+    (await texto("email")) === "",
+  );
   await page.click("#password");
   await esperar(150);
-  ok("C: al salir con email mal escrito muestra error", (await texto("email")) === "Ingresa un email válido.", await texto("email"));
-  ok("aria-invalid=true en el email con error", (await aria("email")) === "true");
-  ok("aria-describedby apunta al mensaje", (await page.$eval("#email", (e) => e.getAttribute("aria-describedby"))) === "email-error");
-  ok("el campo con error queda marcado con borde rojo", await page.$eval("#email", (e) => e.classList.contains("input-error") && getComputedStyle(e).borderTopColor === "rgb(185, 28, 28)"));
+  ok(
+    "C: al salir con email mal escrito muestra error",
+    (await texto("email")) === "Ingresa un email válido.",
+    await texto("email"),
+  );
+  ok(
+    "aria-invalid=true en el email con error",
+    (await aria("email")) === "true",
+  );
+  ok(
+    "aria-describedby apunta al mensaje",
+    (await page.$eval("#email", (e) => e.getAttribute("aria-describedby"))) ===
+      "email-error",
+  );
+  ok(
+    "el campo con error queda marcado con borde rojo",
+    await page.$eval(
+      "#email",
+      (e) =>
+        e.classList.contains("input-error") &&
+        getComputedStyle(e).borderTopColor === "rgb(185, 28, 28)",
+    ),
+  );
   await page.click("#email");
   await page.keyboard.type("@arbitros.cl");
   await esperar(150);
-  ok("C: el error se quita mientras corrige", (await texto("email")) === "" && (await aria("email")) === "false");
+  ok(
+    "C: el error se quita mientras corrige",
+    (await texto("email")) === "" && (await aria("email")) === "false",
+  );
 
   await limpiar("email");
   await page.click("#email");
   await page.click("#password");
   await esperar(150);
-  ok("email vacio: Ingresa tu email.", (await texto("email")) === "Ingresa tu email.");
+  ok(
+    "email vacio: Ingresa tu email.",
+    (await texto("email")) === "Ingresa tu email.",
+  );
   await page.click("#email");
   await esperar(150);
-  ok("contraseña vacia al salir: Ingresa tu contraseña.", (await texto("password")) === "Ingresa tu contraseña.");
+  ok(
+    "contraseña vacia al salir: Ingresa tu contraseña.",
+    (await texto("password")) === "Ingresa tu contraseña.",
+  );
   await page.type("#password", "abc");
   await esperar(150);
-  ok("contraseña corta NO da error en el login", (await texto("password")) === "");
+  ok(
+    "contraseña corta NO da error en el login",
+    (await texto("password")) === "",
+  );
 
-  await limpiar("email"); await limpiar("password");
+  await limpiar("email");
+  await limpiar("password");
   await page.click("button[type=submit]");
   await esperar(300);
-  ok("Entrar vacio: muestra los dos errores", (await texto("email")) !== "" && (await texto("password")) !== "");
-  ok("Entrar vacio: el foco va al primer campo malo (email)", (await page.evaluate(() => document.activeElement.id)) === "email");
-  ok("Entrar vacio: no llama a la API ni muestra error general", (await general()) === "" && (await boton()).t === "Entrar");
+  ok(
+    "Entrar vacio: muestra los dos errores",
+    (await texto("email")) !== "" && (await texto("password")) !== "",
+  );
+  ok(
+    "Entrar vacio: el foco va al primer campo malo (email)",
+    (await page.evaluate(() => document.activeElement.id)) === "email",
+  );
+  ok(
+    "Entrar vacio: no llama a la API ni muestra error general",
+    (await general()) === "" && (await boton()).t === "Entrar",
+  );
 
   await page.type("#email", "admin@futbolapp.cl");
   await page.type("#password", "clavemala");
   await page.click("button[type=submit]");
   await esperar(100);
   const durante = await boton();
-  ok("mientras espera: boton deshabilitado y dice Ingresando…", durante.d && durante.t === "Ingresando…", JSON.stringify(durante));
+  ok(
+    "mientras espera: boton deshabilitado y dice Ingresando…",
+    durante.d && durante.t === "Ingresando…",
+    JSON.stringify(durante),
+  );
   await esperar(900);
-  ok("401: error general arriba del formulario", (await general()) === "Email o contraseña incorrectos.", await general());
-  ok("401: el mensaje va en un role=alert antes de los campos", await page.evaluate(() => { const a = document.querySelector("[role=alert]"); return a.compareDocumentPosition(document.getElementById("email")) & Node.DOCUMENT_POSITION_FOLLOWING; }));
-  ok("401: el boton vuelve a la normalidad", JSON.stringify(await boton()) === JSON.stringify({ d: false, t: "Entrar" }));
+  ok(
+    "401: error general arriba del formulario",
+    (await general()) === "Email o contraseña incorrectos.",
+    await general(),
+  );
+  ok(
+    "401: el mensaje va en un role=alert antes de los campos",
+    await page.evaluate(() => {
+      const a = document.querySelector("[role=alert]");
+      return (
+        a.compareDocumentPosition(document.getElementById("email")) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+      );
+    }),
+  );
+  ok(
+    "401: el boton vuelve a la normalidad",
+    JSON.stringify(await boton()) === JSON.stringify({ d: false, t: "Entrar" }),
+  );
   await page.type("#password", "x");
   await esperar(150);
-  ok("401: el error general se borra al volver a escribir", (await general()) === "");
+  ok(
+    "401: el error general se borra al volver a escribir",
+    (await general()) === "",
+  );
 
-  await limpiar("email"); await limpiar("password");
+  await limpiar("email");
+  await limpiar("password");
   await page.type("#email", "noexiste@futbolapp.cl");
   await page.type("#password", "loquesea");
   await page.click("button[type=submit]");
   await esperar(1000);
-  ok("email que no existe: el mismo mensaje (no revela cuentas)", (await general()) === "Email o contraseña incorrectos.");
+  ok(
+    "email que no existe: el mismo mensaje (no revela cuentas)",
+    (await general()) === "Email o contraseña incorrectos.",
+  );
 
-  await page.evaluate(() => { window.iniciarSesionOriginal = window.iniciarSesion; window.iniciarSesion = async () => { await new Promise((r) => setTimeout(r, 300)); throw new Error("caida simulada"); }; });
+  await page.evaluate(() => {
+    window.iniciarSesionOriginal = window.iniciarSesion;
+    window.iniciarSesion = async () => {
+      await new Promise((r) => setTimeout(r, 300));
+      throw new Error("caida simulada");
+    };
+  });
   await page.type("#password", "y");
   await page.click("button[type=submit]");
   await esperar(700);
-  ok("si la API falla: el boton no se queda pegado (finally)", JSON.stringify(await boton()) === JSON.stringify({ d: false, t: "Entrar" }), JSON.stringify(await boton()));
-  ok("si la API falla: muestra un error general", (await general()).includes("No se pudo iniciar sesión"), await general());
-  await page.evaluate(() => { window.iniciarSesion = window.iniciarSesionOriginal; });
+  ok(
+    "si la API falla: el boton no se queda pegado (finally)",
+    JSON.stringify(await boton()) === JSON.stringify({ d: false, t: "Entrar" }),
+    JSON.stringify(await boton()),
+  );
+  ok(
+    "si la API falla: muestra un error general",
+    (await general()).includes("No se pudo iniciar sesión"),
+    await general(),
+  );
+  await page.evaluate(() => {
+    window.iniciarSesion = window.iniciarSesionOriginal;
+  });
 
-  await limpiar("email"); await limpiar("password");
+  await limpiar("email");
+  await limpiar("password");
   await page.type("#email", "arbitro@futbolapp.cl");
   await page.type("#password", "arbitro123");
-  await Promise.all([page.waitForNavigation({ waitUntil: "networkidle0" }), page.click("button[type=submit]")]);
-  ok("con datos correctos entra al dashboard", new URL(page.url()).pathname === "/usuario/dashboard.html");
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: "networkidle0" }),
+    page.click("button[type=submit]"),
+  ]);
+  ok(
+    "con datos correctos entra al dashboard",
+    new URL(page.url()).pathname === "/usuario/dashboard.html",
+  );
 
   await page.setViewport({ width: 375, height: 800 });
   await page.evaluate(() => localStorage.clear());
   await page.goto(BASE, { waitUntil: "networkidle0" });
   await page.click("button[type=submit]");
   await esperar(300);
-  ok("375px con errores visibles: sin scroll horizontal", (await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)) <= 0);
+  ok(
+    "375px con errores visibles: sin scroll horizontal",
+    (await page.evaluate(
+      () => document.documentElement.scrollWidth - window.innerWidth,
+    )) <= 0,
+  );
 
   await nav.close();
   console.log(res.join("\n"));
-  console.log("\nCONSOLA:", errores.length ? "\n" + [...new Set(errores)].join("\n") : "sin errores");
-})().catch((e) => { console.log(res.join("\n")); console.error("FALLO:", e.message); process.exit(1); });
+  console.log(
+    "\nCONSOLA:",
+    errores.length ? "\n" + [...new Set(errores)].join("\n") : "sin errores",
+  );
+})().catch((e) => {
+  console.log(res.join("\n"));
+  console.error("FALLO:", e.message);
+  process.exit(1);
+});
 ```
 
-*Claude ejecutó en la terminal (Start servers and run the new login validation tests):*
+_Claude ejecutó en la terminal (Start servers and run the new login validation tests):_
 
 ```bash
 N=/c/Users/carlo/AppData/Local/Temp/claude/36b359e89e990fab/3c0f7c63-81c4-46f2-8803-15e909788f15/scratchpad/navegador; cd /c/Users/carlo/Documents/Futbol-desarrollo && (./node_modules/.bin/vite --host 127.0.0.1 --port 5179 --strictPort > $N/vite.log 2>&1 &); (python -m http.server 8766 --bind 127.0.0.1 > $N/static.log 2>&1 &); sleep 4; cd $N && node probar-login.js
@@ -592,7 +848,7 @@ N=/c/Users/carlo/AppData/Local/Temp/claude/36b359e89e990fab/3c0f7c63-81c4-46f2-8
 
 Falla una prueba: el borde rojo del campo con error. Lo investigo.
 
-*Claude ejecutó en la terminal (Inspect the email field classes and computed border color):*
+_Claude ejecutó en la terminal (Inspect the email field classes and computed border color):_
 
 ```bash
 node -e '
@@ -601,7 +857,7 @@ console.log(await pg.$eval("#email",e=>({clase:e.className,borde:getComputedStyl
 const reglas=await pg.evaluate(()=>[...document.styleSheets].flatMap(s=>{try{return [...s.cssRules].map(r=>r.cssText)}catch(e){return []}}).filter(t=>t.includes("input-error")));console.log(reglas);await b.close()})()'
 ```
 
-*Claude ejecutó en la terminal (Wait for the border transition and run all five suites on both servers):*
+_Claude ejecutó en la terminal (Wait for the border transition and run all five suites on both servers):_
 
 ```bash
 python - <<'EOF'
@@ -615,13 +871,13 @@ EOF
 for B in http://127.0.0.1:5179/ http://127.0.0.1:8766/; do echo "######## $B"; for t in probar.js probar-admin.js probar-tiempo-real.js probar-acceso.js probar-login.js; do BASE=$B node $t > r.txt 2>&1; grep '^FALLA\|FALLO\|pageerror\|\[error\]\|http 4' r.txt; echo "  $t: $(grep -c '^OK' r.txt) OK de $(grep -c '^OK\|^FALLA' r.txt)"; done; done
 ```
 
-*Claude ejecutó en la terminal (Stop both test servers):*
+_Claude ejecutó en la terminal (Stop both test servers):_
 
 ```powershell
 foreach ($p in 5179, 8766) { $c = Get-NetTCPConnection -LocalPort $p -State Listen -ErrorAction SilentlyContinue; if ($c) { foreach ($id in ($c.OwningProcess | Sort-Object -Unique)) { try { Stop-Process -Id $id -Confirm:$false -ErrorAction Stop; "detenido $p" } catch { "no se pudo $p" } } } }
 ```
 
-*Claude ejecutó en la terminal (List the changed files and key line numbers):*
+_Claude ejecutó en la terminal (List the changed files and key line numbers):_
 
 ```bash
 cd /c/Users/carlo/Documents/Futbol-desarrollo && git status --short | cat; grep -n 'x-data="login"\|role="alert"\|alpinejs\|login.js' index.html; wc -l login/login.js | cat
@@ -632,6 +888,7 @@ Listo, la validación del login quedó como acordamos. **Pasan 142 de 142 prueba
 ##### Qué cambió
 
 **`index.html`**
+
 - **Línea 19:** el formulario tiene `x-data="login"`, `@submit.prevent="entrar()"` y `novalidate`.
 - **Línea 20:** el error general (401) va arriba del formulario, en un `<p role="alert">`.
 - **Líneas 21-38:** los campos Email y Contraseña tienen `x-model`, `@blur`, `@input`, el borde rojo con `:class`, `aria-invalid`, `aria-describedby` y su mensaje debajo. El botón tiene `:disabled="enviando"` y cambia el texto a "Ingresando…".
@@ -642,6 +899,7 @@ Listo, la validación del login quedó como acordamos. **Pasan 142 de 142 prueba
 **`login/login.css` (de Josefa):** solo agregué reglas al final: `[x-cloak]`, `.input-error`, `.error-campo`, `.alerta-error` y `button:disabled`. Lo que ya tenía ella no cambió.
 
 ##### Qué probé (24 pruebas nuevas)
+
 - **Al abrir la página:** no aparece ningún error y el botón dice "Entrar".
 - **Validación en tiempo real (opción C):** mientras escribes por primera vez no hay error, al salir del campo sí aparece, y se quita mientras lo corriges.
 - **Accesibilidad:** `aria-invalid` cambia de valor, `aria-describedby` apunta al mensaje correcto y el campo con error queda con borde rojo.

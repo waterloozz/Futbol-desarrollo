@@ -2,8 +2,8 @@
 
 - **Fecha:** 2026-11-02
 - **Integrante:** Carlos Benavides (@CBenavidesP)
-- **Herramienta y modelo:** Claude Code (Claude Opus 5.5)
-- **Enlace a la conversación:** no aplica (Claude Code no permite compartir la conversación; el texto completo va abajo)
+- **Herramienta y modelo:** Claude Code
+- **Enlace a la conversación:** no aplica (Claude Code no permite compartir la conversación)
 - **Archivos afectados:** index.html (enlace en el <nav> y sección #registro-arbitros; después se movió a usuarios.html y se quitó de index.html el mismo día); style.css (clases .error-texto, .input-error, .form-acciones y .tabla-arbitros, que después se quitaron porque ya no se usaban)
 
 ## Objetivo
@@ -54,7 +54,7 @@ Por favor no uses emojis ni agregues librerias externas, solo CSS puro y las eti
 
 ### Respuesta 1
 
-*Claude ejecutó en la terminal (Read index.html, style.css and registro-arbitros.js):*
+_Claude ejecutó en la terminal (Read index.html, style.css and registro-arbitros.js):_
 
 ```bash
 cat index.html; echo ======; cat style.css; echo ======; cat registro-arbitros.js
@@ -65,90 +65,146 @@ Te dejo los fragmentos listos para pegar. **No modifiqué ningún archivo.** Los
 ##### 1. `index.html`
 
 ###### a) Enlace en el `<nav>`
+
 Pégalo justo después de `<a href="#acta">Acta Oficial</a>`:
 
 ```html
-      <a href="#registro-arbitros">Registro de Árbitros</a>
+<a href="#registro-arbitros">Registro de Árbitros</a>
 ```
 
 ###### b) Sección de registro
+
 Pégala dentro de `<main>`, después del cierre `</section>` de `#acta` y antes de `</main>`:
 
 ```html
-    <section id="registro-arbitros" x-data="registroArbitros">
-      <h2>Registro de Árbitros</h2>
+<section id="registro-arbitros" x-data="registroArbitros">
+  <h2>Registro de Árbitros</h2>
 
-      <form @submit.prevent="solicitarGuardado()" novalidate>
-        <div>
-          <label for="arbNombre">Nombre completo</label>
-          <input type="text" id="arbNombre" placeholder="Ej: Roberto Tobar" x-model="form.nombre" :class="errores.nombre ? 'input-error' : ''">
-          <small class="error-texto" x-show="errores.nombre" x-text="errores.nombre"></small>
-        </div>
+  <form @submit.prevent="solicitarGuardado()" novalidate>
+    <div>
+      <label for="arbNombre">Nombre completo</label>
+      <input
+        type="text"
+        id="arbNombre"
+        placeholder="Ej: Roberto Tobar"
+        x-model="form.nombre"
+        :class="errores.nombre ? 'input-error' : ''"
+      />
+      <small
+        class="error-texto"
+        x-show="errores.nombre"
+        x-text="errores.nombre"
+      ></small>
+    </div>
 
-        <div>
-          <label for="arbRut">RUT</label>
-          <input type="text" id="arbRut" placeholder="Ej: 12.345.678-5" x-model="form.rut" :class="errores.rut ? 'input-error' : ''">
-          <small class="error-texto" x-show="errores.rut" x-text="errores.rut"></small>
-        </div>
+    <div>
+      <label for="arbRut">RUT</label>
+      <input
+        type="text"
+        id="arbRut"
+        placeholder="Ej: 12.345.678-5"
+        x-model="form.rut"
+        :class="errores.rut ? 'input-error' : ''"
+      />
+      <small
+        class="error-texto"
+        x-show="errores.rut"
+        x-text="errores.rut"
+      ></small>
+    </div>
 
-        <div>
-          <label for="arbEmail">Email</label>
-          <input type="email" id="arbEmail" placeholder="Ej: nombre@arbitros.cl" x-model="form.email" :class="errores.email ? 'input-error' : ''">
-          <small class="error-texto" x-show="errores.email" x-text="errores.email"></small>
-        </div>
+    <div>
+      <label for="arbEmail">Email</label>
+      <input
+        type="email"
+        id="arbEmail"
+        placeholder="Ej: nombre@arbitros.cl"
+        x-model="form.email"
+        :class="errores.email ? 'input-error' : ''"
+      />
+      <small
+        class="error-texto"
+        x-show="errores.email"
+        x-text="errores.email"
+      ></small>
+    </div>
 
-        <div>
-          <label for="arbTelefono">Teléfono</label>
-          <input type="tel" id="arbTelefono" placeholder="Ej: +56 9 1234 5678" x-model="form.telefono" :class="errores.telefono ? 'input-error' : ''">
-          <small class="error-texto" x-show="errores.telefono" x-text="errores.telefono"></small>
-        </div>
+    <div>
+      <label for="arbTelefono">Teléfono</label>
+      <input
+        type="tel"
+        id="arbTelefono"
+        placeholder="Ej: +56 9 1234 5678"
+        x-model="form.telefono"
+        :class="errores.telefono ? 'input-error' : ''"
+      />
+      <small
+        class="error-texto"
+        x-show="errores.telefono"
+        x-text="errores.telefono"
+      ></small>
+    </div>
 
-        <div>
-          <label for="arbCategoria">Categoría</label>
-          <select id="arbCategoria" x-model="form.categoria" :class="errores.categoria ? 'input-error' : ''">
-            <option value="">Selecciona una categoría</option>
-            <template x-for="cat in categorias" :key="cat">
-              <option :value="cat" x-text="cat"></option>
-            </template>
-          </select>
-          <small class="error-texto" x-show="errores.categoria" x-text="errores.categoria"></small>
-        </div>
+    <div>
+      <label for="arbCategoria">Categoría</label>
+      <select
+        id="arbCategoria"
+        x-model="form.categoria"
+        :class="errores.categoria ? 'input-error' : ''"
+      >
+        <option value="">Selecciona una categoría</option>
+        <template x-for="cat in categorias" :key="cat">
+          <option :value="cat" x-text="cat"></option>
+        </template>
+      </select>
+      <small
+        class="error-texto"
+        x-show="errores.categoria"
+        x-text="errores.categoria"
+      ></small>
+    </div>
 
-        <div class="form-acciones">
-          <button type="submit">Guardar Árbitro</button>
-          <button type="button" class="boton-secundario" @click="reiniciarFormulario()">Limpiar</button>
-        </div>
-      </form>
+    <div class="form-acciones">
+      <button type="submit">Guardar Árbitro</button>
+      <button
+        type="button"
+        class="boton-secundario"
+        @click="reiniciarFormulario()"
+      >
+        Limpiar
+      </button>
+    </div>
+  </form>
 
-      <h3>Árbitros Registrados</h3>
-      <table class="tabla-arbitros">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>RUT</th>
-            <th>Email</th>
-            <th>Teléfono</th>
-            <th>Categoría</th>
-          </tr>
-        </thead>
-        <tbody>
-          <template x-for="arb in arbitros" :key="arb.id">
-            <tr>
-              <td x-text="arb.id"></td>
-              <td x-text="arb.nombre"></td>
-              <td x-text="arb.rut"></td>
-              <td x-text="arb.email"></td>
-              <td x-text="arb.telefono"></td>
-              <td x-text="arb.categoria"></td>
-            </tr>
-          </template>
-          <tr x-show="arbitros.length === 0">
-            <td colspan="6" class="tabla-vacia">No hay árbitros registrados.</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+  <h3>Árbitros Registrados</h3>
+  <table class="tabla-arbitros">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>RUT</th>
+        <th>Email</th>
+        <th>Teléfono</th>
+        <th>Categoría</th>
+      </tr>
+    </thead>
+    <tbody>
+      <template x-for="arb in arbitros" :key="arb.id">
+        <tr>
+          <td x-text="arb.id"></td>
+          <td x-text="arb.nombre"></td>
+          <td x-text="arb.rut"></td>
+          <td x-text="arb.email"></td>
+          <td x-text="arb.telefono"></td>
+          <td x-text="arb.categoria"></td>
+        </tr>
+      </template>
+      <tr x-show="arbitros.length === 0">
+        <td colspan="6" class="tabla-vacia">No hay árbitros registrados.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
 ```
 
 ##### 2. `style.css`
@@ -233,20 +289,20 @@ Ahora introduce el codigo que me diste anteriormente al archivo
 
 ### Respuesta 2
 
-*Claude editó `C:\Users\carlo\Documents\Futbol-desarrollo\index.html`. Texto que reemplazó:*
+_Claude editó `C:\Users\carlo\Documents\Futbol-desarrollo\index.html`. Texto que reemplazó:_
 
 ```html
-      <a href="#acta">Acta Oficial</a>
+<a href="#acta">Acta Oficial</a>
 ```
 
-*Texto nuevo:*
+_Texto nuevo:_
 
 ```html
-      <a href="#acta">Acta Oficial</a>
-      <a href="#registro-arbitros">Registro de Árbitros</a>
+<a href="#acta">Acta Oficial</a>
+<a href="#registro-arbitros">Registro de Árbitros</a>
 ```
 
-*Claude editó `C:\Users\carlo\Documents\Futbol-desarrollo\index.html`. Texto que reemplazó:*
+_Claude editó `C:\Users\carlo\Documents\Futbol-desarrollo\index.html`. Texto que reemplazó:_
 
 ```html
         <p>Firma Arbitro Principal</p>
@@ -255,7 +311,7 @@ Ahora introduce el codigo que me diste anteriormente al archivo
   </main>
 ```
 
-*Texto nuevo:*
+_Texto nuevo:_
 
 ```html
         <p>Firma Arbitro Principal</p>
@@ -339,7 +395,7 @@ Ahora introduce el codigo que me diste anteriormente al archivo
   </main>
 ```
 
-*Claude ejecutó en la terminal (Append styles to style.css and locate inserted line numbers):*
+_Claude ejecutó en la terminal (Append styles to style.css and locate inserted line numbers):_
 
 ```bash
 cat >> style.css <<'EOF'
@@ -407,6 +463,7 @@ grep -n 'registro-arbitros\|</main>' index.html; grep -n '^\.error-texto\|^\.tab
 Listo, el código ya está en tus archivos. No pude abrir la página en el navegador para probarla.
 
 **`index.html`**
+
 - **Línea 26:** enlace "Registro de Árbitros" en el menú, que lleva a la nueva sección.
 - **Líneas 121 a 194:** la sección `#registro-arbitros` conectada al componente `registroArbitros`. Tiene:
   - El formulario con los 4 campos de texto y el `<select>` de categoría.
@@ -415,6 +472,7 @@ Listo, el código ya está en tus archivos. No pude abrir la página en el naveg
   - La tabla de árbitros, con el mensaje para cuando no hay ninguno.
 
 **`style.css`** (al final, líneas 285 a 340)
+
 - `.error-texto`: el mensaje de error en rojo y en letra chica.
 - `.input-error`: pinta el borde del campo de rojo cuando tiene un error.
 - `.form-acciones`: deja los dos botones uno al lado del otro con espacio entre ellos.
