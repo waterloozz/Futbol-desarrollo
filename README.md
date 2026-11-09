@@ -121,6 +121,7 @@ Todo el acceso a datos está en `comun/api.js`. Las vistas no leen los JSON dire
 - La primera vez leen los archivos de `public/mocks/` y los copian a `localStorage` (`partidos_crud_data` y `usuarios_data`). Desde ahí se leen y se guardan todos los cambios, que se mantienen al recargar.
 - Responden con `{ ok: true, status, datos }` si todo sale bien (200 o 201), o `{ ok: false, status, error }` con un mensaje para mostrar en pantalla (401, 404, 409 o 500). En los errores de validación (409) también envían `errores`, con un mensaje por campo.
 - Las funciones de usuarios **nunca entregan la sal ni el hash** a las vistas.
+- **Forzar un error (para probar el estado de error):** agregar `?fallar` a la URL de la página (por ejemplo `http://localhost:5173/usuario/dashboard.html?fallar`) y toda lectura responde `{ ok: false, status: 500, error }`, con el botón **Reintentar** visible. `?fallar=0` lo desactiva. También se puede simular una falla al azar con `?probabilidadFalla=0.3` (30 %) o cambiando `PROBABILIDAD_FALLA` en `comun/api.js`.
 
 ### Endpoints simulados
 

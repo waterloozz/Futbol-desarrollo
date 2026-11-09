@@ -5,8 +5,34 @@ const LATENCIA = 450;
 
 const esperar = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+// --- Fallos simulados (sección 5.2) ---
+// Dos formas de forzar un error para probar el estado de error de la interfaz:
+//  1. Poner ?fallar en la URL de la página (ej.: dashboard.html?fallar).
+//     Con ?fallar=0 o ?fallar=false se desactiva.
+//  2. Probabilidad de falla al azar: ?probabilidadFalla=0.3 en la URL (30 %),
+//     o cambiando PROBABILIDAD_FALLA aquí (0 = nunca falla, 1 = siempre).
+const PROBABILIDAD_FALLA = 0;
+
+function debeFallar() {
+  const params = new URLSearchParams(location.search);
+  if (params.has("fallar")) {
+    return !["0", "false"].includes(params.get("fallar"));
+  }
+  const deUrl = parseFloat(params.get("probabilidadFalla"));
+  const probabilidad = Number.isNaN(deUrl) ? PROBABILIDAD_FALLA : deUrl;
+  return Math.random() < probabilidad;
+}
+
+// Lanza un error de red simulado; las funciones lo capturan y responden { ok: false, status: 500 }.
+function simularFallo() {
+  if (debeFallar()) {
+    throw new Error("Error de red simulado. Inténtalo de nuevo.");
+  }
+}
+
 async function pedir(recurso) {
-  await esperar(LATENCIA); 
+  await esperar(LATENCIA);
+  simularFallo();
   const respuesta = await fetch(`${API_BASE}/${recurso}.json`);
   if (!respuesta.ok) {
     throw new Error(`No se pudo cargar "${recurso}" (HTTP ${respuesta.status})`);
@@ -19,6 +45,7 @@ const momento = (p) => `${p.fecha} ${p.hora}`;
 async function obtenerResumen(usuario) {
   try {
     let partidos;
+    simularFallo();
     const guardados = localStorage.getItem(STORAGE_KEY);
     if (guardados) {
       partidos = JSON.parse(guardados);
@@ -76,6 +103,7 @@ async function obtenerResumen(usuario) {
 
 async function obtenerPartidos() {
   try {
+    simularFallo();
     const guardados = localStorage.getItem(STORAGE_KEY);
     if (guardados) {
       const partidos = JSON.parse(guardados);
@@ -146,6 +174,7 @@ async function eliminarPartido(id) {
 const USUARIOS_KEY = "usuarios_data";
 
 async function leerUsuarios() {
+  simularFallo();
   const guardados = localStorage.getItem(USUARIOS_KEY);
   if (guardados) {
     await esperar(LATENCIA);
