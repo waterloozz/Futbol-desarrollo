@@ -55,7 +55,7 @@ label {
   font-size: 14px;
 }
 
-input {
+input, select {
   width: 100%;
   padding: 10px 14px;
   margin-bottom: 18px;
@@ -68,7 +68,7 @@ input {
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-input:focus {
+input:focus, select:focus {
   outline: none;
   border-color: #2563eb;
   background-color: #ffffff;
@@ -254,3 +254,11 @@ button:disabled {
 button:disabled:hover {
   background-color: #1d4ed8;
 }
+
+/* [IA] inicio · ia/2026-11-09_waterloozz_registro-cuenta.md */
+.enlace-secundario {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+}
+/* [IA] fin */
