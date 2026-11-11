@@ -2,7 +2,7 @@
 
 - **Fecha:** 2026-11-02
 - **Integrante:** Carlos Benavides (@CBenavidesP)
-- **Herramienta y modelo:** Claude Code
+- **Herramienta y modelo:** Claude Code (Claude Opus 5.5)
 - **Enlace a la conversación:** no aplica (Claude Code no permite compartir la conversación)
 - **Archivos afectados:** index.html (se quitaron el enlace, la sección de árbitros y el script registro-arbitros.js); usuarios.html (scripts y CSS en el <head>, líneas 15-22; formulario y tabla, líneas 31-126; toasts y modal, líneas 133-156); registro-arbitros.css (archivo nuevo, líneas 1-131)
 

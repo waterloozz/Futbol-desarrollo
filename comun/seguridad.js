@@ -1,3 +1,4 @@
+// [IA] inicio · ia/2026-11-04_cbenavidesp_contrasena-arbitros.md
 function crearSal() {
   const bytes = crypto.getRandomValues(new Uint8Array(16));
   return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
@@ -11,3 +12,4 @@ async function hashearPassword(password, sal) {
   const huella = await crypto.subtle.digest("SHA-256", datos);
   return Array.from(new Uint8Array(huella), (b) => b.toString(16).padStart(2, "0")).join("");
 }
+// [IA] fin

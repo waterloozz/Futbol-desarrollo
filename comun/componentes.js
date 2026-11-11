@@ -1,3 +1,4 @@
+// [IA] inicio · ia/2026-10-30_cbenavidesp_componentes-alpine.md
 function notificar(mensaje, tipo = "exito", duracion = 3000) {
   window.dispatchEvent(
     new CustomEvent("notificar", { detail: { mensaje, tipo, duracion } })
@@ -72,3 +73,4 @@ document.addEventListener("alpine:init", () => {
     },
   }));
 });
+// [IA] fin

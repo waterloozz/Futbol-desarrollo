@@ -2,7 +2,7 @@
 
 - **Fecha:** 2026-11-09
 - **Integrante:** Carlos Benavides (@CBenavidesP)
-- **Herramienta y modelo:** Claude Code
+- **Herramienta y modelo:** Claude Code (Claude Opus 5.5)
 - **Enlace a la conversación:** no aplica (Claude Code no permite compartir la conversación)
 - **Archivos afectados:** admin/registro-arbitros.js (guardando, línea 29; mensajeDe, validarCampo, revalidar, validar y enfocarPrimerError, líneas 31-76; solicitarGuardado, líneas 83-97; agregarArbitro con try/catch/finally, líneas 99-124); admin/usuarios.html (eventos @blur, @input o @change, aria-invalid y aria-describedby en los 7 campos, id en cada mensaje de error y botón Guardar con :disabled, línea 116)
 

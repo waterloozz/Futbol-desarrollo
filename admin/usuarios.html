@@ -12,14 +12,18 @@
   <style>
     [x-cloak] { display: none !important; }
   </style>
+  <!-- [IA] inicio · ia/2026-11-02_cbenavidesp_registro-en-usuarios.md -->
   <link rel="stylesheet" href="registro-arbitros.css">
+  <!-- [IA] fin -->
 
   <script src="../comun/menu.js" defer></script>
 
+  <!-- [IA] inicio · ia/2026-11-02_cbenavidesp_registro-en-usuarios.md · ia/2026-11-04_cbenavidesp_contrasena-arbitros.md · ia/2026-11-09_cbenavidesp_acceso-unico-arbitros.md -->
   <script src="../comun/componentes.js" defer></script>
   <script src="../comun/api.js" defer></script>
   <script src="../comun/seguridad.js" defer></script>
   <script src="registro-arbitros.js" defer></script>
+  <!-- [IA] fin -->
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
 </head>
 <body class="flex min-h-screen flex-col bg-slate-100 text-slate-800">
@@ -29,6 +33,7 @@
   <main class="mx-auto w-full max-w-5xl flex-1 space-y-6 px-4 py-6">
     <h1 class="text-2xl font-semibold">Usuarios</h1>
 
+    <!-- [IA] inicio · ia/2026-11-02_cbenavidesp_vista-registro-arbitros.md · ia/2026-11-02_cbenavidesp_registro-en-usuarios.md · ia/2026-11-04_cbenavidesp_contrasena-arbitros.md · ia/2026-11-09_cbenavidesp_validacion-tiempo-real.md · ia/2026-11-09_cbenavidesp_acceso-unico-arbitros.md -->
     <div x-data="registroArbitros" class="space-y-6">
       <section aria-labelledby="titulo-registro" class="rounded-lg bg-white p-4 shadow-sm">
         <h2 id="titulo-registro" class="mb-4 text-lg font-semibold">Registro de Árbitros</h2>
@@ -176,12 +181,14 @@
         </div>
       </section>
     </div>
+    <!-- [IA] fin -->
   </main>
 
   <footer x-data class="bg-slate-800 py-4 text-center text-sm text-slate-300">
     <p>Sistema de Acta Digital Arbitral · <span x-text="new Date().getFullYear()"></span></p>
   </footer>
 
+  <!-- [IA] inicio · ia/2026-10-30_cbenavidesp_componentes-alpine.md · ia/2026-11-02_cbenavidesp_registro-en-usuarios.md -->
   <div class="toast-contenedor" x-data="notificaciones" @notificar.window="agregar($event.detail)" aria-live="polite">
     <template x-for="toast in lista" :key="toast.id">
       <div class="toast" :class="'toast--' + toast.tipo" x-show="toast.visible"
@@ -204,6 +211,7 @@
       </div>
     </div>
   </div>
+  <!-- [IA] fin -->
 
 </body>
 </html>

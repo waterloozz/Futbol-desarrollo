@@ -2,7 +2,7 @@
 
 - **Fecha:** 2026-10-30
 - **Integrante:** Carlos Benavides (@CBenavidesP)
-- **Herramienta y modelo:** Claude Code
+- **Herramienta y modelo:** Claude Code (Claude Opus 5.5)
 - **Enlace a la conversación:** no aplica (Claude Code no permite compartir la conversación)
 - **Archivos afectados:** registro-arbitros.js (archivo completo; hoy líneas 1-121, después de los cambios del 2026-11-02); index.html (script registro-arbitros.js en el <head>, quitado después el 2026-11-02)
 

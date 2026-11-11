@@ -1,3 +1,4 @@
+// [IA] inicio · ia/2026-10-30_cbenavidesp_estado-registro-arbitros.md · ia/2026-11-04_cbenavidesp_contrasena-arbitros.md · ia/2026-11-09_cbenavidesp_validacion-tiempo-real.md · ia/2026-11-09_cbenavidesp_acceso-unico-arbitros.md
 document.addEventListener("alpine:init", () => {
   const formVacio = () => ({
     nombre: "",
@@ -171,3 +172,4 @@ document.addEventListener("alpine:init", () => {
     },
   }));
 });
+// [IA] fin

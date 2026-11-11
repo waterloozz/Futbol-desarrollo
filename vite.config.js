@@ -1,3 +1,4 @@
+// [IA] inicio · ia/2026-11-09_cbenavidesp_pagina-no-encontrada.md
 import { defineConfig } from "vite";
 import fs from "node:fs";
 import path from "node:path";
@@ -25,3 +26,4 @@ export default defineConfig({
   appType: "mpa",
   plugins: [paginaNoEncontrada()],
 });
+// [IA] fin

@@ -1,3 +1,4 @@
+// [IA] inicio · ia/2026-11-09_cbenavidesp_validacion-login.md
 document.addEventListener("alpine:init", () => {
   Alpine.data("login", () => ({
     form: { email: "", password: "" },
@@ -62,3 +63,4 @@ document.addEventListener("alpine:init", () => {
     },
   }));
 });
+// [IA] fin

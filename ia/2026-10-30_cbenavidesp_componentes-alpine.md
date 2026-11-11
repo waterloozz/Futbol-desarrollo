@@ -2,7 +2,7 @@
 
 - **Fecha:** 2026-10-30
 - **Integrante:** Carlos Benavides (@CBenavidesP)
-- **Herramienta y modelo:** Claude Code
+- **Herramienta y modelo:** Claude Code (Claude Opus 5.5)
 - **Enlace a la conversación:** no aplica (Claude Code no permite compartir la conversación)
 - **Archivos afectados:** componentes.js (archivo completo, líneas 1-101); index.html (scripts del <head>, líneas 8-16, y contenedores de toasts y modal, líneas 120-160); style.css (sección "Alpine.js: componentes globales", líneas 173-295)
 
@@ -428,6 +428,41 @@ Desde un componente Alpine:
 ```
 
 Un buen primer paso para los formularios sería cambiar las líneas `mensaje.textContent = ...` de `login.js` por llamadas a `notificar(...)`.
+
+### Prompt 2
+
+```text
+Realizaste todos los cambios en el visual studio code o donde realizaste los cambios?
+```
+
+### Respuesta 2
+
+No los hice dentro de Visual Studio Code. Escribí los archivos **directamente en tu disco**, en la carpeta del proyecto:
+
+`C:\Users\carlo\Documents\Futbol-desarrollo`
+
+Los cambios fueron estos:
+- **`componentes.js`**: archivo nuevo, en la raíz del proyecto.
+- **`index.html`**: agregué los scripts en el `<head>` y el HTML de los toasts y del modal al final del `<body>`.
+- **`style.css`**: agregué los estilos al final del archivo.
+
+Si abres esa carpeta en VS Code (Archivo → Abrir carpeta), vas a ver los cambios. Si ya la tenías abierta, VS Code los muestra solo. Además, en la pestaña de **Control de código fuente** (el ícono de Git) aparecen los tres archivos como modificados o nuevos, y puedes ver exactamente qué se agregó.
+
+No hice ningún commit. Los cambios están en tu copia local para que los revises primero, y tú decides cuándo subirlos al repositorio del equipo.
+
+## Qué se incorporó al proyecto
+
+- componentes.js completo, con los componentes `notificaciones` y `modalConfirmacion` y las funciones `notificar()` y `pedirConfirmacion()` para que el resto del equipo los use.
+- Los scripts en el `<head>` de index.html con `defer`, cargando componentes.js antes que Alpine.
+- El HTML de los toasts y del modal al final del `<body>` de index.html.
+- Los estilos de los toasts, el modal y `[x-cloak]` al final de style.css.
+- No se descartó nada de esta respuesta. Más adelante (registro del 2026-11-02 sobre usuarios.html) los estilos de toasts y modal se pasaron a registro-arbitros.css para no chocar con Tailwind.
+
+## Verificación
+
+- Abrí la página con Live Server y llamé `notificar("Prueba")` y `notificar("Error", "error")` desde la consola: el toast aparece abajo a la derecha y se cierra solo a los 3 segundos o con la X.
+- Probé `pedirConfirmacion({...})`: el modal se abre con fondo oscuro y se cierra con Cancelar, con Escape y al hacer clic fuera.
+- Entiendo que los componentes se registran en el evento `alpine:init` y que por eso componentes.js tiene que cargarse antes que Alpine, y que se comunican con eventos en `window` para que cualquier script los pueda usar.
 
 ## Conclusión: lo que aprendí
 

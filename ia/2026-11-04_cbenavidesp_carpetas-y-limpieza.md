@@ -2,7 +2,7 @@
 
 - **Fecha:** 2026-11-04
 - **Integrante:** Carlos Benavides (@CBenavidesP)
-- **Herramienta y modelo:** Claude Code
+- **Herramienta y modelo:** Claude Code (Claude Opus 5.5)
 - **Enlace a la conversación:** no aplica (Claude Code no permite compartir la conversación)
 - **Archivos afectados:** estructura completa del proyecto (carpetas login/, comun/, usuario/ y admin/); rutas en index.html, usuario/\*.html, admin/usuarios.html, login/login.js, comun/sesion.js, comun/menu.js y comun/api.js; index.html y login/login.css (limpieza); README.md (reescrito); se eliminaron src/main.js, src/style.css, public/favicon.svg y public/icons.svg
 

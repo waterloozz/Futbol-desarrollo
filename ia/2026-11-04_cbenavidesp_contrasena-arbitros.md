@@ -2,7 +2,7 @@
 
 - **Fecha:** 2026-11-04
 - **Integrante:** Carlos Benavides (@CBenavidesP)
-- **Herramienta y modelo:** Claude Code
+- **Herramienta y modelo:** Claude Code (Claude Opus 5.5)
 - **Enlace a la conversación:** no aplica (Claude Code no permite compartir la conversación)
 - **Archivos afectados:** comun/seguridad.js (archivo nuevo, líneas 1-15); admin/usuarios.html (script seguridad.js, línea 22; campos de contraseña y confirmación, líneas 85-101); admin/registro-arbitros.js (formVacio, líneas 8-9; validaciones, líneas 58-64; agregarArbitro, líneas 94-120)
 
@@ -450,6 +450,41 @@ node probar-admin.js 2>&1 | tail -12
 ```text
 que fue lo que sucedio? no se pudieron hacer los arreglos?
 ```
+
+### Respuesta 2
+
+Sí se hicieron. **Los cambios en tu proyecto están listos.** Lo que interrumpiste fue un arreglo a mi script de pruebas, que está en mi carpeta temporal y no en tu proyecto.
+
+##### Cambios que quedaron en tu proyecto
+
+- **`comun/seguridad.js`** (archivo nuevo): las funciones `crearSal()` y `hashearPassword()`, con comentarios cortos.
+- **`admin/usuarios.html`:**
+  - Carga `../comun/seguridad.js` antes de `registro-arbitros.js`.
+  - Tiene los campos "Contraseña" y "Confirmar contraseña", con `type="password"`, su `x-model` y su mensaje de error, igual que los demás.
+- **`admin/registro-arbitros.js`:**
+  - `password` y `confirmarPassword` agregados a `formVacio()`.
+  - Las dos validaciones en `validar()`.
+  - `agregarArbitro()` ahora es `async` y guarda `sal` y `passwordHash` en vez de la contraseña.
+
+##### Lo que mostraron las pruebas
+
+Probé con Vite y con un servidor como el de AWS. Pasaron 15 de 17:
+
+- Con la contraseña corta o distinta, aparecen sus errores.
+- Con datos válidos se abre el modal y el árbitro se agrega a la tabla con su toast.
+- **No se guarda la contraseña.** Solo quedan la sal (32 caracteres) y el hash (64 caracteres).
+- El mismo hash se puede volver a calcular con la misma clave y la misma sal, que es lo que necesita el login. Una clave distinta, o la misma clave con otra sal, da un hash distinto.
+- La tabla no muestra ni la contraseña ni el hash.
+- La consola quedó sin errores.
+
+**Las 2 que fallaron parecen errores de mi script, no de tu código:**
+
+1. _"El formulario queda limpio"_: el código sí llama a `reiniciarFormulario()`, pero el script leía mal los datos de Alpine. Lo estaba cambiando para que revise directamente los campos de la página.
+2. _"Eliminar sigue funcionando"_: el script no encontró el botón "Eliminar" del modal. Iba a agregar detalle para ver qué pasaba.
+
+Hasta que vuelva a correr esas dos pruebas, no puedo asegurarte que limpiar y eliminar funcionen. Antes de estos cambios sí funcionaban.
+
+Además, los dos servidores de prueba (Vite en el puerto 5179 y el estático en el 8766) **siguen encendidos** en segundo plano.
 
 ## Qué se incorporó al proyecto
 
