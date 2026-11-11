@@ -14,4 +14,5 @@
 | 2026-11-09 | @CBenavidesP | Claude Code | Validación del login con Alpine.js | [ver](2026-11-09_cbenavidesp_validacion-login.md) |
 | 2026-11-09 | @CBenavidesP | Claude Code | Página de no encontrado (404) | [ver](2026-11-09_cbenavidesp_pagina-no-encontrada.md) |
 | 2026-11-09 | @waterloozz | Claude Code | Vista de registro de cuenta de árbitro | [ver](2026-11-09_waterloozz_registro-cuenta.md) |
+| 2026-11-11 | @CBenavidesP | Claude Code | Estilos de toasts y modal en comun/ y modal igual al de Partidos | [ver](2026-11-11_cbenavidesp_estilos-componentes.md) |
 | 2026-11-11 | @CBenavidesP | Claude Code | Pestañas en el modal del acta (tercer componente) | [ver](2026-11-11_cbenavidesp_pestanas-acta.md) |
