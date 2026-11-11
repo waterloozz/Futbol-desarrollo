@@ -163,6 +163,7 @@ Futbol-desarrollo/
 │   ├── sesion.js              Protección de rutas por sesión y rol
 │   ├── menu.js                Menú común con control por rol
 │   ├── componentes.js         Notificaciones (toasts) y modal de confirmación
+│   ├── componentes.css        Estilos de los toasts y del modal de confirmación
 │   └── partidos.js            Componente de partidos: CRUD, filtros y acta
 ├── usuario/                   Vistas del árbitro (y del administrador)
 │   ├── dashboard.html         Inicio con el resumen del torneo
@@ -171,8 +172,7 @@ Futbol-desarrollo/
 │   └── perfil.html            Perfil y configuración
 ├── admin/                     Vistas solo para el administrador
 │   ├── usuarios.html          Registro de árbitros
-│   ├── registro-arbitros.js
-│   └── registro-arbitros.css  Estilos de toasts y modal
+│   └── registro-arbitros.js
 ├── public/
 │   └── mocks/                 Un JSON por recurso
 ├── ia/
