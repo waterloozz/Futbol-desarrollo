@@ -1,5 +1,7 @@
 
+// [IA] inicio · ia/2026-11-04_cbenavidesp_carpetas-y-limpieza.md
 const API_BASE = new URL("../public/mocks", document.currentScript?.src ?? location.href).href;
+// [IA] fin
 const STORAGE_KEY = "partidos_crud_data";
 const LATENCIA = 450;
 
@@ -54,8 +56,10 @@ async function obtenerResumen(usuario) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(partidos));
     }
 
+    // [IA] inicio · ia/2026-11-09_cbenavidesp_acceso-unico-arbitros.md
     const usuarios = await leerUsuarios();
     const nombre = usuarios.find((u) => u.email === usuario || u.usuario === usuario)?.nombre ?? null;
+    // [IA] fin
     const finalizados = partidos.filter((p) => p.estado === "finalizado");
     const programados = partidos.filter((p) => p.estado === "programado");
     const tarjetas = finalizados.reduce((total, p) => total + (p.amarillas || 0) + (p.rojas || 0), 0);
@@ -171,6 +175,7 @@ async function eliminarPartido(id) {
   return { ok: true, datos: { id } };
 }
 
+// [IA] inicio · ia/2026-11-09_cbenavidesp_acceso-unico-arbitros.md
 const USUARIOS_KEY = "usuarios_data";
 
 async function leerUsuarios() {
@@ -268,3 +273,4 @@ async function iniciarSesion(email, password) {
     return { ok: false, status: 500, error: error.message || "No se pudo iniciar sesión." };
   }
 }
+// [IA] fin

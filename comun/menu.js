@@ -78,7 +78,9 @@ document.addEventListener("alpine:init", () => {
 
 
     esActual(link) {
+      // [IA] inicio · ia/2026-11-04_cbenavidesp_carpetas-y-limpieza.md
       return window.location.pathname.split("/").pop() === link.href.split("/").pop();
+      // [IA] fin
     },
 
     cerrarSesion() {

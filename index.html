@@ -16,6 +16,7 @@
   <main>
     <section id="login">
       <h2>Acceso al Sistema</h2>
+      <!-- [IA] inicio · ia/2026-11-09_cbenavidesp_validacion-login.md -->
       <form x-data="login" @submit.prevent="entrar()" novalidate>
         <p x-show="errorGeneral" x-cloak role="alert" class="alerta-error" x-text="errorGeneral"></p>
         <div>
@@ -37,6 +38,7 @@
         <div>
           <button type="submit" :disabled="enviando" x-text="enviando ? 'Ingresando…' : 'Entrar'">Entrar</button>
         </div>
+      <!-- [IA] fin -->
         <!-- [IA] inicio · ia/2026-11-09_waterloozz_registro-cuenta.md -->
         <p class="enlace-secundario">¿No tienes cuenta? <a href="login/registro.html">Crear cuenta</a></p>
         <!-- [IA] fin -->
@@ -44,9 +46,11 @@
     </section>
   </main>
 
+  <!-- [IA] inicio · ia/2026-11-09_cbenavidesp_acceso-unico-arbitros.md · ia/2026-11-09_cbenavidesp_validacion-login.md -->
   <script src="comun/api.js" defer></script>
   <script src="comun/seguridad.js" defer></script>
   <script src="login/login.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
+  <!-- [IA] fin -->
 </body>
 </html>

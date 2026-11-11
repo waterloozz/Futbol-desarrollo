@@ -7,7 +7,7 @@ Es la Entrega 2 de Desarrollo Web y Móvil (CIT2008, UDP): frontend con datos si
 **Integrantes:**
 
 - Carlos Benavides (@CBenavidesP)
-- Roberto Sánchez
+- Roberto Sánchez (@waterloozz)
 - Josefa Solís (@josefasolis1-hue)
 
 ---
@@ -68,6 +68,7 @@ Los otros 8 árbitros de `public/mocks/usuarios.json` también pueden entrar: su
 | Vista | Archivo | Cómo llegar | Acceso |
 |---|---|---|---|
 | Iniciar sesión | `index.html` | Al abrir la aplicación | Pública |
+| Crear cuenta | `login/registro.html` | Enlace **Crear cuenta** en el login | Pública |
 | Inicio (resumen del torneo) | `usuario/dashboard.html` | Al iniciar sesión, o menú **Inicio** | Con sesión |
 | Partidos y acta oficial | `usuario/partidos.html` | Menú **Partidos** | Con sesión |
 | Perfil y configuración | `usuario/perfil.html` | Menú **Perfil** | Con sesión |
@@ -81,11 +82,12 @@ Sin sesión, cualquier vista interna redirige al login. Un árbitro que intenta 
 ## Funcionalidades
 
 - **Login con email:** valida cada campo en tiempo real (email obligatorio y con formato, contraseña obligatoria), deshabilita el botón mientras se comprueban los datos y muestra un mensaje general si el email o la contraseña son incorrectos, sin decir cuál de los dos falló.
+- **Crear cuenta:** un árbitro puede crear su propia cuenta desde el login (nombre, RUT, email, teléfono, categoría y contraseña con confirmación). Valida cada campo en tiempo real, no acepta un email o RUT ya registrado y, al terminar, entra directo al inicio.
 - **Sesión simulada:** el login guarda el rol y el email en `localStorage` y las vistas internas lo revisan antes de mostrarse.
 - **Menú común** en todas las vistas internas: marca la vista actual, muestra **Usuarios** solo al administrador y se convierte en menú hamburguesa en móvil.
 - **Inicio:** saludo por nombre, totales del torneo, próximos partidos y últimos resultados, con estados de *cargando* (skeleton), *vacío* y *error con botón Reintentar*.
 - **Partidos:** listado con búsqueda por equipo o estadio, filtro por estado (programado o finalizado) y orden por fecha o por equipo local. CRUD completo (crear, editar y eliminar con confirmación), con los cambios guardados en `localStorage`.
-- **Acta oficial:** detalle de cada partido donde se registran y eliminan acontecimientos (goles y tarjetas) por minuto; el marcador y las tarjetas se actualizan solos.
+- **Acta oficial:** detalle de cada partido donde se registran y eliminan acontecimientos (goles y tarjetas) por minuto; el marcador y las tarjetas se actualizan solos. Está organizada en pestañas (**Resumen**, **Acontecimientos** y **Observaciones**) que también se manejan con el teclado.
 - **Perfil:** muestra el usuario y su rol, y permite editar la asociación y el teléfono de contacto, que se mantienen al recargar.
 - **Registro de árbitros (administrador):**
   - Formulario con nombre, RUT con guion, email, teléfono, categoría, contraseña y su confirmación.
@@ -95,7 +97,7 @@ Sin sesión, cualquier vista interna redirige al login. Un árbitro que intenta 
   - La lista se carga desde la capa de datos, con estados de *cargando* y *error con Reintentar*, y se mantiene al recargar.
   - **Cada árbitro registrado puede iniciar sesión con su propio email y contraseña.**
 - **Accesibilidad en los formularios:** `aria-invalid` y `aria-describedby` en los campos con error, y foco automático en el primer campo con error al enviar.
-- **Componentes de interfaz:** modales (confirmación, formulario de partido y acta), notificaciones (toasts) y menú desplegable.
+- **Componentes de interfaz:** modales (confirmación, formulario de partido y acta), notificaciones (toasts) y pestañas (en el acta oficial: con flechas, Inicio y Fin del teclado, y `aria-selected`). Aparte, el menú común se convierte en menú hamburguesa en móvil.
 
 ## Cómo probar
 
@@ -103,11 +105,13 @@ Con `npm run dev` y la aplicación abierta en **http://localhost:5173**:
 
 1. **Validación del login:** sin escribir nada, apretar **Entrar** (aparecen los errores y el cursor va al email). Escribir un email sin `@` y pasar al siguiente campo (aparece el error) y corregirlo (el error se quita solo).
 2. **Credenciales incorrectas:** entrar con `admin@futbolapp.cl` y una contraseña cualquiera. Arriba aparece *"Email o contraseña incorrectos."* y se borra al volver a escribir.
-3. **Registrar un árbitro:** entrar como administrador, ir a **Usuarios** y completar el formulario. Probar los errores (RUT sin guion, email repetido como `jperez@futbolapp.cl`, contraseña de menos de 8 caracteres o confirmación distinta) y luego registrarlo con datos válidos.
-4. **Que quede guardado:** recargar la página (el árbitro sigue en la tabla) y cerrar sesión.
-5. **Acceso propio del árbitro nuevo:** iniciar sesión con el email y la contraseña del árbitro registrado. El inicio lo saluda por su nombre y el menú no muestra **Usuarios**.
-6. **Eliminar:** volver a entrar como administrador, eliminar ese árbitro y comprobar que ya no puede iniciar sesión.
-7. **Página no encontrada:** abrir `http://localhost:5173/no-existe.html`. Con sesión el botón vuelve al inicio; sin sesión lleva al login.
+3. **Crear cuenta:** en el login, apretar **Crear cuenta** y completar el formulario. Probar un email ya registrado (por ejemplo `jperez@futbolapp.cl`) y luego crear la cuenta con datos válidos: entra directo al inicio. Cerrar sesión y volver a entrar con ese email y contraseña.
+4. **Registrar un árbitro:** entrar como administrador, ir a **Usuarios** y completar el formulario. Probar los errores (RUT sin guion, email repetido como `jperez@futbolapp.cl`, contraseña de menos de 8 caracteres o confirmación distinta) y luego registrarlo con datos válidos.
+5. **Que quede guardado:** recargar la página (el árbitro sigue en la tabla) y cerrar sesión.
+6. **Acceso propio del árbitro nuevo:** iniciar sesión con el email y la contraseña del árbitro registrado. El inicio lo saluda por su nombre y el menú no muestra **Usuarios**.
+7. **Eliminar:** volver a entrar como administrador, eliminar ese árbitro y comprobar que ya no puede iniciar sesión.
+8. **Pestañas del acta:** en **Partidos**, apretar **Acta** en cualquier partido. Cambiar de pestaña con clic o con las flechas del teclado, y registrar un acontecimiento en **Acontecimientos**.
+9. **Página no encontrada:** abrir `http://localhost:5173/no-existe.html`. Con sesión el botón vuelve al inicio; sin sesión lleva al login.
 
 Para volver a los datos originales de `public/mocks/`, ejecutar `localStorage.clear()` en la consola del navegador (F12) y recargar.
 
