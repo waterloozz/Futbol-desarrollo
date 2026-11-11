@@ -416,11 +416,27 @@
           class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs"
         ></div>
 
+        <!-- [IA] inicio · ia/2026-11-11_cbenavidesp_pestanas-acta.md -->
         <div
           x-show="modalDetalle"
           x-transition
           class="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 text-left shadow-xl border border-slate-200"
+          x-data="{
+            pestanaActa: 'resumen',
+            pestanasActa: ['resumen', 'acontecimientos', 'observaciones'],
+            irAPestanaActa(nombre) {
+              this.pestanaActa = nombre;
+              this.$nextTick(() => this.$refs['tabActa-' + nombre].focus());
+            },
+            moverPestanaActa(paso) {
+              const total = this.pestanasActa.length;
+              const i = this.pestanasActa.indexOf(this.pestanaActa);
+              this.irAPestanaActa(this.pestanasActa[(i + paso + total) % total]);
+            }
+          }"
+          x-init="$watch('modalDetalle', abierto => { if (abierto) pestanaActa = 'resumen' })"
         >
+        <!-- [IA] fin -->
           
           <div class="flex items-center justify-between pb-4 border-b border-slate-200">
             <div>
@@ -442,6 +458,62 @@
             </button>
           </div>
 
+          <!-- [IA] inicio · ia/2026-11-11_cbenavidesp_pestanas-acta.md -->
+          <div role="tablist" aria-label="Secciones del acta" class="mt-4 flex overflow-x-auto border-b border-slate-200 sm:gap-1">
+            <button
+              type="button"
+              role="tab"
+              id="tab-acta-resumen"
+              x-ref="tabActa-resumen"
+              aria-controls="panel-acta-resumen"
+              :aria-selected="pestanaActa === 'resumen' ? 'true' : 'false'"
+              :tabindex="pestanaActa === 'resumen' ? 0 : -1"
+              @click="pestanaActa = 'resumen'"
+              @keydown.arrow-right.prevent="moverPestanaActa(1)"
+              @keydown.arrow-left.prevent="moverPestanaActa(-1)"
+              @keydown.home.prevent="irAPestanaActa('resumen')"
+              @keydown.end.prevent="irAPestanaActa('observaciones')"
+              class="-mb-px whitespace-nowrap border-b-2 px-2 py-2 text-xs font-semibold transition sm:px-3 sm:text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+              :class="pestanaActa === 'resumen' ? 'border-blue-700 text-blue-700' : 'border-transparent text-slate-600 hover:text-slate-900'"
+            >Resumen</button>
+            <button
+              type="button"
+              role="tab"
+              id="tab-acta-acontecimientos"
+              x-ref="tabActa-acontecimientos"
+              aria-controls="panel-acta-acontecimientos"
+              :aria-selected="pestanaActa === 'acontecimientos' ? 'true' : 'false'"
+              :tabindex="pestanaActa === 'acontecimientos' ? 0 : -1"
+              @click="pestanaActa = 'acontecimientos'"
+              @keydown.arrow-right.prevent="moverPestanaActa(1)"
+              @keydown.arrow-left.prevent="moverPestanaActa(-1)"
+              @keydown.home.prevent="irAPestanaActa('resumen')"
+              @keydown.end.prevent="irAPestanaActa('observaciones')"
+              class="-mb-px whitespace-nowrap border-b-2 px-2 py-2 text-xs font-semibold transition sm:px-3 sm:text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+              :class="pestanaActa === 'acontecimientos' ? 'border-blue-700 text-blue-700' : 'border-transparent text-slate-600 hover:text-slate-900'"
+            >Acontecimientos</button>
+            <button
+              type="button"
+              role="tab"
+              id="tab-acta-observaciones"
+              x-ref="tabActa-observaciones"
+              aria-controls="panel-acta-observaciones"
+              :aria-selected="pestanaActa === 'observaciones' ? 'true' : 'false'"
+              :tabindex="pestanaActa === 'observaciones' ? 0 : -1"
+              @click="pestanaActa = 'observaciones'"
+              @keydown.arrow-right.prevent="moverPestanaActa(1)"
+              @keydown.arrow-left.prevent="moverPestanaActa(-1)"
+              @keydown.home.prevent="irAPestanaActa('resumen')"
+              @keydown.end.prevent="irAPestanaActa('observaciones')"
+              class="-mb-px whitespace-nowrap border-b-2 px-2 py-2 text-xs font-semibold transition sm:px-3 sm:text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+              :class="pestanaActa === 'observaciones' ? 'border-blue-700 text-blue-700' : 'border-transparent text-slate-600 hover:text-slate-900'"
+            >Observaciones</button>
+          </div>
+          <!-- [IA] fin -->
+
+          <!-- [IA] inicio · ia/2026-11-11_cbenavidesp_pestanas-acta.md -->
+          <div role="tabpanel" id="panel-acta-resumen" aria-labelledby="tab-acta-resumen" x-show="pestanaActa === 'resumen'">
+          <!-- [IA] fin -->
           <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 rounded-xl bg-slate-50 p-4 text-xs border border-slate-200">
             <div>
               <p class="text-slate-400 font-medium">Marcador</p>
@@ -460,11 +532,18 @@
               <p class="text-sm font-semibold text-slate-800 truncate" x-text="partidoSeleccionado?.cancha"></p>
             </div>
           </div>
+          <!-- [IA] inicio · ia/2026-11-11_cbenavidesp_pestanas-acta.md -->
+          </div>
+          <!-- [IA] fin -->
 
-          <div class="mt-6 space-y-3">
+          <!-- [IA] inicio · ia/2026-11-11_cbenavidesp_pestanas-acta.md -->
+          <div role="tabpanel" id="panel-acta-acontecimientos" aria-labelledby="tab-acta-acontecimientos" x-show="pestanaActa === 'acontecimientos'" class="mt-4 space-y-3">
+          <!-- [IA] fin -->
             <h4 class="text-sm font-bold text-slate-900">Acontecimientos Registrados</h4>
 
-            <div class="overflow-hidden rounded-lg border border-slate-200">
+            <!-- [IA] inicio · ia/2026-11-11_cbenavidesp_pestanas-acta.md -->
+            <div class="overflow-x-auto rounded-lg border border-slate-200">
+            <!-- [IA] fin -->
               <table class="w-full text-left text-xs text-slate-700">
                 <thead class="bg-slate-50 font-semibold text-slate-600 uppercase border-b border-slate-200">
                   <tr>
@@ -568,7 +647,9 @@
           </div>
 
          
-          <div class="mt-4 pt-3 border-t border-slate-200">
+          <!-- [IA] inicio · ia/2026-11-11_cbenavidesp_pestanas-acta.md -->
+          <div role="tabpanel" id="panel-acta-observaciones" aria-labelledby="tab-acta-observaciones" x-show="pestanaActa === 'observaciones'" class="mt-4">
+          <!-- [IA] fin -->
             <h4 class="text-xs font-bold text-slate-700">Observaciones del Árbitro:</h4>
             <p class="text-xs text-slate-600 mt-1" x-text="partidoSeleccionado?.observaciones || 'Sin observaciones registradas.'"></p>
           </div>
