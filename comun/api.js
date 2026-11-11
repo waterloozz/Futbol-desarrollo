@@ -274,3 +274,48 @@ async function iniciarSesion(email, password) {
   }
 }
 // [IA] fin
+
+// [IA] inicio · ia/2026-11-11_waterloozz_perfil-api.md
+async function obtenerPerfil(email) {
+  try {
+    const usuarios = await leerUsuarios();
+    const usuario = usuarios.find((u) => u.email.toLowerCase() === (email || "").toLowerCase());
+    if (!usuario) {
+      return { ok: false, status: 404, error: "No se encontró el perfil." };
+    }
+    const perfil = {
+      ...sinClave(usuario),
+      asociacion: usuario.asociacion || "Asociación Nacional de Árbitros",
+      telefono: usuario.telefono || "",
+    };
+    return { ok: true, status: 200, datos: perfil, data: perfil };
+  } catch (error) {
+    return { ok: false, status: 500, error: "No se pudo cargar el perfil." };
+  }
+}
+
+async function actualizarPerfil(email, { asociacion, telefono }) {
+  try {
+    await esperar(LATENCIA);
+    simularFallo();
+    const usuarios = await leerUsuarios();
+    const indice = usuarios.findIndex((u) => u.email.toLowerCase() === (email || "").toLowerCase());
+    if (indice === -1) {
+      return { ok: false, status: 404, error: "No se encontró el perfil." };
+    }
+    if (!/^[+\d][\d\s-]{6,19}$/.test((telefono || "").trim())) {
+      return { ok: false, status: 400, error: "Ingresa un teléfono válido." };
+    }
+    usuarios[indice] = {
+      ...usuarios[indice],
+      asociacion: (asociacion || "").trim(),
+      telefono: telefono.trim(),
+    };
+    guardarUsuarios(usuarios);
+    const perfil = sinClave(usuarios[indice]);
+    return { ok: true, status: 200, datos: perfil, data: perfil };
+  } catch (error) {
+    return { ok: false, status: 500, error: "No se pudo guardar el perfil." };
+  }
+}
+// [IA] fin

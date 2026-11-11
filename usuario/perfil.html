@@ -15,47 +15,88 @@
   </style>
   <link rel="stylesheet" href="../comun/componentes.css">
 
+  <!-- [IA] inicio · ia/2026-11-11_waterloozz_perfil-api.md -->
+  <script src="../comun/api.js" defer></script>
+  <!-- [IA] fin -->
   <script src="../comun/menu.js" defer></script>
   <script src="../comun/componentes.js" defer></script>
+  <!-- [IA] inicio · ia/2026-11-11_waterloozz_perfil-api.md -->
+  <script defer>
+    document.addEventListener("alpine:init", () => {
+      Alpine.data("perfil", () => ({
+        estado: "cargando",
+        error: "",
+        datos: null,
+        asociacion: "",
+        telefono: "",
+        guardando: false,
+        async init() {
+          if (typeof redirigiendo !== "undefined" && redirigiendo) return;
+          await this.cargar();
+        },
+        async cargar() {
+          this.estado = "cargando";
+          const r = await obtenerPerfil(localStorage.getItem("usuario"));
+          if (!r.ok) {
+            this.error = r.error;
+            this.estado = "error";
+            return;
+          }
+          this.datos = r.datos;
+          this.asociacion = r.datos.asociacion;
+          this.telefono = r.datos.telefono;
+          this.estado = "listo";
+        },
+        async guardar() {
+          this.guardando = true;
+          const r = await actualizarPerfil(this.datos.email, {
+            asociacion: this.asociacion,
+            telefono: this.telefono,
+          });
+          this.guardando = false;
+          if (r.ok) {
+            this.datos = r.datos;
+            notificar("Perfil actualizado con éxito.", "exito");
+          } else {
+            notificar(r.error, "error");
+          }
+        },
+      }));
+    });
+  </script>
+  <!-- [IA] fin -->
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
 </head>
 <body class="flex min-h-screen flex-col bg-slate-100 text-slate-800">
 
   <header id="menu-comun"></header>
 
-  <main
-    x-data="{
-      usuario: localStorage.getItem('usuario') || 'Usuario',
-      rol: localStorage.getItem('rol') || 'arbitro',
-      asociacion: localStorage.getItem('perfil_asociacion') || 'Asociación Nacional de Árbitros',
-      telefono: localStorage.getItem('perfil_telefono') || '+56 9 8765 4321',
-      guardar() {
-        localStorage.setItem('perfil_asociacion', this.asociacion);
-        localStorage.setItem('perfil_telefono', this.telefono);
-        if (typeof notificar === 'function') {
-          notificar('Perfil actualizado con éxito.', 'exito');
-        }
-      }
-    }"
-    class="mx-auto w-full max-w-5xl flex-1 space-y-6 px-4 py-6"
-  >
+  <!-- [IA] inicio · ia/2026-11-11_waterloozz_perfil-api.md -->
+  <main x-data="perfil" class="mx-auto w-full max-w-5xl flex-1 space-y-6 px-4 py-6">
     <div class="space-y-1">
       <h1 class="text-2xl font-bold tracking-tight text-slate-900">Perfil y Configuración</h1>
       <p class="text-sm text-slate-600">Revisa tus datos personales y credenciales en el sistema arbitral.</p>
     </div>
 
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+    <p x-show="estado === 'cargando'" x-cloak role="status" aria-live="polite" class="text-sm text-slate-600">Cargando perfil…</p>
+
+    <div x-show="estado === 'error'" x-cloak role="alert" class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+      <p x-text="error"></p>
+      <button type="button" @click="cargar()" class="mt-2 rounded-lg bg-red-700 px-4 py-1.5 text-sm font-semibold text-white hover:bg-red-800">Reintentar</button>
+    </div>
+
+    <div x-show="estado === 'listo'" x-cloak class="grid grid-cols-1 gap-6 md:grid-cols-3">
 
       <section aria-labelledby="titulo-resumen-perfil" class="rounded-2xl bg-white p-6 shadow-sm border border-slate-200 text-center flex flex-col items-center">
         <h2 id="titulo-resumen-perfil" class="sr-only">Resumen de usuario</h2>
         <div class="size-20 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-2xl font-bold uppercase shadow-inner">
-          <span x-text="usuario.substring(0, 2)"></span>
+          <span x-text="datos?.nombre.substring(0, 2)"></span>
         </div>
-        <h3 class="mt-4 text-lg font-bold text-slate-900 capitalize" x-text="usuario"></h3>
+        <h3 class="mt-4 text-lg font-bold text-slate-900" x-text="datos?.nombre"></h3>
         <span
           class="mt-1 inline-flex items-center rounded-full px-3 py-0.5 text-xs font-semibold capitalize"
-          :class="rol === 'admin' ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-blue-50 text-blue-700 border border-blue-200'"
-          x-text="rol === 'admin' ? 'Administrador' : 'Árbitro Oficial'"
+          :class="datos?.rol === 'admin' ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-blue-50 text-blue-700 border border-blue-200'"
+          x-text="datos?.rol === 'admin' ? 'Administrador' : 'Árbitro Oficial'"
         ></span>
         <p class="mt-4 text-xs text-slate-500">Sesión activa y autenticada en el sistema de actas digitales.</p>
       </section>
@@ -67,12 +108,17 @@
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label for="pUsuario" class="block text-xs font-semibold text-slate-700 mb-1">Nombre de usuario</label>
-              <input type="text" id="pUsuario" :value="usuario" disabled class="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500 cursor-not-allowed">
+              <input type="text" id="pUsuario" :value="datos?.usuario || datos?.email" disabled class="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500 cursor-not-allowed">
             </div>
             <div>
               <label for="pRol" class="block text-xs font-semibold text-slate-700 mb-1">Rol en el sistema</label>
-              <input type="text" id="pRol" :value="rol" disabled class="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500 cursor-not-allowed capitalize">
+              <input type="text" id="pRol" :value="datos?.rol" disabled class="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500 cursor-not-allowed capitalize">
             </div>
+          </div>
+
+          <div>
+            <label for="pEmail" class="block text-xs font-semibold text-slate-700 mb-1">Correo electrónico</label>
+            <input type="text" id="pEmail" :value="datos?.email" disabled class="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500 cursor-not-allowed">
           </div>
 
           <div>
@@ -88,7 +134,9 @@
           <div class="pt-3 border-t border-slate-100 flex justify-end">
             <button
               type="submit"
-              class="rounded-lg bg-blue-700 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition"
+              :disabled="guardando"
+              x-text="guardando ? 'Guardando…' : 'Guardar Cambios'"
+              class="rounded-lg bg-blue-700 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition disabled:opacity-60"
             >
               Guardar Cambios
             </button>
@@ -97,6 +145,7 @@
       </section>
     </div>
   </main>
+  <!-- [IA] fin -->
 
   <footer x-data class="bg-slate-800 py-4 text-center text-sm text-slate-300">
     <p>Sistema de Acta Digital Arbitral · <span x-text="new Date().getFullYear()"></span></p>
@@ -120,4 +169,3 @@
 
 </body>
 </html>
-
