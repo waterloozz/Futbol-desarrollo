@@ -50,11 +50,13 @@
        
         <div class="sm:col-span-6 relative">
           <label for="buscar" class="sr-only">Buscar partidos</label>
+          <!-- [IA] inicio · ia/2026-11-12_josefasolis1-hue_correcciones-partidos.md -->
           <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
           </div>
+          <!-- [IA] fin -->
           <input
             type="search"
             id="buscar"
@@ -136,11 +138,13 @@
         x-show="partidosFiltrados.length === 0"
         class="rounded-xl bg-white p-8 text-center shadow-sm border border-slate-200/80"
       >
+        <!-- [IA] inicio · ia/2026-11-12_josefasolis1-hue_correcciones-partidos.md -->
         <div class="mx-auto mb-3 flex size-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
-          <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
           </svg>
         </div>
+        <!-- [IA] fin -->
         <h3 class="text-base font-semibold text-slate-800">No se encontraron partidos</h3>
         <p class="mt-1 text-sm text-slate-500">Prueba ajustando la búsqueda o cambiando el filtro de estado.</p>
         <button
@@ -174,15 +178,19 @@
                       <template x-if="p.estado === 'finalizado'">
                         <span class="rounded bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-700" x-text="`${p.golesLocal} - ${p.golesVisitante}`"></span>
                       </template>
+                      <!-- [IA] inicio · ia/2026-11-12_josefasolis1-hue_correcciones-partidos.md -->
                       <template x-if="p.estado === 'programado'">
-                        <span class="text-xs font-normal text-slate-400">vs</span>
+                        <span class="text-xs font-normal text-slate-600">vs</span>
                       </template>
+                      <!-- [IA] fin -->
                       <span x-text="p.visitante" class="font-semibold"></span>
                     </div>
                   </td>
                   <td class="px-4 py-3.5 whitespace-nowrap">
                     <div class="text-slate-800" x-text="formatearFecha(p.fecha)"></div>
-                    <div class="text-xs text-slate-400" x-text="p.hora"></div>
+                    <!-- [IA] inicio · ia/2026-11-12_josefasolis1-hue_correcciones-partidos.md -->
+                    <div class="text-xs text-slate-600" x-text="p.hora"></div>
+                    <!-- [IA] fin -->
                   </td>
                   <td class="px-4 py-3.5 text-slate-600" x-text="p.cancha"></td>
                   <td class="px-4 py-3.5 whitespace-nowrap">
@@ -265,9 +273,11 @@
               class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
               aria-label="Cerrar modal"
             >
-              <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <!-- [IA] inicio · ia/2026-11-12_josefasolis1-hue_correcciones-partidos.md -->
+              <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
+              <!-- [IA] fin -->
             </button>
           </div>
 
@@ -389,7 +399,12 @@
                 :disabled="guardando"
                 class="inline-flex items-center gap-2 rounded-lg bg-blue-700 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-800 disabled:opacity-50"
               >
-                <span x-show="guardando" class="animate-spin text-sm">⏳</span>
+                <!-- [IA] inicio · ia/2026-11-12_josefasolis1-hue_correcciones-partidos.md -->
+                <svg x-show="guardando" class="size-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"></path>
+                </svg>
+                <!-- [IA] fin -->
                 <span x-text="guardando ? 'Guardando...' : (modoEdicion ? 'Actualizar' : 'Crear')"></span>
               </button>
             </div>
@@ -443,19 +458,24 @@
               <span class="text-xs font-bold uppercase tracking-wider text-blue-700">Acta Arbitral Oficial</span>
               <h3 id="modal-acta-titulo" class="text-xl font-bold text-slate-900">
                 <span x-text="partidoSeleccionado?.local"></span>
-                <span class="text-slate-400 font-normal"> vs </span>
+                <!-- [IA] inicio · ia/2026-11-12_josefasolis1-hue_correcciones-partidos.md -->
+                <span class="text-slate-600 font-normal"> vs </span>
+                <!-- [IA] fin -->
                 <span x-text="partidoSeleccionado?.visitante"></span>
               </h3>
             </div>
+            <!-- [IA] inicio · ia/2026-11-12_josefasolis1-hue_correcciones-partidos.md -->
             <button
               type="button"
               @click="cerrarDetalle()"
               class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+              aria-label="Cerrar acta"
             >
-              <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
+            <!-- [IA] fin -->
           </div>
 
           <!-- [IA] inicio · ia/2026-11-11_cbenavidesp_pestanas-acta.md -->
@@ -514,24 +534,26 @@
           <!-- [IA] inicio · ia/2026-11-11_cbenavidesp_pestanas-acta.md -->
           <div role="tabpanel" id="panel-acta-resumen" aria-labelledby="tab-acta-resumen" x-show="pestanaActa === 'resumen'">
           <!-- [IA] fin -->
+          <!-- [IA] inicio · ia/2026-11-12_josefasolis1-hue_correcciones-partidos.md -->
           <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 rounded-xl bg-slate-50 p-4 text-xs border border-slate-200">
             <div>
-              <p class="text-slate-400 font-medium">Marcador</p>
-              <p class="text-lg font-extrabold text-slate-900" x-text="partidoSeleccionado?.estado === 'finalizado' ? `${partidoSeleccionado.golesLocal} - ${partidoSeleccionado.golesVisitante}` : '0 - 0'"></p>
+              <p class="text-slate-600 font-medium">Marcador</p>
+              <p class="text-lg font-extrabold text-slate-900" x-text="`${partidoSeleccionado?.golesLocal ?? 0} - ${partidoSeleccionado?.golesVisitante ?? 0}`"></p>
             </div>
             <div>
-              <p class="text-slate-400 font-medium">Estado</p>
+              <p class="text-slate-600 font-medium">Estado</p>
               <p class="text-sm font-bold text-slate-800 capitalize" x-text="partidoSeleccionado?.estado"></p>
             </div>
             <div>
-              <p class="text-slate-400 font-medium">Fecha y Hora</p>
+              <p class="text-slate-600 font-medium">Fecha y Hora</p>
               <p class="text-sm font-semibold text-slate-800" x-text="`${partidoSeleccionado?.fecha} ${partidoSeleccionado?.hora}`"></p>
             </div>
             <div>
-              <p class="text-slate-400 font-medium">Estadio</p>
+              <p class="text-slate-600 font-medium">Estadio</p>
               <p class="text-sm font-semibold text-slate-800 truncate" x-text="partidoSeleccionado?.cancha"></p>
             </div>
           </div>
+          <!-- [IA] fin -->
           <!-- [IA] inicio · ia/2026-11-11_cbenavidesp_pestanas-acta.md -->
           </div>
           <!-- [IA] fin -->
@@ -583,9 +605,11 @@
                     </tr>
                   </template>
                   <tr x-show="!partidoSeleccionado?.acontecimientos || partidoSeleccionado.acontecimientos.length === 0">
-                    <td colspan="5" class="px-3 py-4 text-center text-slate-400">
+                    <!-- [IA] inicio · ia/2026-11-12_josefasolis1-hue_correcciones-partidos.md -->
+                    <td colspan="5" class="px-3 py-4 text-center text-slate-600">
                       No hay acontecimientos registrados para este partido.
                     </td>
+                    <!-- [IA] fin -->
                   </tr>
                 </tbody>
               </table>

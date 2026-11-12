@@ -124,6 +124,9 @@ document.addEventListener("alpine:init", () => {
       this.form = formVacio();
       this.errores = erroresVacios();
       this.modalFormulario = true;
+      // [IA] inicio · ia/2026-11-12_josefasolis1-hue_correcciones-partidos.md
+      this.$nextTick(() => document.getElementById("fLocal")?.focus());
+      // [IA] fin
     },
 
     // Modal Editar
@@ -147,6 +150,9 @@ document.addEventListener("alpine:init", () => {
       };
       this.errores = erroresVacios();
       this.modalFormulario = true;
+      // [IA] inicio · ia/2026-11-12_josefasolis1-hue_correcciones-partidos.md
+      this.$nextTick(() => document.getElementById("fLocal")?.focus());
+      // [IA] fin
     },
 
     cerrarModalFormulario() {
@@ -323,7 +329,21 @@ document.addEventListener("alpine:init", () => {
 
     async eliminarAcontecimiento(acId) {
       const p = this.partidoSeleccionado;
+      // [IA] inicio · ia/2026-11-12_josefasolis1-hue_correcciones-partidos.md
+      const ac = p.acontecimientos.find((a) => a.id === acId);
+      if (!ac) return;
+      // [IA] fin
       p.acontecimientos = p.acontecimientos.filter((a) => a.id !== acId);
+      // [IA] inicio · ia/2026-11-12_josefasolis1-hue_correcciones-partidos.md
+      if (ac.tipo === "Gol") {
+        if (ac.equipo === p.local) p.golesLocal = Math.max(0, (p.golesLocal || 0) - 1);
+        else p.golesVisitante = Math.max(0, (p.golesVisitante || 0) - 1);
+      } else if (ac.tipo === "Tarjeta amarilla") {
+        p.amarillas = Math.max(0, (p.amarillas || 0) - 1);
+      } else if (ac.tipo === "Tarjeta roja") {
+        p.rojas = Math.max(0, (p.rojas || 0) - 1);
+      }
+      // [IA] fin
       const res = await actualizarPartido(p.id, p);
       if (res.ok) {
         const idx = this.partidos.findIndex((x) => x.id === p.id);
