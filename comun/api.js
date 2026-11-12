@@ -1,6 +1,9 @@
 
 // [IA] inicio · ia/2026-11-04_cbenavidesp_carpetas-y-limpieza.md
-const API_BASE = new URL("../public/mocks", document.currentScript?.src ?? location.href).href;
+const ES_VITE = typeof window !== "undefined" && (location.port === "5173" || Boolean(document.querySelector('script[src*="@vite"]')));
+const API_BASE = ES_VITE
+  ? `${location.origin}/mocks`
+  : new URL("../public/mocks", document.currentScript?.src ?? location.href).href;
 // [IA] fin
 const STORAGE_KEY = "partidos_crud_data";
 const LATENCIA = 450;
@@ -35,7 +38,16 @@ function simularFallo() {
 async function pedir(recurso) {
   await esperar(LATENCIA);
   simularFallo();
-  const respuesta = await fetch(`${API_BASE}/${recurso}.json`);
+  let respuesta = await fetch(`${API_BASE}/${recurso}.json`);
+  if (!respuesta.ok) {
+    const rutaAlt = API_BASE.includes("/public/")
+      ? `${location.origin}/mocks/${recurso}.json`
+      : new URL(`../public/mocks/${recurso}.json`, document.currentScript?.src ?? location.href).href;
+    try {
+      const resAlt = await fetch(rutaAlt);
+      if (resAlt.ok) respuesta = resAlt;
+    } catch (_) {}
+  }
   if (!respuesta.ok) {
     throw new Error(`No se pudo cargar "${recurso}" (HTTP ${respuesta.status})`);
   }
@@ -174,6 +186,18 @@ async function eliminarPartido(id) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(filtrados));
   return { ok: true, datos: { id } };
 }
+
+// [IA] inicio · ia/2026-11-03_josefasolis1-hue_crud-partidos.md
+async function obtenerEquipos() {
+  try {
+    simularFallo();
+    const equipos = await pedir("equipos");
+    return { ok: true, status: 200, datos: equipos, data: equipos };
+  } catch (error) {
+    return { ok: false, status: 500, error: "No se pudieron cargar los equipos." };
+  }
+}
+// [IA] fin
 
 // [IA] inicio · ia/2026-11-09_cbenavidesp_acceso-unico-arbitros.md
 const USUARIOS_KEY = "usuarios_data";

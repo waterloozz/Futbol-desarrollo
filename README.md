@@ -140,6 +140,7 @@ Todo el acceso a datos está en `comun/api.js`. Las vistas no leen los JSON dire
 | `crearPartido(nuevoPartido)` | POST | `/api/partidos` | `localStorage` | Crea un partido y lo devuelve con su `id` |
 | `actualizarPartido(id, datos)` | PUT | `/api/partidos/:id` | `localStorage` | Actualiza un partido, o error si no existe |
 | `eliminarPartido(id)` | DELETE | `/api/partidos/:id` | `localStorage` | Elimina un partido y devuelve su `id` |
+| `obtenerEquipos()` | GET | `/api/equipos` | `equipos.json` | Lista de equipos y estadios disponibles para partidos |
 
 ### Datos (`public/mocks/`)
 

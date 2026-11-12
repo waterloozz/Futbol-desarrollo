@@ -20,3 +20,4 @@
 | 2026-11-09 | @waterloozz | Claude Code | Vista de registro de cuenta de árbitro | [ver](2026-11-09_waterloozz_registro-cuenta.md) |
 | 2026-11-11 | @CBenavidesP | Claude Code | Estilos de toasts y modal en comun/ y modal igual al de Partidos | [ver](2026-11-11_cbenavidesp_estilos-componentes.md) |
 | 2026-11-11 | @CBenavidesP | Claude Code | Pestañas en el modal del acta (tercer componente) | [ver](2026-11-11_cbenavidesp_pestanas-acta.md) |
+| 2026-11-11 | @waterloozz | Claude Code | Perfil con obtenerPerfil() y actualizarPerfil() en la capa de datos | [ver](2026-11-11_waterloozz_perfil-api.md) |

@@ -53,31 +53,9 @@ document.addEventListener("alpine:init", () => {
       tipo: "Gol",
     },
 
-    // Opciones para formularios
-    equiposDisponibles: [
-      "Colo-Colo",
-      "U. de Chile",
-      "U. Católica",
-      "Everton",
-      "Palestino",
-      "Huachipato",
-      "Coquimbo Unido",
-      "La Serena",
-      "Ñublense",
-      "Deportes Limache",
-    ],
-    canchasDisponibles: [
-      "Estadio Monumental David Arellano",
-      "Estadio Nacional",
-      "Claro Arena",
-      "Estadio Sausalito",
-      "Estadio Municipal de La Cisterna",
-      "Estadio Huachipato-CAP Acero",
-      "Estadio Francisco Sánchez Rumoroso",
-      "Estadio La Portada",
-      "Estadio Nelson Oyarzún",
-      "Estadio Municipal de Limache",
-    ],
+    // Opciones para formularios (cargadas dinámicamente desde equipos.json)
+    equiposDisponibles: [],
+    canchasDisponibles: [],
 
     init() {
       if (typeof redirigiendo !== "undefined" && redirigiendo) return;
@@ -87,12 +65,22 @@ document.addEventListener("alpine:init", () => {
     async cargar() {
       this.estado = "cargando";
       this.mensajeError = "";
-      const res = await obtenerPartidos();
-      if (res.ok) {
-        this.partidos = res.datos;
+      const [resPartidos, resEquipos] = await Promise.all([
+        obtenerPartidos(),
+        obtenerEquipos(),
+      ]);
+
+      if (resPartidos.ok) {
+        this.partidos = resPartidos.datos;
+        if (resEquipos && resEquipos.ok && Array.isArray(resEquipos.datos)) {
+          this.equiposDisponibles = resEquipos.datos.map((e) => e.nombre);
+          this.canchasDisponibles = [
+            ...new Set(resEquipos.datos.map((e) => e.estadio).filter(Boolean)),
+          ];
+        }
         this.estado = "listo";
       } else {
-        this.mensajeError = res.error || "No se pudieron cargar los partidos.";
+        this.mensajeError = resPartidos.error || "No se pudieron cargar los partidos.";
         this.estado = "error";
       }
     },
