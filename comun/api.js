@@ -1,4 +1,3 @@
-
 // [IA] inicio · ia/2026-11-04_cbenavidesp_carpetas-y-limpieza.md
 const ES_VITE = typeof window !== "undefined" && (location.port === "5173" || Boolean(document.querySelector('script[src*="@vite"]')));
 const API_BASE = ES_VITE
@@ -6,9 +5,11 @@ const API_BASE = ES_VITE
   : new URL("../public/mocks", document.currentScript?.src ?? location.href).href;
 // [IA] fin
 const STORAGE_KEY = "partidos_crud_data";
-const LATENCIA = 450;
+const LATENCIA_MIN = 300;
+const LATENCIA_MAX = 800;
 
 const esperar = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const latencia = () => esperar(LATENCIA_MIN + Math.random() * (LATENCIA_MAX - LATENCIA_MIN));
 
 // --- Fallos simulados (sección 5.2) ---
 // Dos formas de forzar un error para probar el estado de error de la interfaz:
@@ -36,8 +37,6 @@ function simularFallo() {
 }
 
 async function pedir(recurso) {
-  await esperar(LATENCIA);
-  simularFallo();
   let respuesta = await fetch(`${API_BASE}/${recurso}.json`);
   if (!respuesta.ok) {
     const rutaAlt = API_BASE.includes("/public/")
@@ -54,19 +53,26 @@ async function pedir(recurso) {
   return respuesta.json();
 }
 
+// [IA] inicio · ia/2026-11-11_-api.md
+async function leerPartidos() {
+  const guardados = localStorage.getItem(STORAGE_KEY);
+  if (guardados) return JSON.parse(guardados);
+  const partidos = await pedir("partidos");
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(partidos));
+  return partidos;
+}
+
+function guardarPartidos(partidos) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(partidos));
+}
+// [IA] fin 
 const momento = (p) => `${p.fecha} ${p.hora}`;
 
 async function obtenerResumen(usuario) {
   try {
-    let partidos;
+    await latencia();
     simularFallo();
-    const guardados = localStorage.getItem(STORAGE_KEY);
-    if (guardados) {
-      partidos = JSON.parse(guardados);
-    } else {
-      partidos = await pedir("partidos");
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(partidos));
-    }
+    const partidos = await leerPartidos();
 
     // [IA] inicio · ia/2026-11-09_cbenavidesp_acceso-unico-arbitros.md
     const usuarios = await leerUsuarios();
@@ -84,28 +90,16 @@ async function obtenerResumen(usuario) {
       .sort((a, b) => momento(b).localeCompare(momento(a)))
       .slice(0, 3);
 
-    return {
-      ok: true,
-      status: 200,
-      datos: {
-        nombre,
-        totalPartidos: partidos.length,
-        programados: programados.length,
-        finalizados: finalizados.length,
-        tarjetas,
-        proximos,
-        ultimosResultados,
-      },
-      data: {
-        nombre,
-        totalPartidos: partidos.length,
-        programados: programados.length,
-        finalizados: finalizados.length,
-        tarjetas,
-        proximos,
-        ultimosResultados,
-      },
+    const resumen = {
+      nombre,
+      totalPartidos: partidos.length,
+      programados: programados.length,
+      finalizados: finalizados.length,
+      tarjetas,
+      proximos,
+      ultimosResultados,
     };
+    return { ok: true, status: 200, datos: resumen, data: resumen };
   } catch (error) {
     console.error(error);
     return {
@@ -116,17 +110,11 @@ async function obtenerResumen(usuario) {
   }
 }
 
-
 async function obtenerPartidos() {
   try {
+    await latencia();
     simularFallo();
-    const guardados = localStorage.getItem(STORAGE_KEY);
-    if (guardados) {
-      const partidos = JSON.parse(guardados);
-      return { ok: true, status: 200, datos: partidos, data: partidos };
-    }
-    const partidos = await pedir("partidos");
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(partidos));
+    const partidos = await leerPartidos();
     return { ok: true, status: 200, datos: partidos, data: partidos };
   } catch (error) {
     return { ok: false, status: 500, error: "No se pudieron cargar los partidos." };
@@ -134,62 +122,70 @@ async function obtenerPartidos() {
 }
 
 async function crearPartido(nuevoPartido) {
-  const resultado = await obtenerPartidos();
-  if (!resultado.ok) return resultado;
-
-  const partidos = resultado.datos;
-  const partidoConId = {
-    ...nuevoPartido,
-    id: Date.now(),
-    acontecimientos: nuevoPartido.acontecimientos || [],
-    observaciones: nuevoPartido.observaciones || "",
-    amarillas: Number(nuevoPartido.amarillas) || 0,
-    rojas: Number(nuevoPartido.rojas) || 0,
-    golesLocal: nuevoPartido.golesLocal !== null && nuevoPartido.golesLocal !== "" ? Number(nuevoPartido.golesLocal) : null,
-    golesVisitante: nuevoPartido.golesVisitante !== null && nuevoPartido.golesVisitante !== "" ? Number(nuevoPartido.golesVisitante) : null,
-  };
-
-  partidos.unshift(partidoConId);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(partidos));
-  return { ok: true, status: 201, datos: partidoConId, data: partidoConId };
+  try {
+    await latencia();
+    simularFallo();
+    const partidos = await leerPartidos();
+    const partidoConId = {
+      ...nuevoPartido,
+      id: Date.now(),
+      acontecimientos: nuevoPartido.acontecimientos || [],
+      observaciones: nuevoPartido.observaciones || "",
+      amarillas: Number(nuevoPartido.amarillas) || 0,
+      rojas: Number(nuevoPartido.rojas) || 0,
+      golesLocal: nuevoPartido.golesLocal !== null && nuevoPartido.golesLocal !== "" ? Number(nuevoPartido.golesLocal) : null,
+      golesVisitante: nuevoPartido.golesVisitante !== null && nuevoPartido.golesVisitante !== "" ? Number(nuevoPartido.golesVisitante) : null,
+    };
+    partidos.unshift(partidoConId);
+    guardarPartidos(partidos);
+    return { ok: true, status: 201, datos: partidoConId, data: partidoConId };
+  } catch (error) {
+    return { ok: false, status: 500, error: "No se pudo crear el partido." };
+  }
 }
 
 async function actualizarPartido(id, datosActualizados) {
-  const resultado = await obtenerPartidos();
-  if (!resultado.ok) return resultado;
-
-  const partidos = resultado.datos;
-  const index = partidos.findIndex((p) => p.id == id);
-  if (index === -1) {
-    return { ok: false, status: 404, error: "Partido no encontrado para actualizar." };
+  try {
+    await latencia();
+    simularFallo();
+    const partidos = await leerPartidos();
+    const index = partidos.findIndex((p) => p.id == id);
+    if (index === -1) {
+      return { ok: false, status: 404, error: "Partido no encontrado para actualizar." };
+    }
+    partidos[index] = {
+      ...partidos[index],
+      ...datosActualizados,
+      id: Number(id),
+      amarillas: Number(datosActualizados.amarillas) || 0,
+      rojas: Number(datosActualizados.rojas) || 0,
+    };
+    guardarPartidos(partidos);
+    return { ok: true, status: 200, datos: partidos[index], data: partidos[index] };
+  } catch (error) {
+    return { ok: false, status: 500, error: "No se pudo actualizar el partido." };
   }
-
-  partidos[index] = {
-    ...partidos[index],
-    ...datosActualizados,
-    id: Number(id),
-    amarillas: Number(datosActualizados.amarillas) || 0,
-    rojas: Number(datosActualizados.rojas) || 0,
-  };
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(partidos));
-  return { ok: true, status: 200, datos: partidos[index], data: partidos[index] };
 }
 
 async function eliminarPartido(id) {
-  const resultado = await obtenerPartidos();
-  if (!resultado.ok) return resultado;
-
-  const partidos = resultado.datos;
-  const filtrados = partidos.filter((p) => p.id != id);
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(filtrados));
-  return { ok: true, datos: { id } };
+  try {
+    await latencia();
+    simularFallo();
+    const partidos = await leerPartidos();
+    if (!partidos.some((p) => p.id == id)) {
+      return { ok: false, status: 404, error: "Partido no encontrado para eliminar." };
+    }
+    guardarPartidos(partidos.filter((p) => p.id != id));
+    return { ok: true, status: 200, datos: { id }, data: { id } };
+  } catch (error) {
+    return { ok: false, status: 500, error: "No se pudo eliminar el partido." };
+  }
 }
 
 // [IA] inicio · ia/2026-11-03_josefasolis1-hue_crud-partidos.md
 async function obtenerEquipos() {
   try {
+    await latencia();
     simularFallo();
     const equipos = await pedir("equipos");
     return { ok: true, status: 200, datos: equipos, data: equipos };
@@ -203,12 +199,8 @@ async function obtenerEquipos() {
 const USUARIOS_KEY = "usuarios_data";
 
 async function leerUsuarios() {
-  simularFallo();
   const guardados = localStorage.getItem(USUARIOS_KEY);
-  if (guardados) {
-    await esperar(LATENCIA);
-    return JSON.parse(guardados);
-  }
+  if (guardados) return JSON.parse(guardados);
   const usuarios = await pedir("usuarios");
   localStorage.setItem(USUARIOS_KEY, JSON.stringify(usuarios));
   return usuarios;
@@ -226,6 +218,8 @@ const normalizarRut = (rut) => rut.replace(/\./g, "").toUpperCase().trim();
 
 async function obtenerArbitros() {
   try {
+    await latencia();
+    simularFallo();
     const usuarios = await leerUsuarios();
     const arbitros = usuarios.filter((u) => u.rol === "arbitro").map(sinClave);
     return { ok: true, status: 200, datos: arbitros, data: arbitros };
@@ -236,6 +230,8 @@ async function obtenerArbitros() {
 
 async function crearArbitro(datos) {
   try {
+    await latencia();
+    simularFallo();
     const usuarios = await leerUsuarios();
     const email = datos.email.trim().toLowerCase();
     const errores = {};
@@ -273,6 +269,8 @@ async function crearArbitro(datos) {
 
 async function eliminarArbitro(id) {
   try {
+    await latencia();
+    simularFallo();
     const usuarios = await leerUsuarios();
     if (!usuarios.some((u) => u.id === id && u.rol === "arbitro")) {
       return { ok: false, status: 404, error: "No se encontró el árbitro." };
@@ -286,6 +284,8 @@ async function eliminarArbitro(id) {
 
 async function iniciarSesion(email, password) {
   try {
+    await latencia();
+    simularFallo();
     const usuarios = await leerUsuarios();
     const usuario = usuarios.find((u) => u.email.toLowerCase() === email.trim().toLowerCase());
     if (usuario && (await hashearPassword(password, usuario.sal)) === usuario.passwordHash) {
@@ -302,6 +302,8 @@ async function iniciarSesion(email, password) {
 // [IA] inicio · ia/2026-11-11_waterloozz_perfil-api.md
 async function obtenerPerfil(email) {
   try {
+    await latencia();
+    simularFallo();
     const usuarios = await leerUsuarios();
     const usuario = usuarios.find((u) => u.email.toLowerCase() === (email || "").toLowerCase());
     if (!usuario) {
@@ -320,7 +322,7 @@ async function obtenerPerfil(email) {
 
 async function actualizarPerfil(email, { asociacion, telefono }) {
   try {
-    await esperar(LATENCIA);
+    await latencia();
     simularFallo();
     const usuarios = await leerUsuarios();
     const indice = usuarios.findIndex((u) => u.email.toLowerCase() === (email || "").toLowerCase());
