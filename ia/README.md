@@ -22,3 +22,4 @@
 | 2026-11-11 | @CBenavidesP | Claude Code | Pestañas en el modal del acta (tercer componente) | [ver](2026-11-11_cbenavidesp_pestanas-acta.md) |
 | 2026-11-11 | @waterloozz | Claude Code | Perfil con obtenerPerfil() y actualizarPerfil() en la capa de datos | [ver](2026-11-11_waterloozz_perfil-api.md) |
 | 2026-11-12 | @josefasolis1-hue | Claude | Correcciones de la revisión en Partidos (acta, contraste, foco y spinner) | [ver](2026-11-12_josefasolis1-hue_correcciones-partidos.md) |
+| 2026-11-12 | @waterloozz | Claude | Latencia aleatoria y status en la capa de datos | [ver](2026-11-12_waterloozz_latencia-api.md) |

@@ -53,7 +53,7 @@ async function pedir(recurso) {
   return respuesta.json();
 }
 
-// [IA] inicio · ia/2026-11-11_-api.md
+// [IA] inicio · ia/2026-11-12_waterloozz_latencia-api.md
 async function leerPartidos() {
   const guardados = localStorage.getItem(STORAGE_KEY);
   if (guardados) return JSON.parse(guardados);
