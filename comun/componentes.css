@@ -47,11 +47,13 @@
   color: #0f172a;
 }
 
+/* [IA] fin */
 .toast-cerrar:focus-visible,
 .modal-boton:focus-visible {
   outline: 2px solid #1d4ed8;
   outline-offset: 2px;
 }
+/* [IA] inicio · ia/2026-11-02_cbenavidesp_registro-en-usuarios.md · ia/2026-11-11_cbenavidesp_estilos-componentes.md */
 
 @keyframes toast-entrada {
   from {

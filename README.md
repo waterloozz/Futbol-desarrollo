@@ -1,8 +1,8 @@
 # Sistema de Acta Digital Arbitral
 
-Aplicación web para que los **árbitros de fútbol registren lo que ocurre en un partido** y para que el administrador gestione a los árbitros. Reemplaza la libreta tradicional del árbitro por una herramienta digital sencilla.
+Aplicación web para que los **árbitros de fútbol registren lo que ocurre en un partido** y para que el administrador gestione a los árbitros. Reemplaza la libreta tradicional del árbitro por una herramienta digital sencilla: programación de partidos, acta oficial con goles y tarjetas por minuto, y cuentas propias para cada árbitro.
 
-Es la Entrega 2 de Desarrollo Web y Móvil (CIT2008, UDP): frontend con datos simulados (mocks) detrás de una capa de servicios que imita una API REST y que en la Entrega 3 se reemplazará por el backend real.
+Es la Entrega 2 de Desarrollo Web y Móvil (CIT2008, UDP): frontend completo con datos simulados (mocks) detrás de una capa de servicios que imita una API REST y que en la Entrega 3 se reemplazará por el backend real.
 
 **Integrantes:**
 
@@ -17,14 +17,14 @@ Es la Entrega 2 de Desarrollo Web y Móvil (CIT2008, UDP): frontend con datos si
 | Tecnología | Uso | Cómo se incluye |
 |---|---|---|
 | HTML, CSS y JavaScript | Base del proyecto | Archivos del repositorio |
-| [Alpine.js 3.14.9](https://alpinejs.dev) | Interactividad: `x-data`, `x-show`, `x-for`, `x-model`, `@click`, `Alpine.data` | CDN (jsDelivr) |
-| [Tailwind CSS 4](https://tailwindcss.com) | Estilos de las vistas internas con clases utilitarias y prefijos responsivos | CDN (`@tailwindcss/browser@4.1.13`) |
-| [Vite 8](https://vite.dev) | Servidor local de desarrollo | npm (`devDependencies`) |
-| [Web Crypto API](https://developer.mozilla.org/es/docs/Web/API/Web_Crypto_API) (`crypto.subtle`) | Hash SHA-256 con sal para las contraseñas de los árbitros (`comun/seguridad.js`) | Nativa del navegador (no se instala) |
+| [Alpine.js 3.14.9](https://alpinejs.dev) | Interactividad: `x-data`, `x-show`, `x-for`, `x-model`, `@click`, `Alpine.data`, `$watch`, `$nextTick` | CDN (jsDelivr) |
+| [Tailwind CSS 4](https://tailwindcss.com) | Estilos de las vistas internas con clases utilitarias y prefijos responsivos (`sm:`, `md:`, `lg:`) | CDN (`@tailwindcss/browser@4.1.13`) |
+| [Vite 8](https://vite.dev) | Servidor local de desarrollo y página 404 (`vite.config.js`) | npm (`devDependencies`) |
+| [Web Crypto API](https://developer.mozilla.org/es/docs/Web/API/Web_Crypto_API) (`crypto.subtle`) | Hash SHA-256 con sal para las contraseñas (`comun/seguridad.js`) | Nativa del navegador (no se instala) |
 
-La pantalla de login usa su propio archivo de estilos (`login/login.css`).
+El login y la página de crear cuenta usan su propio archivo de estilos (`login/login.css`); las vistas internas usan Tailwind, y los toasts y el modal de confirmación tienen sus estilos en `comun/componentes.css`.
 
-> **Sobre las contraseñas:** la Web Crypto API es parte del navegador, no una librería externa. Los navegadores solo la habilitan en **localhost** o en sitios **https**, por eso el registro de árbitros con contraseña funciona al levantar el proyecto con `npm run dev`, pero no en una dirección `http://` con IP. Como no hay backend, esto es una simulación: en la Entrega 3 el hash se calculará en el servidor.
+> **Sobre las contraseñas:** la Web Crypto API es parte del navegador, no una librería externa. Los navegadores solo la habilitan en **localhost** o en sitios **https**, por eso el login, la creación de cuentas y el registro de árbitros funcionan al levantar el proyecto con `npm run dev`, pero no en una dirección `http://` con IP. Como no hay backend, esto es una simulación: en la Entrega 3 el hash se calculará en el servidor.
 
 ## Requisitos
 
@@ -45,7 +45,7 @@ npm run dev
 
 Abrir la URL que muestra la terminal (por defecto **http://localhost:5173**).
 
-También funciona con la extensión **Live Server** de VS Code: clic derecho en `index.html` → **Open with Live Server**.
+También funciona con la extensión **Live Server** de VS Code (clic derecho en `index.html` → **Open with Live Server**), salvo la página 404, que se muestra solo con `npm run dev`.
 
 ## Credenciales de prueba
 
@@ -56,9 +56,9 @@ Se inicia sesión con **email y contraseña**.
 | Administrador | `admin@futbolapp.cl` | `admin123` |
 | Árbitro (cuenta de prueba) | `arbitro@futbolapp.cl` | `arbitro123` |
 
-Los otros 8 árbitros de `public/mocks/usuarios.json` también pueden entrar: su contraseña es la primera parte de su email seguida de `123` (por ejemplo, `jperez@futbolapp.cl` / `jperez123`). Los árbitros que registra el administrador entran con el email y la contraseña que se les asignó.
+Los otros 8 árbitros de `public/mocks/usuarios.json` también pueden entrar: su contraseña es la primera parte de su email seguida de `123` (por ejemplo, `jperez@futbolapp.cl` / `jperez123`). También se puede crear una cuenta nueva con **Crear cuenta** en el login, y los árbitros que registra el administrador entran con el email y la contraseña que se les asignó.
 
-- **Árbitro:** ve el inicio con el resumen del torneo, partidos y perfil.
+- **Árbitro:** ve el inicio con el resumen del torneo, los partidos con su acta y su perfil.
 - **Administrador:** además entra a **Usuarios**, donde registra y elimina árbitros.
 
 > En el mock las contraseñas no están escritas: cada usuario tiene una **sal** y un **hash SHA-256** (ver *Sobre las contraseñas* en Tecnologías).
@@ -70,34 +70,36 @@ Los otros 8 árbitros de `public/mocks/usuarios.json` también pueden entrar: su
 | Iniciar sesión | `index.html` | Al abrir la aplicación | Pública |
 | Crear cuenta | `login/registro.html` | Enlace **Crear cuenta** en el login | Pública |
 | Inicio (resumen del torneo) | `usuario/dashboard.html` | Al iniciar sesión, o menú **Inicio** | Con sesión |
-| Partidos y acta oficial | `usuario/partidos.html` | Menú **Partidos** | Con sesión |
+| Partidos | `usuario/partidos.html` | Menú **Partidos** | Con sesión |
+| Acta oficial (detalle de un partido) | Modal dentro de `usuario/partidos.html` | Botón **Acta** en cualquier partido | Con sesión |
 | Perfil y configuración | `usuario/perfil.html` | Menú **Perfil** | Con sesión |
 | Usuarios (registro de árbitros) | `admin/usuarios.html` | Menú **Usuarios** | Solo administrador |
 | Página no encontrada | `404.html` | Abrir una dirección que no existe, por ejemplo `http://localhost:5173/no-existe.html` | Pública |
 
-Sin sesión, cualquier vista interna redirige al login. Un árbitro que intenta entrar a **Usuarios** vuelve al inicio. **Cerrar sesión** (en el menú) borra la sesión y vuelve al login; los partidos, los árbitros y el perfil guardados se mantienen.
-
-> La página no encontrada se muestra con `npm run dev` gracias a `vite.config.js`. Con Live Server se ve la página de error propia de la extensión.
+Sin sesión, cualquier vista interna redirige al login. Un árbitro que intenta entrar a **Usuarios** vuelve al inicio. **Cerrar sesión** (en el menú) borra la sesión y vuelve al login; los partidos, los árbitros y los perfiles guardados se mantienen.
 
 ## Funcionalidades
 
 - **Login con email:** valida cada campo en tiempo real (email obligatorio y con formato, contraseña obligatoria), deshabilita el botón mientras se comprueban los datos y muestra un mensaje general si el email o la contraseña son incorrectos, sin decir cuál de los dos falló.
 - **Crear cuenta:** un árbitro puede crear su propia cuenta desde el login (nombre, RUT, email, teléfono, categoría y contraseña con confirmación). Valida cada campo en tiempo real, no acepta un email o RUT ya registrado y, al terminar, entra directo al inicio.
-- **Sesión simulada:** el login guarda el rol y el email en `localStorage` y las vistas internas lo revisan antes de mostrarse.
+- **Sesión simulada:** el login guarda el rol y el email en `localStorage` y las vistas internas lo revisan antes de mostrarse (`comun/sesion.js`).
 - **Menú común** en todas las vistas internas: marca la vista actual, muestra **Usuarios** solo al administrador y se convierte en menú hamburguesa en móvil.
-- **Inicio:** saludo por nombre, totales del torneo, próximos partidos y últimos resultados, con estados de *cargando* (skeleton), *vacío* y *error con botón Reintentar*.
-- **Partidos:** listado con búsqueda por equipo o estadio, filtro por estado (programado o finalizado) y orden por fecha o por equipo local. CRUD completo (crear, editar y eliminar con confirmación), con los cambios guardados en `localStorage`.
-- **Acta oficial:** detalle de cada partido donde se registran y eliminan acontecimientos (goles y tarjetas) por minuto; el marcador y las tarjetas se actualizan solos. Está organizada en pestañas (**Resumen**, **Acontecimientos** y **Observaciones**) que también se manejan con el teclado.
-- **Perfil:** muestra el usuario y su rol, y permite editar la asociación y el teléfono de contacto, que se mantienen al recargar.
+- **Inicio:** saludo por nombre, totales del torneo, próximos partidos y últimos resultados.
+- **Partidos:**
+  - Listado con búsqueda por equipo o estadio, filtro por estado (programado o finalizado) y orden por fecha o por equipo local.
+  - CRUD completo: crear y editar en un modal (con validación por campo, foco en el primer campo y botón deshabilitado con spinner mientras guarda) y eliminar con confirmación. La tabla se actualiza al instante.
+  - Los equipos y estadios de los formularios se cargan desde `equipos.json`.
+- **Acta oficial:** detalle de cada partido donde se registran y eliminan acontecimientos (goles y tarjetas) por minuto; el marcador y las tarjetas se recalculan al agregar o quitar. Está organizada en pestañas (**Resumen**, **Acontecimientos** y **Observaciones**).
+- **Perfil:** muestra el nombre, el usuario, el email y el rol de quien inició sesión, y permite editar la asociación y el teléfono de contacto (con validación). Los cambios se guardan por usuario y se mantienen al recargar.
 - **Registro de árbitros (administrador):**
   - Formulario con nombre, RUT con guion, email, teléfono, categoría, contraseña y su confirmación.
   - Validación en tiempo real: cada campo se revisa al salir de él y, si tenía error, mientras se corrige. El email y el RUT no pueden repetirse.
   - La contraseña se guarda como **sal + hash**, nunca en texto plano.
   - Modal de confirmación antes de guardar y de eliminar, botón deshabilitado mientras guarda, y notificaciones (toasts) de éxito o error.
-  - La lista se carga desde la capa de datos, con estados de *cargando* y *error con Reintentar*, y se mantiene al recargar.
   - **Cada árbitro registrado puede iniciar sesión con su propio email y contraseña.**
-- **Accesibilidad en los formularios:** `aria-invalid` y `aria-describedby` en los campos con error, y foco automático en el primer campo con error al enviar.
-- **Componentes de interfaz:** modales (confirmación, formulario de partido y acta), notificaciones (toasts) y pestañas (en el acta oficial: con flechas, Inicio y Fin del teclado, y `aria-selected`). Aparte, el menú común se convierte en menú hamburguesa en móvil.
+- **Componentes de interfaz:** modales (confirmación, formulario de partido y acta), notificaciones (toasts) y pestañas (en el acta oficial, manejables con las flechas, Inicio y Fin del teclado). Aparte, el menú común se convierte en menú hamburguesa en móvil.
+- **Estados de interfaz:** Inicio, Partidos, Usuarios y Perfil muestran *cargando*, *vacío* (cuando corresponde) y *error con botón Reintentar*.
+- **Diseño responsive** (móvil, tablet y escritorio, sin scroll horizontal a 375 px) y **accesibilidad básica:** labels en todos los campos, `aria-invalid` y `aria-describedby` en los errores, foco visible, navegación con teclado, botones con nombre accesible y contraste suficiente.
 
 ## Cómo probar
 
@@ -110,8 +112,11 @@ Con `npm run dev` y la aplicación abierta en **http://localhost:5173**:
 5. **Que quede guardado:** recargar la página (el árbitro sigue en la tabla) y cerrar sesión.
 6. **Acceso propio del árbitro nuevo:** iniciar sesión con el email y la contraseña del árbitro registrado. El inicio lo saluda por su nombre y el menú no muestra **Usuarios**.
 7. **Eliminar:** volver a entrar como administrador, eliminar ese árbitro y comprobar que ya no puede iniciar sesión.
-8. **Pestañas del acta:** en **Partidos**, apretar **Acta** en cualquier partido. Cambiar de pestaña con clic o con las flechas del teclado, y registrar un acontecimiento en **Acontecimientos**.
-9. **Página no encontrada:** abrir `http://localhost:5173/no-existe.html`. Con sesión el botón vuelve al inicio; sin sesión lleva al login.
+8. **Partidos:** buscar, filtrar y ordenar; crear un partido nuevo, editarlo y eliminarlo (pide confirmación).
+9. **Acta oficial:** apretar **Acta** en un partido, cambiar de pestaña con clic o con las flechas del teclado, registrar un gol en **Acontecimientos** y quitarlo: el marcador de **Resumen** vuelve al valor original.
+10. **Perfil:** cambiar el teléfono, guardar y recargar: el cambio se mantiene. Un teléfono inválido muestra un aviso de error.
+11. **Estado de error:** abrir cualquier vista con `?fallar` al final (por ejemplo `http://localhost:5173/usuario/dashboard.html?fallar`) y apretar **Reintentar** después de quitarlo.
+12. **Página no encontrada:** abrir `http://localhost:5173/no-existe.html`. Con sesión el botón vuelve al inicio; sin sesión lleva al login.
 
 Para volver a los datos originales de `public/mocks/`, ejecutar `localStorage.clear()` en la consola del navegador (F12) y recargar.
 
@@ -119,34 +124,59 @@ Para volver a los datos originales de `public/mocks/`, ejecutar `localStorage.cl
 
 ## Capa de datos (mocks como API)
 
-Todo el acceso a datos está en `comun/api.js`. Las vistas no leen los JSON directamente: llaman a funciones de esta capa.
+### La idea
 
-- Las funciones son **asíncronas** y esperan **450 ms** antes de responder, para imitar la latencia de red.
+```
+ Vista (HTML + Alpine)  ──►  comun/api.js  ──►  public/mocks/*.json  (la primera vez)
+                           "la única puerta"  ──►  localStorage        (lecturas y cambios)
+```
+
+- Las vistas **solo** llaman funciones de `comun/api.js` (`obtenerPartidos()`, `crearArbitro()`, `iniciarSesion()`, ...). Ninguna vista usa `fetch` ni lee los JSON directamente.
+- Todas las funciones son **asíncronas** y esperan una **latencia aleatoria de 300 a 800 ms** antes de responder, para imitar la red.
 - La primera vez leen los archivos de `public/mocks/` y los copian a `localStorage` (`partidos_crud_data` y `usuarios_data`). Desde ahí se leen y se guardan todos los cambios, que se mantienen al recargar.
-- Responden con `{ ok: true, status, datos }` si todo sale bien (200 o 201), o `{ ok: false, status, error }` con un mensaje para mostrar en pantalla (401, 404, 409 o 500). En los errores de validación (409) también envían `errores`, con un mensaje por campo.
+- Responden siempre con el mismo formato:
+
+  ```js
+  { ok: true,  status: 200, datos: ... }
+  { ok: false, status: 409, error: "Ya existe un usuario con esos datos.", errores: { email: "..." } }
+  ```
+
+  `errores` (un mensaje por campo) aparece en las validaciones que fallan.
 - Las funciones de usuarios **nunca entregan la sal ni el hash** a las vistas.
-- **Forzar un error (para probar el estado de error):** agregar `?fallar` a la URL de la página (por ejemplo `http://localhost:5173/usuario/dashboard.html?fallar`) y toda lectura responde `{ ok: false, status: 500, error }`, con el botón **Reintentar** visible. `?fallar=0` lo desactiva. También se puede simular una falla al azar con `?probabilidadFalla=0.3` (30 %) o cambiando `PROBABILIDAD_FALLA` en `comun/api.js`.
+- En la Entrega 3 se reemplaza lo que hay dentro de `comun/api.js` por llamadas al backend real; las vistas no cambian.
+
+### Forzar errores
+
+- Agregar `?fallar` a la URL de cualquier vista (por ejemplo `http://localhost:5173/usuario/partidos.html?fallar`): las funciones responden `{ ok: false, status: 500, error }` y se ve el estado de error con el botón **Reintentar**. `?fallar=0` lo desactiva.
+- Para fallas al azar: `?probabilidadFalla=0.3` (30 %) en la URL, o cambiar `PROBABILIDAD_FALLA` en `comun/api.js`.
+- **Restablecer los datos de prueba:** `localStorage.clear()` en la consola del navegador y recargar.
 
 ### Endpoints simulados
 
-| Función | Método | Ruta equivalente | Fuente de datos | Descripción |
-|---|---|---|---|---|
-| `iniciarSesion(email, password)` | POST | `/api/auth/login` | `usuarios.json` / `localStorage` | Comprueba la contraseña con su sal y hash. 200 con el usuario, o 401 si el email o la contraseña son incorrectos |
-| `obtenerResumen(usuario)` | GET | `/api/resumen` | `partidos.json` + `usuarios.json` / `localStorage` | Totales, próximos partidos, últimos resultados y nombre de quien inició sesión |
-| `obtenerArbitros()` | GET | `/api/arbitros` | `usuarios.json` / `localStorage` | Lista de usuarios con rol árbitro, sin sal ni hash. 200 |
-| `crearArbitro(datos)` | POST | `/api/arbitros` | `localStorage` | Crea un árbitro y guarda su contraseña con sal y hash. 201, o 409 si el email o el RUT ya existen |
-| `eliminarArbitro(id)` | DELETE | `/api/arbitros/:id` | `localStorage` | Elimina un árbitro. 200, o 404 si no existe |
-| `obtenerPartidos()` | GET | `/api/partidos` | `partidos.json` / `localStorage` | Lista de partidos |
-| `crearPartido(nuevoPartido)` | POST | `/api/partidos` | `localStorage` | Crea un partido y lo devuelve con su `id` |
-| `actualizarPartido(id, datos)` | PUT | `/api/partidos/:id` | `localStorage` | Actualiza un partido, o error si no existe |
-| `eliminarPartido(id)` | DELETE | `/api/partidos/:id` | `localStorage` | Elimina un partido y devuelve su `id` |
-| `obtenerEquipos()` | GET | `/api/equipos` | `equipos.json` | Lista de equipos y estadios disponibles para partidos |
+Esta tabla es la base de la API real de la Entrega 3.
+
+| Función | Método | Ruta equivalente | Descripción y respuestas |
+|---|---|---|---|
+| `iniciarSesion(email, password)` | POST | `/api/auth/login` | Comprueba la contraseña con su sal y hash. 200 con el usuario · 401 (email o contraseña incorrectos) |
+| `obtenerResumen(usuario)` | GET | `/api/resumen` | Totales, próximos partidos, últimos resultados y nombre de quien inició sesión. 200 |
+| `obtenerPartidos()` | GET | `/api/partidos` | Lista de partidos. 200 |
+| `crearPartido(nuevoPartido)` | POST | `/api/partidos` | Crea un partido y lo devuelve con su `id`. 201 |
+| `actualizarPartido(id, datos)` | PUT | `/api/partidos/:id` | Actualiza un partido (también sus acontecimientos). 200 · 404 |
+| `eliminarPartido(id)` | DELETE | `/api/partidos/:id` | Elimina un partido. 200 · 404 |
+| `obtenerEquipos()` | GET | `/api/equipos` | Equipos y estadios para los formularios de partido. 200 |
+| `obtenerArbitros()` | GET | `/api/arbitros` | Usuarios con rol árbitro, sin sal ni hash. 200 |
+| `crearArbitro(datos)` | POST | `/api/arbitros` | Crea un árbitro (desde Usuarios o desde Crear cuenta) y guarda su contraseña con sal y hash. 201 · 409 (email o RUT ya existen) |
+| `eliminarArbitro(id)` | DELETE | `/api/arbitros/:id` | Elimina un árbitro. 200 · 404 |
+| `obtenerPerfil(email)` | GET | `/api/perfil` | Datos del usuario que inició sesión, sin sal ni hash. 200 · 404 |
+| `actualizarPerfil(email, datos)` | PUT | `/api/perfil` | Actualiza la asociación y el teléfono. 200 · 400 (teléfono inválido) · 404 |
+
+Cualquier función puede responder **500** si se fuerza el error.
 
 ### Datos (`public/mocks/`)
 
 | Archivo | Registros | Contenido |
 |---|---|---|
-| `partidos.json` | 12 | Fecha, hora, equipos, goles, tarjetas, estado, cancha, árbitro, acontecimientos y observaciones |
+| `partidos.json` | 12 | Recurso principal: fecha, hora, equipos, goles, tarjetas, estado, cancha, árbitro, acontecimientos y observaciones |
 | `usuarios.json` | 10 | 1 administrador y 9 árbitros con nombre, email, rol, sal y hash de la contraseña; los árbitros además con RUT, teléfono y categoría |
 | `equipos.json` | 10 | Nombre, iniciales, ciudad y estadio de cada equipo |
 
@@ -161,7 +191,9 @@ Futbol-desarrollo/
 ├── vite.config.js             Muestra 404.html en las direcciones que no existen (npm run dev)
 ├── login/
 │   ├── login.js               Componente del login: validación y sesión
-│   └── login.css              Estilos del login
+│   ├── registro.html          Crear cuenta de árbitro
+│   ├── registro.js            Componente de crear cuenta: validación y alta
+│   └── login.css              Estilos del login y de crear cuenta
 ├── comun/                     Lo que usan varias vistas
 │   ├── api.js                 Capa de datos (mocks como API)
 │   ├── seguridad.js           Sal y hash SHA-256 de las contraseñas
@@ -181,18 +213,17 @@ Futbol-desarrollo/
 ├── public/
 │   └── mocks/                 Un JSON por recurso
 ├── ia/
-│   └── README.md              Índice de uso de IA
+│   ├── README.md              Índice de uso de IA
+│   └── AAAA-MM-DD_usuario_tema.md   Un registro por interacción
 └── package.json
 ```
+
+### Navegación
+
+Es una aplicación de **varias páginas**: cada vista es un archivo HTML y el menú común (`comun/menu.js`) enlaza entre ellas. Cada página interna carga primero `comun/sesion.js`, que revisa la sesión y el rol antes de mostrarla. Los componentes de cada vista se registran con `Alpine.data` en su propio archivo `.js`, que se carga antes que Alpine.
 
 ---
 
 ## Uso de IA
 
-Ver el índice en [`ia/README.md`](ia/README.md).
-
----
-
-## Estado del proyecto
-
-En desarrollo.
+Ver el índice en [`ia/README.md`](ia/README.md). Cada registro tiene los prompts y las respuestas, y el código que viene de la IA está marcado en los archivos con `[IA] inicio` / `[IA] fin`.

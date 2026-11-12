@@ -1,7 +1,7 @@
-// [IA] inicio · ia/2026-11-04_cbenavidesp_carpetas-y-limpieza.md
 const ES_VITE = typeof window !== "undefined" && (location.port === "5173" || Boolean(document.querySelector('script[src*="@vite"]')));
 const API_BASE = ES_VITE
   ? `${location.origin}/mocks`
+  // [IA] inicio · ia/2026-11-04_cbenavidesp_carpetas-y-limpieza.md
   : new URL("../public/mocks", document.currentScript?.src ?? location.href).href;
 // [IA] fin
 const STORAGE_KEY = "partidos_crud_data";
@@ -195,7 +195,7 @@ async function obtenerEquipos() {
 }
 // [IA] fin
 
-// [IA] inicio · ia/2026-11-09_cbenavidesp_acceso-unico-arbitros.md
+// [IA] inicio · ia/2026-11-09_cbenavidesp_acceso-unico-arbitros.md · ia/2026-11-12_waterloozz_latencia-api.md
 const USUARIOS_KEY = "usuarios_data";
 
 async function leerUsuarios() {
