@@ -6,7 +6,7 @@
 - **Enlace a la conversación:** no aplica (Claude Code no permite compartir la conversación; el texto completo va abajo, exportado de la sesión)
 - **Archivos afectados:** public/mocks/usuarios.json (7 usuarios nuevos); README.md (sección "API simulada (endpoints)", 16 líneas).
 
-> **Nota:** este registro se subió el 2026-11-11, después del código. El código se subió el 2026-11-03 en el commit `d8f772e` sin su registro y sin marcas `[IA]`; en ese momento no lo documenté. Lo corrijo ahora con la conversación completa.
+> **Nota:** este registro se subió el 2026-11-11, después del código. El código se subió el 2026-11-03 en el commit `d8f772e` sin su registro y sin marcas `[IA]`; en ese momento no lo documenté. 
 
 ## Objetivo
 
@@ -276,4 +276,4 @@ Todas devuelven un objeto `{ ok: true, datos }` si salen bien, o `{ ok: false, e
 
 ## Conclusión: lo que aprendí
 
-*(Pendiente: escríbelo con tus palabras.)*
+*Aprendí a usar los archivos JSON de mocks/ como si fueran una base de datos, y a relacionar cada función de api.js con una ruta REST (por ejemplo, obtenerPartidos() equivale a GET /api/partidos), lo que ayuda a entender cómo sería con un backend real. También vi que agregar usuarios al JSON no basta si el login no lee ese archivo, porque los datos tienen que pasar por la capa de datos para que se usen. Comparar mis tareas con la rúbrica me sirvió para ver qué me faltaba y qué tareas eran de mis compañeros. Me di cuenta de que algunos cambios que subí eran parte de la tarea de Josefa y que debí revisar mejor de quién era cada cosa antes de subirlas.*

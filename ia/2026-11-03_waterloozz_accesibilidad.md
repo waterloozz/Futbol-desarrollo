@@ -6,8 +6,7 @@
 - **Enlace a la conversación:** no aplica (Claude Code no permite compartir la conversación; el texto completo va abajo, exportado de la sesión)
 - **Archivos afectados:** js/menu.js; registro-arbitros.css; style.css; usuarios.html (34 líneas agregadas y 14 quitadas en total). Hoy esos archivos están en comun/menu.js, admin/registro-arbitros.css y admin/usuarios.html.
 
-> **Nota:** este registro se subió el 2026-11-11, después del código. El código se subió el 2026-11-03 en el commit `9734f34` sin su registro y sin marcas `[IA]`; en ese momento no lo documenté. Lo corrijo ahora con la conversación completa.
-
+> **Nota:** este registro se subió el 2026-11-11, después del código. El código se subió el 2026-11-03 en el commit `9734f34` sin su registro y sin marcas `[IA]`; en ese momento no lo documenté. 
 ## Objetivo
 
 Otro de los requisitos que tenía anotados pedía foco visible en links y botones, `aria-label` en el botón hamburguesa y buen contraste. Le pedí a la IA que me diera el código para implementarlo.

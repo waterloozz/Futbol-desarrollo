@@ -6,7 +6,7 @@
 - **Enlace a la conversación:** no aplica (Claude Code no permite compartir la conversación; el texto completo va abajo, exportado de la sesión)
 - **Archivos afectados:** dashboard.html (grillas de indicadores, listas y skeleton: 4 líneas); js/api.js (se quitó `export` de 5 funciones y se agregó un comentario al inicio). Hoy esos archivos están en usuario/dashboard.html y comun/api.js.
 
-> **Nota:** este registro se subió el 2026-11-11, después del código. El código se subió el 2026-11-03 en los commits `5232e77` y `3acc40d` (integrados a `main` con el PR `31b352b`) sin su registro y sin marcas `[IA]`; en ese momento no lo documenté. Lo corrijo ahora con la conversación completa.
+> **Nota:** este registro se subió el 2026-11-11, después del código. El código se subió el 2026-11-03 en los commits `5232e77` y `3acc40d` (integrados a `main` con el PR `31b352b`) sin su registro y sin marcas `[IA]`; en ese momento no lo documenté. 
 
 ## Objetivo
 
@@ -474,4 +474,4 @@ async function eliminarPartido(id) {
 
 ## Conclusión: lo que aprendí
 
-*(Pendiente: escríbelo con tus palabras.)*
+*Aprendí cómo funcionan los breakpoints de Tailwind: sm:, md: y lg: se aplican desde cierto ancho hacia arriba, así que cambiar sm:grid-cols-4 por lg:grid-cols-4 hace que los indicadores queden en 2 columnas hasta escritorio. También entendí por qué el dashboard no cargaba datos: un archivo con export solo funciona si se carga como type="module", y como api.js se cargaba como script clásico, el navegador daba error y nada se ejecutaba. Además aprendí cosas de Git que no sabía: que el autor de un commit sale de la configuración de user.name y user.email, que GitHub asocia los commits a la cuenta según el correo, y cómo se abre y fusiona un PR. Algo que haría distinto es documentar el uso de IA en el momento, en vez de quitar la línea de coautor.(Despues documente la IA, en el momento no lo pense bien)*

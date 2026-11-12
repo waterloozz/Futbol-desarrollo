@@ -6,7 +6,7 @@
 - **Enlace a la conversación:** no aplica (Claude Code no permite compartir la conversación; el texto completo va abajo, exportado de la sesión)
 - **Archivos afectados:** comun/api.js (constante `PROBABILIDAD_FALLA` y funciones `debeFallar()` y `simularFallo()`, más una llamada a `simularFallo()` en `pedir()`, `obtenerResumen()`, `obtenerPartidos()` y `leerUsuarios()`); README.md (1 línea en "Capa de datos").
 
-> **Nota:** este registro se subió el 2026-11-11, después del código. El código se subió el 2026-11-09 en el commit `c3dddcc` sin su registro y sin marcas `[IA]`; en ese momento no lo documenté. Lo corrijo ahora con la conversación completa.
+> **Nota:** este registro se subió el 2026-11-11, después del código. El código se subió el 2026-11-09 en el commit `c3dddcc` sin su registro y sin marcas `[IA]`; en ese momento no lo documenté.
 
 ## Objetivo
 
@@ -311,4 +311,4 @@ async function leerUsuarios() {
 
 ## Conclusión: lo que aprendí
 
-*(Pendiente: escríbelo con tus palabras.)*
+*Aprendí a leer parámetros de la URL con URLSearchParams para cambiar el comportamiento de la página sin tocar el código, y a simular una falla con una probabilidad usando Math.random(). También entendí el flujo de errores: simularFallo() lanza un error, cada función lo captura con try/catch y responde { ok: false, status: 500, error }, y así la interfaz muestra el estado de error con el botón Reintentar. Esto sirve para probar que la página maneja bien los errores sin tener que romper nada de verdad. En Git aprendí a trabajar en una rama e integrarla a main*
